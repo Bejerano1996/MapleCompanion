@@ -1,0 +1,1 @@
+3.29 invalidates older map/party/species captures after automatic-context mode is switched off/on, clearing cached context until fresh confirmation. Same-mode, invalid and cancelled Setup preserve valid pending reads. Includes pending3.28 automatic-level confirmation freshness fix. Recorded/synthetic/native tests only, not live gameplay validation.

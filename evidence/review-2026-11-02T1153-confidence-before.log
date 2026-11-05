@@ -1,0 +1,33 @@
+.FF
+======================================================================
+FAIL: test_clear_prefix_does_not_make_weak_amount_trusted (__main__.ConfidenceTests.test_clear_prefix_does_not_make_weak_amount_trusted)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_reward_amount_confidence.py", line 14, in test_clear_prefix_does_not_make_weak_amount_trusted
+    events=self.read(.8);self.assertEqual(list(events),[('mesos',7)]);self.assertFalse(events.trusted_money)
+                                                                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {0} is not false
+
+======================================================================
+FAIL: test_low_amount_confidence_stays_pending (__main__.ConfidenceTests.test_low_amount_confidence_stays_pending)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_reward_amount_confidence.py", line 18, in test_low_amount_confidence_stays_pending
+    self.assertEqual(list(self.read(.6)),[('mesos',None)])
+AssertionError: Lists differ: [('mesos', 7)] != [('mesos', None)]
+
+First differing element 0:
+('mesos', 7)
+('mesos', None)
+
+- [('mesos', 7)]
+?            ^
+
++ [('mesos', None)]
+?            ^^^^
+
+
+----------------------------------------------------------------------
+Ran 3 tests in 0.001s
+
+FAILED (failures=2)

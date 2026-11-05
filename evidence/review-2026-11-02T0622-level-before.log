@@ -1,0 +1,21 @@
+........FF..........
+======================================================================
+FAIL: test_jump_confirmation_requires_consecutive_samples (__main__.TrainingTests.test_jump_confirmation_requires_consecutive_samples) (target=25)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_model.py", line 30, in test_jump_confirmation_requires_consecutive_samples
+    self.assertIsNone(x.observe({'level':target,'exp':100},9,3))
+AssertionError: 9 is not None
+
+======================================================================
+FAIL: test_jump_confirmation_requires_consecutive_samples (__main__.TrainingTests.test_jump_confirmation_requires_consecutive_samples) (target=30)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_model.py", line 30, in test_jump_confirmation_requires_consecutive_samples
+    self.assertIsNone(x.observe({'level':target,'exp':100},9,3))
+AssertionError: 219566 is not None
+
+----------------------------------------------------------------------
+Ran 19 tests in 0.005s
+
+FAILED (failures=2)

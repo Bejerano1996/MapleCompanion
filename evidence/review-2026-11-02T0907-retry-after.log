@@ -1,0 +1,14 @@
+F
+======================================================================
+FAIL: test_recorded_bright_money_recovered_without_trust_or_duplicates (__main__.RetryTests.test_recorded_bright_money_recovered_without_trust_or_duplicates)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_reward_row_retry.py", line 16, in test_recorded_bright_money_recovered_without_trust_or_duplicates
+    self.assertEqual(second['mesos'],7);self.assertEqual(third['mesos'],0)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: 17 != 7
+
+----------------------------------------------------------------------
+Ran 1 test in 2.266s
+
+FAILED (failures=1)

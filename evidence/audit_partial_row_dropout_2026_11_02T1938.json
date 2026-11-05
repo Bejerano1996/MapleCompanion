@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "cases": 200,
+  "failures": [],
+  "source_sha": "982856a185c62d3dbd168c997a98d4de1712c57f4a9f53158f7196412bec7be1",
+  "scope": "Synthetic pre-session stationary money rows,whole-row partial masking/dropout and recovery,no actualpickups or livegameplay"
+}

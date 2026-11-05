@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "failure_recovery_cycles": 50,
+  "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
+  "scope": "Actual save_state wrapper with mocked OSError then real temporary-file recovery; no real savedstate/UI/gameinteraction"
+}

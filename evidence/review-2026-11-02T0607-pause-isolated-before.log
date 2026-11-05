@@ -1,0 +1,7 @@
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_session_rewards_ui.py", line 50, in <module>
+    check('Paused callback cannot refresh party evidence',getattr(a,'_training_party_seen_at',None)==party_seen_before)
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_session_rewards_ui.py", line 19, in check
+    if not value:raise AssertionError(name)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Paused callback cannot refresh party evidence

@@ -1,0 +1,666 @@
+{
+  "ok": true,
+  "streams": 200,
+  "polls": 9800,
+  "failures": [],
+  "captures": {
+    "session-rewards-fixture.png": [
+      {
+        "spec": {
+          "brightness": 0.8,
+          "padding": [
+            0,
+            0
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            7
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "mesos",
+            10
+          ],
+          [
+            "mesos",
+            7
+          ],
+          [
+            "mesos",
+            10
+          ]
+        ],
+        "positions": [
+          [
+            166.0,
+            74.0
+          ],
+          [
+            245.0,
+            74.0
+          ],
+          [
+            327.0,
+            70.0
+          ],
+          [
+            406.5,
+            69.0
+          ],
+          [
+            484.25,
+            68.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 0.8,
+          "padding": [
+            8,
+            4
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            7
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "mesos",
+            10
+          ],
+          [
+            "mesos",
+            7
+          ],
+          [
+            "mesos",
+            10
+          ]
+        ],
+        "positions": [
+          [
+            171.25,
+            71.0
+          ],
+          [
+            249.0,
+            76.0
+          ],
+          [
+            330.5,
+            73.0
+          ],
+          [
+            410.25,
+            69.0
+          ],
+          [
+            488.75,
+            70.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 1.0,
+          "padding": [
+            0,
+            0
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            7
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "mesos",
+            10
+          ],
+          [
+            "mesos",
+            7
+          ],
+          [
+            "mesos",
+            10
+          ]
+        ],
+        "positions": [
+          [
+            166.5,
+            75.0
+          ],
+          [
+            245.0,
+            74.0
+          ],
+          [
+            326.5,
+            71.0
+          ],
+          [
+            406.5,
+            69.0
+          ],
+          [
+            483.5,
+            71.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 1.0,
+          "padding": [
+            8,
+            4
+          ]
+        },
+        "events": [
+          [
+            "bonus",
+            2
+          ],
+          [
+            "mesos",
+            10
+          ],
+          [
+            "mesos",
+            7
+          ],
+          [
+            "mesos",
+            10
+          ]
+        ],
+        "positions": [
+          [
+            249.5,
+            77.0
+          ],
+          [
+            330.5,
+            73.0
+          ],
+          [
+            410.25,
+            69.0
+          ],
+          [
+            489.75,
+            68.0
+          ]
+        ],
+        "trusted_money": [
+          3
+        ]
+      },
+      {
+        "spec": {
+          "brightness": 1.2,
+          "padding": [
+            0,
+            0
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "mesos",
+            10
+          ],
+          [
+            "mesos",
+            7
+          ],
+          [
+            "mesos",
+            10
+          ]
+        ],
+        "positions": [
+          [
+            166.75,
+            66.0
+          ],
+          [
+            245.25,
+            69.0
+          ],
+          [
+            327.0,
+            74.0
+          ],
+          [
+            406.5,
+            69.0
+          ],
+          [
+            484.0,
+            66.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 1.2,
+          "padding": [
+            8,
+            4
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "mesos",
+            7
+          ],
+          [
+            "mesos",
+            10
+          ]
+        ],
+        "positions": [
+          [
+            172.0,
+            66.0
+          ],
+          [
+            249.5,
+            75.0
+          ],
+          [
+            410.5,
+            69.0
+          ],
+          [
+            490.5,
+            69.0
+          ]
+        ],
+        "trusted_money": [
+          3
+        ]
+      }
+    ],
+    "party-rewards-fixture.png": [
+      {
+        "spec": {
+          "brightness": 0.8,
+          "padding": [
+            0,
+            0
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            null
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "exp",
+            7
+          ],
+          [
+            "bonus",
+            2
+          ]
+        ],
+        "positions": [
+          [
+            140.75,
+            51.0
+          ],
+          [
+            199.5,
+            51.0
+          ],
+          [
+            259.0,
+            50.0
+          ],
+          [
+            377.25,
+            50.0
+          ],
+          [
+            437.0,
+            50.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 0.8,
+          "padding": [
+            8,
+            4
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            null
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "bonus",
+            2
+          ]
+        ],
+        "positions": [
+          [
+            153.25,
+            51.0
+          ],
+          [
+            212.0,
+            46.0
+          ],
+          [
+            271.0,
+            50.0
+          ],
+          [
+            330.5,
+            57.0
+          ],
+          [
+            449.0,
+            50.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 1.0,
+          "padding": [
+            0,
+            0
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            null
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "exp",
+            7
+          ],
+          [
+            "bonus",
+            2
+          ]
+        ],
+        "positions": [
+          [
+            140.75,
+            51.0
+          ],
+          [
+            199.5,
+            51.0
+          ],
+          [
+            259.0,
+            50.0
+          ],
+          [
+            319.25,
+            55.0
+          ],
+          [
+            377.25,
+            50.0
+          ],
+          [
+            437.0,
+            50.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 1.0,
+          "padding": [
+            8,
+            4
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            null
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            2
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            2
+          ]
+        ],
+        "positions": [
+          [
+            153.25,
+            51.0
+          ],
+          [
+            212.0,
+            46.0
+          ],
+          [
+            271.0,
+            50.0
+          ],
+          [
+            330.5,
+            57.0
+          ],
+          [
+            390.0,
+            48.0
+          ],
+          [
+            449.25,
+            50.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 1.2,
+          "padding": [
+            0,
+            0
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            null
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            2
+          ]
+        ],
+        "positions": [
+          [
+            141.5,
+            47.0
+          ],
+          [
+            199.5,
+            51.0
+          ],
+          [
+            259.25,
+            49.0
+          ],
+          [
+            377.25,
+            50.0
+          ],
+          [
+            437.0,
+            50.0
+          ]
+        ],
+        "trusted_money": []
+      },
+      {
+        "spec": {
+          "brightness": 1.2,
+          "padding": [
+            8,
+            4
+          ]
+        },
+        "events": [
+          [
+            "exp",
+            null
+          ],
+          [
+            "bonus",
+            null
+          ],
+          [
+            "exp",
+            null
+          ],
+          [
+            "exp",
+            7
+          ],
+          [
+            "bonus",
+            2
+          ]
+        ],
+        "positions": [
+          [
+            154.0,
+            50.0
+          ],
+          [
+            212.0,
+            46.0
+          ],
+          [
+            271.5,
+            53.0
+          ],
+          [
+            389.75,
+            50.0
+          ],
+          [
+            449.25,
+            50.0
+          ]
+        ],
+        "trusted_money": []
+      }
+    ]
+  },
+  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
+  "scope": "Actual12combinedbrightness/translationOCRvariants replayed as unchanged oldnotices; no livegame"
+}

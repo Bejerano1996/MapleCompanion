@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cases": 200,
+  "scope": "Wallet restart while old capture pending must exclude old balance, fresh capture anchors1020 and later1030 yields10; synthetic only",
+  "source_sha": "7927596096260501fff78bebccaedd7d20f71cd926d14b60fe1063714550cf70"
+}

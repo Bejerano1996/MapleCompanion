@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cases": 200,
+  "scope": "Actual background callbacks: target/map/party/mode change in flight, totals preserved, stale calibration excluded, three fresh samples relearn9; offline only",
+  "source_sha": "0db0a3760fde975eac68640c8437f1490c5b5717db160599efce8d48ac581239"
+}

@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "cases": 784,
+  "levels": [
+    1,
+    98
+  ],
+  "bonus_delays": [
+    0.05,
+    1,
+    4.99,
+    5
+  ],
+  "both_hud_notice_orders": true,
+  "source_sha": "454251f62573988fd5d432e79a10b3a1dc2ff0e76c528cb9e02ec3c87f74ff88",
+  "scope": "Production accountant, synthetic one-level crossings and late party refinements within supported5second grace; no OCR/live game"
+}

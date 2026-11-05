@@ -1,0 +1,13 @@
+..........F.
+======================================================================
+FAIL: test_split_party_bonus_hud_window_cannot_train_base_only_yield (__main__.YieldTests.test_split_party_bonus_hud_window_cannot_train_base_only_yield)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_yield.py", line 60, in test_split_party_bonus_hud_window_cannot_train_base_only_yield
+    self.assertIsNone(learner.estimate(key,5))
+AssertionError: 7 is not None
+
+----------------------------------------------------------------------
+Ran 12 tests in 0.001s
+
+FAILED (failures=1)

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_reader_generation_2026_11_03_0008.py", line 32, in <module>
+    assert (s['exp'],s['party_exp'],s['kills'])==(0,0,0),(mode,s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('auto_roundtrip', {'id': 'audit', 'running_since': 1.0, 'auto_rewards': True, 'exp': 9, 'mesos': 0, 'kills': 1, 'party_exp': 2, 'exp_source': 'EXP bar � net', 'exp_is_net': True, 'kills_estimated': True})

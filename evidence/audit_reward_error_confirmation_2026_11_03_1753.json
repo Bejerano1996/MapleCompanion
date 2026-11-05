@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "cases": 500,
+  "capture_error_cases": 250,
+  "unavailable_gap_cases": 250,
+  "net_exp": 9,
+  "party_exp": 2,
+  "kills": 1,
+  "error_route_money": 17,
+  "unavailable_route_money": 0,
+  "source_sha": "893de067847d7b4741a92151c30bae87483710697c25d84b61c25afe9925bbe5",
+  "scope": "Actual reward polling/callback/accountant, identical synthetic notices around shorterror or unavailablegap. Missing-gap money conservatively uncounted baseline; no actual capture/OCR/game."
+}

@@ -1,0 +1,185 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "fixture": "live_exp_2560.png",
+      "mode": "integer_side",
+      "split_fraction": 0.5,
+      "texts": [
+        "EXP",
+        "29",
+        ".28"
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_exp_2560.png",
+      "mode": "integer_side",
+      "split_fraction": 0.6,
+      "texts": [
+        "EXP",
+        "29",
+        ".285"
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_exp_2560.png",
+      "mode": "percent_side",
+      "split_fraction": 0.5,
+      "texts": [
+        "5153.",
+        "3.34%]"
+      ],
+      "numbers": [],
+      "pcts": [
+        3.34
+      ],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_exp_2560.png",
+      "mode": "percent_side",
+      "split_fraction": 0.6,
+      "texts": [
+        "53",
+        "8.34%1"
+      ],
+      "numbers": [
+        1
+      ],
+      "pcts": [
+        8.34
+      ],
+      "reading": null,
+      "concordant_channel_missing": false
+    },
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "mode": "integer_side",
+      "split_fraction": 0.5,
+      "texts": [
+        "EXP",
+        "5.29"
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "mode": "integer_side",
+      "split_fraction": 0.6,
+      "texts": [
+        "EXP",
+        "5.299["
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "mode": "percent_side",
+      "split_fraction": 0.5,
+      "texts": [
+        "9[11,",
+        "22%1"
+      ],
+      "numbers": [
+        22,
+        1
+      ],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "mode": "percent_side",
+      "split_fraction": 0.6,
+      "texts": [
+        "11",
+        "22%1"
+      ],
+      "numbers": [
+        22,
+        1
+      ],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "mode": "integer_side",
+      "split_fraction": 0.5,
+      "texts": [
+        "EXP",
+        "5.34"
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "mode": "integer_side",
+      "split_fraction": 0.6,
+      "texts": [
+        "EXP",
+        "5",
+        "5.340["
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "mode": "percent_side",
+      "split_fraction": 0.5,
+      "texts": [
+        ".31%]"
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "mode": "percent_side",
+      "split_fraction": 0.6,
+      "texts": [
+        "11",
+        ".31%]"
+      ],
+      "numbers": [],
+      "pcts": [],
+      "reading": null,
+      "concordant_channel_missing": true
+    }
+  ],
+  "failures": [],
+  "missing_component_cases": 11,
+  "source_sha": "586afc05fd42a71a44fbf7a541bf0399d1940236d01c45b4ea0601366d77403e",
+  "scope": "ActualOCR ofpartialEXPtextboxes from3localHUDfooters,productionconfidencefilter+characterparser; missingintegerorpercent mustnotyieldacceptedreading; no livegame",
+  "component_counts": {
+    "integer_only": 2,
+    "percent_only": 1,
+    "neither": 8,
+    "both_retained": 1
+  }
+}

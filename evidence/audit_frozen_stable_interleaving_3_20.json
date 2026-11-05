@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cases": 1000,
+  "scope": "PartialpositiveHUD resets witness; fresh notices before/at retirement survive; strict5secondboundary and final HUD consume exactlyonce; offline only",
+  "source_sha": "b3d235543353b54936d06e81e5934fae14b10d7cdbcb6bbb703c9486757ca17c"
+}

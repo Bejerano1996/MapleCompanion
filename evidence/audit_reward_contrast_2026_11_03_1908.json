@@ -1,0 +1,520 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "fixture": "session-rewards-fixture.png",
+      "contrast": 0.4,
+      "events": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "positions": [
+        [
+          167.25,
+          72.0
+        ],
+        [
+          245.75,
+          75.0
+        ],
+        [
+          327.0,
+          68.0
+        ],
+        [
+          406.5,
+          67.0
+        ],
+        [
+          484.5,
+          67.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "mesos",
+          8
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "contrast": 0.6,
+      "events": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "positions": [
+        [
+          167.25,
+          72.0
+        ],
+        [
+          245.75,
+          74.0
+        ],
+        [
+          326.5,
+          71.0
+        ],
+        [
+          406.25,
+          69.0
+        ],
+        [
+          485.5,
+          65.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "mesos",
+          8
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "contrast": 0.8,
+      "events": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "positions": [
+        [
+          167.25,
+          75.0
+        ],
+        [
+          245.75,
+          74.0
+        ],
+        [
+          326.25,
+          71.0
+        ],
+        [
+          406.5,
+          71.0
+        ],
+        [
+          485.0,
+          68.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "mesos",
+          8
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "contrast": 1.0,
+      "events": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "positions": [
+        [
+          167.25,
+          75.0
+        ],
+        [
+          245.75,
+          74.0
+        ],
+        [
+          325.75,
+          72.0
+        ],
+        [
+          406.5,
+          71.0
+        ],
+        [
+          484.5,
+          67.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "mesos",
+          8
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "contrast": 0.4,
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "positions": [
+        [
+          141.5,
+          49.0
+        ],
+        [
+          199.25,
+          47.0
+        ],
+        [
+          258.75,
+          51.0
+        ],
+        [
+          317.25,
+          49.0
+        ],
+        [
+          437.25,
+          50.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "contrast": 0.6,
+      "events": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "positions": [
+        [
+          140.75,
+          50.0
+        ],
+        [
+          199.25,
+          47.0
+        ],
+        [
+          258.5,
+          51.0
+        ],
+        [
+          317.75,
+          49.0
+        ],
+        [
+          377.25,
+          47.0
+        ],
+        [
+          437.25,
+          50.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "contrast": 0.8,
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "positions": [
+        [
+          140.75,
+          50.0
+        ],
+        [
+          199.0,
+          48.0
+        ],
+        [
+          259.0,
+          52.0
+        ],
+        [
+          317.75,
+          47.0
+        ],
+        [
+          377.5,
+          43.0
+        ],
+        [
+          437.25,
+          50.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "contrast": 1.0,
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "positions": [
+        [
+          141.0,
+          48.0
+        ],
+        [
+          199.0,
+          48.0
+        ],
+        [
+          258.75,
+          53.0
+        ],
+        [
+          317.75,
+          47.0
+        ],
+        [
+          377.5,
+          43.0
+        ],
+        [
+          436.75,
+          51.0
+        ]
+      ],
+      "trusted_money": [],
+      "wrong": [],
+      "missing": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ]
+    }
+  ],
+  "failures": [],
+  "source_sha": "893de067847d7b4741a92151c30bae87483710697c25d84b61c25afe9925bbe5",
+  "scope": "Actual local uncompressed reward OCR aftercontrast.4/.6/.8/1; manually established original notice values, unknown/missing reported, no live game or source image overwrite"
+}

@@ -1,0 +1,13 @@
+F
+======================================================================
+FAIL: test_width_change_updates_wrap_without_repeated_rebuild (__main__.StripTests.test_width_change_updates_wrap_without_repeated_rebuild)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_strip_resize.py", line 12, in test_width_change_updates_wrap_without_repeated_rebuild
+    self.assertEqual(int(a.lvl_strip._training_nodes[1].cget('wraplength')),485)
+AssertionError: 305 != 485
+
+----------------------------------------------------------------------
+Ran 1 test in 0.110s
+
+FAILED (failures=1)

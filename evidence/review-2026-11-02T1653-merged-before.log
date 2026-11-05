@@ -1,0 +1,32 @@
+..........FFF................
+======================================================================
+FAIL: test_merged_reward_messages_are_not_one_relabelled_amount (__main__.RewardsTests.test_merged_reward_messages_are_not_one_relabelled_amount) (text='You received EXP (+7) Bonus EXP for PARTY (+2)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_session_rewards.py", line 63, in test_merged_reward_messages_are_not_one_relabelled_amount
+    with self.subTest(text=text):self.assertIsNone(reward_event(text))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('bonus', 7) is not None
+
+======================================================================
+FAIL: test_merged_reward_messages_are_not_one_relabelled_amount (__main__.RewardsTests.test_merged_reward_messages_are_not_one_relabelled_amount) (text='You received EXP (+7) You have gained mesos (+10)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_session_rewards.py", line 63, in test_merged_reward_messages_are_not_one_relabelled_amount
+    with self.subTest(text=text):self.assertIsNone(reward_event(text))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('mesos', 7) is not None
+
+======================================================================
+FAIL: test_merged_reward_messages_are_not_one_relabelled_amount (__main__.RewardsTests.test_merged_reward_messages_are_not_one_relabelled_amount) (text='You have gained mesos (+10) You have gained mesos (+20)')
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_session_rewards.py", line 63, in test_merged_reward_messages_are_not_one_relabelled_amount
+    with self.subTest(text=text):self.assertIsNone(reward_event(text))
+                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: ('mesos', 10) is not None
+
+----------------------------------------------------------------------
+Ran 27 tests in 0.003s
+
+FAILED (failures=3)

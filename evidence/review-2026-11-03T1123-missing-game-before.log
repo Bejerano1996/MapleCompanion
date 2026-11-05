@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "<stdin>", line 5, in <module>
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work/umbrale-companion\companion_integration.py", line 155, in _on_synced
+    self._live_last_result={'_minimap_readable':bool(result.get('map'))}
+                                                     ^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'get'

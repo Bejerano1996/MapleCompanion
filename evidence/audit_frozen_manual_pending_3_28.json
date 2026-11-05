@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cases": 20,
+  "source_sha": "454251f62573988fd5d432e79a10b3a1dc2ff0e76c528cb9e02ec3c87f74ff88",
+  "scope": "ActualSetup explicitEXP2000 with oldHUD1016pending: oldmustnotoverwriteusercalibration, freshbaseline+3new14windows count42; save mocked,noOCR/game"
+}

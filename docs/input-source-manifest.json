@@ -1,0 +1,27 @@
+{
+  "target": "liavbateman/umbrale",
+  "source": "user supplied local files",
+  "original_files": {
+    "app.py": "c61227a32c96efd78e4c8de541bd338f4164471bed4419713a1e3ed7728654de",
+    "build.bat": "2186394575f52d63a6915b466c4d22ebe766d7988bc154915e937a1827d1f544",
+    "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",
+    "gps_image.py": "b493f610536a9209524cd939afe653d57852c2c7f929b17ca1436b599dec0928",
+    "guides.py": "cebc0d2b931c6553f1d9a45f99327a6ea7a446de33d0a86a68ced9f95f7afc86",
+    "leveling.py": "3a3f07648eeecd3dc565cf1fe15a922aa6e3ded726996936ba47de4f7955984e",
+    "make_icon.py": "c1ccb27f30cd6e22a137ce00cfc09e85a37b58b2093e795e3152dd70e43aeb7f",
+    "meowdb.py": "6023ea27a13293f49c5e1158286ff1bdef0e00fb63f95ab83605e48ea3763f12",
+    "minimap.py": "0d1f78d9a709b29e6837eb0955c15d42b90fc41b0d2681ec3aa1c4c33f3baedc",
+    "party_quests.py": "9fac6ceb563df214bc3ee6496607d2251a05d61dbce1cec4b0e4148971c31ecc",
+    "quest_rank.py": "64a26ce43760de47169198a9d82e8703658533f77cfbad9819d79fb882d7e998",
+    "requirements.txt": "ad126fbbc2c6e68a5521f5b1085b25e85b26e66161abc2f50c6b26f2e549bc1b",
+    "screen_ocr.py": "41e0dcad93c1ca3186b206643c07554334dfb96d35dc6ae29ffee59d5696b46b",
+    "start.bat": "5effbbe965c8c372695425b12f2710788518e5bb42063a1abee5de583c963a4d",
+    "sync.py": "51f74c4e783ffd96b14b0eabfcc884709625bc9be389ffae6088b1469461fdaa",
+    "trainer.py": "0af9830fb152e60d8202f5941a5b2b308c8ae133480ed7bdf8eeea6c58fbd20b",
+    "widgets.py": "d7a7a81358d5d5905c95fbb962e2486cddfaca64df2b30d1d289f26bfb349cba",
+    "icon.ico": "6948d208603fd5375b65ae262c6a4d4f6deefe2305dd9191e5585d01eae95330",
+    "icon.png": "a260e80b1cdce6bfe47342da8ee54dfd882c42bd83e6c960b6fda24d0821fdc0",
+    "README.md": "7c6cdbaa921cdc5a73837929afac30635c07c7f505880f9d0308d46b686bf368",
+    "CHANGELOG.md": "662d4e9709cc4ad1154bd845cca22c86438de5aad07b631d2d0ef555c781844f"
+  }
+}

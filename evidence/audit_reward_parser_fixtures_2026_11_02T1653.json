@@ -1,0 +1,31 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "fixture": "session-rewards-fixture.png",
+      "brightness": 1,
+      "totals": {
+        "exp": 9,
+        "mesos": 27
+      }
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "brightness": 1.2,
+      "totals": {
+        "exp": 2,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "brightness": 1,
+      "totals": {
+        "exp": 4,
+        "mesos": 0
+      }
+    }
+  ],
+  "source_sha": "91c91984263e7c2de59af074f373f9c9b0c862d76a20cd36cc24cd816dbe931d",
+  "scope": "Preservation of existing known observed fixture totals,not full actual reward recovery; offline supplied images"
+}

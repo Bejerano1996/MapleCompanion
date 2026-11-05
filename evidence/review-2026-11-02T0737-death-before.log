@@ -1,0 +1,13 @@
+F.........
+======================================================================
+FAIL: test_death_does_not_recredit_previously_covered_late_bonus (__main__.TimingTests.test_death_does_not_recredit_previously_covered_late_bonus)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_reconciliation.py", line 71, in test_death_does_not_recredit_previously_covered_late_bonus
+    self.assertEqual(s['exp'],-100)
+AssertionError: -98 != -100
+
+----------------------------------------------------------------------
+Ran 10 tests in 0.299s
+
+FAILED (failures=1)

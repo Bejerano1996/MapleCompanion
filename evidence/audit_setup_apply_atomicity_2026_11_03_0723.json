@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "invalid_apply_cases": 11,
+  "valid_apply_cases": 1,
+  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
+  "scope": "Own withdrawn Tk actualtrainingSetup/Apply invalidinputs preservestate; onevalidApplychangesinmemoryonly,mocked save, no realfile/OCR/game"
+}

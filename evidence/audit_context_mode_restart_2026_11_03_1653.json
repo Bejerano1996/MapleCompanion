@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "cases": 20,
+  "off_on_cycles": 20,
+  "old_context_rejected": 20,
+  "tk_errors": [],
+  "source_sha": "3b4aa8eeb013ebb9dbad774de60fc14403fa05008e289cfcd7d4aabf3f83cea8",
+  "scope": "Full isolated native CompanionApp real general sync dispatch/result pump/character accept and parsed HUD. Controlled callbacks, temporary state, no capture/network/hotkeys/live game."
+}

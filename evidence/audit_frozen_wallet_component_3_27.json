@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cases": 400,
+  "scope": "Repeated wallet restarts exclude old balance while preserving same-capture EXP9/party2, fresh wallet baseline and new14EXP/party3 counted once; wallet ignores logmesos999; synthetic only",
+  "source_sha": "139dbfeb47f7c1b62c113d3917235a0e480a183284e528a203b210517958c5ae"
+}

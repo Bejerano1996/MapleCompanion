@@ -1,0 +1,13 @@
+......F...........
+======================================================================
+FAIL: test_decimal_personal_yield_exact_boundary (__main__.TrainingTests.test_decimal_personal_yield_exact_boundary)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_model.py", line 30, in test_decimal_personal_yield_exact_boundary
+    self.assertEqual(r['kills'],15)
+AssertionError: 16 != 15
+
+----------------------------------------------------------------------
+Ran 18 tests in 0.004s
+
+FAILED (failures=1)

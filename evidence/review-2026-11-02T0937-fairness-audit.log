@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_retry_fairness_2026_11_02.py", line 22, in <module>
+    assert total<=expected,(n,phase,blocked,total,values)
+           ^^^^^^^^^^^^^^^
+AssertionError: (3, 4, True, 69, [23, 23, 23])

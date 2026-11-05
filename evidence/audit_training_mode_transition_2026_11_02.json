@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "from_auto": true,
+      "fresh_context": true,
+      "next_available": true
+    },
+    {
+      "from_auto": true,
+      "fresh_context": false,
+      "next_available": true
+    },
+    {
+      "from_auto": false,
+      "fresh_context": true,
+      "next_available": true
+    },
+    {
+      "from_auto": false,
+      "fresh_context": false,
+      "next_available": false
+    }
+  ],
+  "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+  "scope": "Synthetic mode-switch learned-yield scoping with identical target/party where possible,not livegameplay"
+}

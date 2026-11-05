@@ -1,0 +1,261 @@
+{
+  "ok": true,
+  "cases": 36,
+  "max_label_height": 57,
+  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
+  "cases_geometry": [
+    {
+      "scale": 1.0,
+      "panel_width": 260,
+      "mode": 0,
+      "label_reqwidth": 214,
+      "label_reqheight": 32
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 260,
+      "mode": 1,
+      "label_reqwidth": 221,
+      "label_reqheight": 45
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 260,
+      "mode": 2,
+      "label_reqwidth": 222,
+      "label_reqheight": 32
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 280,
+      "mode": 0,
+      "label_reqwidth": 235,
+      "label_reqheight": 19
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 280,
+      "mode": 1,
+      "label_reqwidth": 241,
+      "label_reqheight": 45
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 280,
+      "mode": 2,
+      "label_reqwidth": 236,
+      "label_reqheight": 32
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 340,
+      "mode": 0,
+      "label_reqwidth": 235,
+      "label_reqheight": 19
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 340,
+      "mode": 1,
+      "label_reqwidth": 288,
+      "label_reqheight": 32
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 340,
+      "mode": 2,
+      "label_reqwidth": 300,
+      "label_reqheight": 19
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 520,
+      "mode": 0,
+      "label_reqwidth": 235,
+      "label_reqheight": 19
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 520,
+      "mode": 1,
+      "label_reqwidth": 479,
+      "label_reqheight": 19
+    },
+    {
+      "scale": 1.0,
+      "panel_width": 520,
+      "mode": 2,
+      "label_reqwidth": 300,
+      "label_reqheight": 19
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 260,
+      "mode": 0,
+      "label_reqwidth": 220,
+      "label_reqheight": 36
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 260,
+      "mode": 1,
+      "label_reqwidth": 227,
+      "label_reqheight": 51
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 260,
+      "mode": 2,
+      "label_reqwidth": 196,
+      "label_reqheight": 36
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 280,
+      "mode": 0,
+      "label_reqwidth": 241,
+      "label_reqheight": 21
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 280,
+      "mode": 1,
+      "label_reqwidth": 248,
+      "label_reqheight": 51
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 280,
+      "mode": 2,
+      "label_reqwidth": 243,
+      "label_reqheight": 36
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 340,
+      "mode": 0,
+      "label_reqwidth": 241,
+      "label_reqheight": 21
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 340,
+      "mode": 1,
+      "label_reqwidth": 295,
+      "label_reqheight": 36
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 340,
+      "mode": 2,
+      "label_reqwidth": 307,
+      "label_reqheight": 21
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 520,
+      "mode": 0,
+      "label_reqwidth": 241,
+      "label_reqheight": 21
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 520,
+      "mode": 1,
+      "label_reqwidth": 471,
+      "label_reqheight": 36
+    },
+    {
+      "scale": 1.15,
+      "panel_width": 520,
+      "mode": 2,
+      "label_reqwidth": 307,
+      "label_reqheight": 21
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 260,
+      "mode": 0,
+      "label_reqwidth": 217,
+      "label_reqheight": 40
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 260,
+      "mode": 1,
+      "label_reqwidth": 225,
+      "label_reqheight": 57
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 260,
+      "mode": 2,
+      "label_reqwidth": 215,
+      "label_reqheight": 40
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 280,
+      "mode": 0,
+      "label_reqwidth": 247,
+      "label_reqheight": 40
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 280,
+      "mode": 1,
+      "label_reqwidth": 225,
+      "label_reqheight": 57
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 280,
+      "mode": 2,
+      "label_reqwidth": 215,
+      "label_reqheight": 40
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 340,
+      "mode": 0,
+      "label_reqwidth": 272,
+      "label_reqheight": 23
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 340,
+      "mode": 1,
+      "label_reqwidth": 286,
+      "label_reqheight": 40
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 340,
+      "mode": 2,
+      "label_reqwidth": 303,
+      "label_reqheight": 40
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 520,
+      "mode": 0,
+      "label_reqwidth": 272,
+      "label_reqheight": 23
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 520,
+      "mode": 1,
+      "label_reqwidth": 440,
+      "label_reqheight": 40
+    },
+    {
+      "scale": 1.3,
+      "panel_width": 520,
+      "mode": 2,
+      "label_reqwidth": 341,
+      "label_reqheight": 23
+    }
+  ],
+  "scope": "Own withdrawnTkproductionstrip requestedgeometry,hugecounter/longname/unknowntext,scales1/1.15/1.3,width260\u2013520; not screenshot or fullapp/game"
+}

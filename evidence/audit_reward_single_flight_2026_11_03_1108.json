@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "completed_captures": 500,
+  "blocked_poll_requests": 17323,
+  "generation_resets_while_busy": 72,
+  "max_pending_captures": 1,
+  "source_sha": "586afc05fd42a71a44fbf7a541bf0399d1940236d01c45b4ea0601366d77403e",
+  "scope": "Productionpollscheduler with heldcallback and20\u201350rapidpolls perread, optionalreaderreset; single-flight prevents overlapping rewardcaptures. Mockedasyncdelivery,not actualthreads/OCR/livegame"
+}

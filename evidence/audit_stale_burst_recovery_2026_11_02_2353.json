@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "cases": 500,
+  "rejected_callbacks": 1667,
+  "source_sha": "b3d235543353b54936d06e81e5934fae14b10d7cdbcb6bbb703c9486757ca17c",
+  "scope": "Synthetic actual callbacks:1\u20136consecutive stale results preserve accounted rewards, timely same visible stack recovers new rewards once, repeated reads stay stable; no OCR/livegame"
+}

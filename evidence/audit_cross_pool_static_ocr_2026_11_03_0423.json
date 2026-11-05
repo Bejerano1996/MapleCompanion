@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "streams": 1000,
+  "polls": 99000,
+  "cached_real_ocr_variants": 30,
+  "failures": [],
+  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
+  "scope": "Cross-pool replay of current-release actualOCR18translation+12brightnessvariants; unchangedoldmessages, no new OCR/livegame"
+}

@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_manual_exp_pending_2026_11_03_0808.py", line 33, in <module>
+    assert app.state['character_exp']['exp']==2000,(initial,seed,app.state['character_exp'])
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: (False, 0, {'level': 27, 'exp': 1016})

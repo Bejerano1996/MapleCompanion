@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "seeds": 200,
+  "valid_steps": 10000,
+  "rejected_or_unconfirmed_injections": 2800,
+  "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+  "scope": "Synthetic formatted HUD text->parser->accountant with gains,losses,levelup and unsupported/outlier levels; no OCR image recognition or livegameplay"
+}

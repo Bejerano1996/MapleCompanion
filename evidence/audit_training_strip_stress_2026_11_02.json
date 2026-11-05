@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "updates": 1500,
+  "median_render_ms": 0.038,
+  "p99_render_ms": 0.106,
+  "fonts": 17,
+  "images": 4,
+  "source_sha": "402c8487ebe91cf67c3300edb95ac91bee39ab8c64dbb5c85b5ea62d6709c812",
+  "scope": "Isolated native Tk strip with simulated width/EXP updates; render-call timings exclude full application and OCR,not live gameplay"
+}

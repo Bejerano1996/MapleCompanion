@@ -1,0 +1,91 @@
+{
+  "ok": true,
+  "cases": [
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "scale": 1,
+      "expected": "2",
+      "found": "2",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "scale": 0.85,
+      "expected": "2",
+      "found": "2",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "scale": 0.7,
+      "expected": "2",
+      "found": null,
+      "status": "unavailable"
+    },
+    {
+      "fixture": "live_frame_ant_tunnel2.png",
+      "scale": 0.5,
+      "expected": "2",
+      "found": null,
+      "status": "unavailable"
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "scale": 1,
+      "expected": "2",
+      "found": "2",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "scale": 0.85,
+      "expected": "2",
+      "found": "2",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "scale": 0.7,
+      "expected": "2",
+      "found": "2",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_frame_1920.png",
+      "scale": 0.5,
+      "expected": "2",
+      "found": null,
+      "status": "unavailable"
+    },
+    {
+      "fixture": "live_exp_2560.png",
+      "scale": 1,
+      "expected": "3",
+      "found": "3",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_exp_2560.png",
+      "scale": 0.85,
+      "expected": "3",
+      "found": "3",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_exp_2560.png",
+      "scale": 0.7,
+      "expected": "3",
+      "found": "3",
+      "status": "correct"
+    },
+    {
+      "fixture": "live_exp_2560.png",
+      "scale": 0.5,
+      "expected": "3",
+      "found": null,
+      "status": "unavailable"
+    }
+  ],
+  "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
+  "scope": "Local supplied fullgame screenshots with synthetic downscaling; unknown is distinguished from wrong; no livegameplay"
+}

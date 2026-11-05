@@ -1,0 +1,37 @@
+F.FFF..
+======================================================================
+FAIL: test_accountant_does_not_restore_retired_loss (__main__.StableHudTests.test_accountant_does_not_restore_retired_loss)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_stable_hud.py", line 37, in test_accountant_does_not_restore_retired_loss
+    self.assertEqual(s['exp'],65)
+AssertionError: 84 != 65
+
+======================================================================
+FAIL: test_new_notices_survive_old_difference_retirement (__main__.StableHudTests.test_new_notices_survive_old_difference_retirement)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_stable_hud.py", line 14, in test_new_notices_survive_old_difference_retirement
+    self.assertEqual(a.feed(dict(exp=9,kills=1,party_exp=2),0,7),9)
+AssertionError: 28 != 9
+
+======================================================================
+FAIL: test_old_difference_is_retired_after_stable_hud (__main__.StableHudTests.test_old_difference_is_retired_after_stable_hud)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_stable_hud.py", line 10, in test_old_difference_is_retired_after_stable_hud
+    self.assertEqual(a.feed({},0,6.001),0)
+AssertionError: 19 != 0
+
+======================================================================
+FAIL: test_positive_hud_motion_restarts_stable_witness (__main__.StableHudTests.test_positive_hud_motion_restarts_stable_witness)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_stable_hud.py", line 25, in test_positive_hud_motion_restarts_stable_witness
+    self.assertEqual(a.feed({},0,10.001),0)
+AssertionError: 15 != 0
+
+----------------------------------------------------------------------
+Ran 7 tests in 0.002s
+
+FAILED (failures=4)

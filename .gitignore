@@ -1,0 +1,16 @@
+build/
+cache/
+state.json
+__pycache__/
+*.pyc
+tests/*.json
+show.request
+
+.env
+.env.*
+.venv/
+.build/
+dist/
+*.exe
+_internal/
+_local_state/

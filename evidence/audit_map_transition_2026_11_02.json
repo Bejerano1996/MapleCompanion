@@ -1,0 +1,27 @@
+{
+  "ok": true,
+  "results": [
+    {
+      "path": "new_map",
+      "observations": 4,
+      "fresh_samples_required": 3
+    },
+    {
+      "path": "unread_title",
+      "observations": 3,
+      "fresh_samples_required": 3
+    },
+    {
+      "path": "game_unavailable",
+      "observations": 3,
+      "fresh_samples_required": 3
+    },
+    {
+      "path": "flickering_titles",
+      "observations": 5,
+      "fresh_samples_required": 3
+    }
+  ],
+  "source_sha": "402c8487ebe91cf67c3300edb95ac91bee39ab8c64dbb5c85b5ea62d6709c812",
+  "scope": "Synthetic ContextTracker-to-target-to-yield integration, not live gameplay"
+}

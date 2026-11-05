@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "cases": 200,
+  "identical_observed_prefixes": 200,
+  "fresh_hud_correct": true,
+  "persistent_loss_recredit_cases": 0,
+  "source_sha": "b3d235543353b54936d06e81e5934fae14b10d7cdbcb6bbb703c9486757ca17c",
+  "conclusion": "Repeated stable HUD retires witnessed old remainder; both loss and lag hypotheses converge after authoritative recovery. Five-second stable-HUD grace is a bounded policy: longer HUD lag can temporarily undercount until next accepted bar reading. No claim of perfect ambiguity inference.",
+  "scope": "Offline alternate-ground-truth simulations; no livegame/OCR",
+  "examples": [
+    {
+      "gain": 22,
+      "ambiguous": 1,
+      "loss_confirmed": 21,
+      "loss_recredited": 21,
+      "lag_confirmed": 22,
+      "lag_final": 22
+    },
+    {
+      "gain": 36,
+      "ambiguous": 15,
+      "loss_confirmed": 21,
+      "loss_recredited": 21,
+      "lag_confirmed": 36,
+      "lag_final": 36
+    },
+    {
+      "gain": 94,
+      "ambiguous": 35,
+      "loss_confirmed": 59,
+      "loss_recredited": 59,
+      "lag_confirmed": 94,
+      "lag_final": 94
+    }
+  ]
+}

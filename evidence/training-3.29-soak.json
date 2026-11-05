@@ -1,0 +1,58 @@
+{
+  "running": false,
+  "source_sha": "893de067847d7b4741a92151c30bae87483710697c25d84b61c25afe9925bbe5",
+  "target_seconds": 120.0,
+  "ok": true,
+  "latest": {
+    "seconds": 120.0,
+    "frames": 575,
+    "exp": 5157,
+    "party_seen": 1126,
+    "mesos_observed": 8355,
+    "mesos_true": 8605,
+    "fonts": 17,
+    "images": 26,
+    "jobs": 6,
+    "callback_errors": 0
+  },
+  "samples": [
+    {
+      "seconds": 30.6,
+      "frames": 1,
+      "exp": 0,
+      "party_seen": 0,
+      "mesos_observed": 0,
+      "mesos_true": 0,
+      "fonts": 17,
+      "images": 26,
+      "jobs": 7,
+      "callback_errors": 0
+    },
+    {
+      "seconds": 90.6,
+      "frames": 385,
+      "exp": 3456,
+      "party_seen": 756,
+      "mesos_observed": 5601,
+      "mesos_true": 5764,
+      "fonts": 17,
+      "images": 26,
+      "jobs": 6,
+      "callback_errors": 0
+    },
+    {
+      "seconds": 120.0,
+      "frames": 575,
+      "exp": 5157,
+      "party_seen": 1126,
+      "mesos_observed": 8355,
+      "mesos_true": 8605,
+      "fonts": 17,
+      "images": 26,
+      "jobs": 6,
+      "callback_errors": 0
+    }
+  ],
+  "errors": [],
+  "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
+}

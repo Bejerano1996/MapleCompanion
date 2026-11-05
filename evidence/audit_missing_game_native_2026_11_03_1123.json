@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "missing_game_callbacks": 51,
+  "subsequent_result_processed": true,
+  "source_sha": "0ce4f54ed09ba003d6cc5aeba8b952ee3cc779337207b7646b40d3379d8314a3",
+  "scope": "Isolated fullnativeCompanionApp,backgroundcapture/hotkeys/networkdisabled,tempstateonly; realmissinggamesync+sharedresultpump, no livegame"
+}

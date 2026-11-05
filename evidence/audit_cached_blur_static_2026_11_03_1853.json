@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "streams": 200,
+  "polls": 19800,
+  "failures": [],
+  "cached_blur_ocr_sha256": "a8781b10cf036615954b39b8c079f66d263029bfbf6f784997217da68496ce84",
+  "source_sha": "893de067847d7b4741a92151c30bae87483710697c25d84b61c25afe9925bbe5",
+  "scope": "Synthetic unchanged-old-image sequence replay of cached actual uncompressed Gaussianblur OCR; blur varies independently eachpoll, syntheticpixelcondition. Anycredit is a stress falsepositive, not livegame evidence."
+}

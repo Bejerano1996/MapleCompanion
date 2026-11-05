@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cases": 1000,
+  "scope": "Old witnessed pending plus newer intervening notices, strict5secondboundary, later HUDcredit and no fallbackduplicate; offline only",
+  "source_sha": "d8019221f8cfbbea29c17a170f0cb6ab3243d15e25e86a91b531333449c7cf17"
+}

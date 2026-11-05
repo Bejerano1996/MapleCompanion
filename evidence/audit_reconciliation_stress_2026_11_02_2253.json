@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "cycles": 20000,
+  "feed_calls": 120000,
+  "elapsed_seconds": 0.6971008999971673,
+  "module_retained_growth_bytes": 0,
+  "traced_peak_bytes": 39632,
+  "fields": 6,
+  "sampled_call_microseconds_median": 5.983333333333333,
+  "sampled_call_microseconds_p99": 12.8,
+  "source_sha": "807ca80b844d78489346e11a6ef1b6bc7b8047e9c4ac34891e3947405747eb25",
+  "scope": "Synthetic reconciliation-only stress, timing includes tracemalloc and cycle assertions; not OCR, fullapp latency or livegame"
+}

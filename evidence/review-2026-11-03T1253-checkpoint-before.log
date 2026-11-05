@@ -1,0 +1,5 @@
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_general_sync_checkpoint_confirmation_2026_11_03_1253.py", line 38, in <module>
+    assert a.state['character_exp']['level']==27, 'Old confirmation survived contradictory accepted level'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: Old confirmation survived contradictory accepted level

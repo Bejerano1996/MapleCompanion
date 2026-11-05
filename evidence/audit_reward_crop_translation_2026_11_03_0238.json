@@ -1,0 +1,726 @@
+{
+  "ok": false,
+  "cases": [
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        0,
+        0
+      ],
+      "events": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        1,
+        0
+      ],
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        0,
+        1
+      ],
+      "events": [
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          null
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        2,
+        3
+      ],
+      "events": [
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        3,
+        2
+      ],
+      "events": [
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        4,
+        4
+      ],
+      "events": [
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        8,
+        4
+      ],
+      "events": [
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        4,
+        8
+      ],
+      "events": [
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ]
+    },
+    {
+      "fixture": "session-rewards-fixture.png",
+      "padding": [
+        12,
+        12
+      ],
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "mesos",
+          10
+        ],
+        [
+          "mesos",
+          7
+        ],
+        [
+          "mesos",
+          10
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        0,
+        0
+      ],
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        1,
+        0
+      ],
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        0,
+        1
+      ],
+      "events": [
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        2,
+        3
+      ],
+      "events": [
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "bonus",
+          2
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        3,
+        2
+      ],
+      "events": [
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        4,
+        4
+      ],
+      "events": [
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        8,
+        4
+      ],
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "bonus",
+          2
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        4,
+        8
+      ],
+      "events": [
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "bonus",
+          2
+        ]
+      ]
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        12,
+        12
+      ],
+      "events": [
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [],
+      "missing_vs_baseline": [
+        [
+          "bonus",
+          2
+        ]
+      ]
+    }
+  ],
+  "unexpected": [
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        0,
+        0
+      ],
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        1,
+        0
+      ],
+      "events": [
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ],
+      "missing_vs_baseline": []
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "padding": [
+        0,
+        1
+      ],
+      "events": [
+        [
+          "bonus",
+          null
+        ],
+        [
+          "exp",
+          null
+        ],
+        [
+          "bonus",
+          2
+        ],
+        [
+          "exp",
+          7
+        ],
+        [
+          "bonus",
+          2
+        ]
+      ],
+      "unexpected_vs_baseline": [
+        [
+          "exp",
+          7
+        ]
+      ],
+      "missing_vs_baseline": []
+    }
+  ],
+  "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+  "scope": "Recorded reward images with translation via constant12pixelborder, identical pixels/content; compare concrete amounts against same-image baseline, missing rows explicit; no livegame"
+}

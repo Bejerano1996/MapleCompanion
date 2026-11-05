@@ -1,0 +1,7 @@
+{
+  "ok": true,
+  "seeds": 200,
+  "assertions": 8000,
+  "source_sha": "6942d26733f82f3d872f7343dfe89d0abafdf2c21539b17ba53b0a7e26597831",
+  "method": "Synthetic interleaved level outliers and valid HUD readings; no live gameplay"
+}

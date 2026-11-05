@@ -1,0 +1,20 @@
+{
+  "ok": true,
+  "cases": 100,
+  "monotonic_gaps": [
+    6,
+    60
+  ],
+  "wall_clock_jumps": [
+    -86400,
+    86400,
+    -3600,
+    3600,
+    0
+  ],
+  "stale_rejected": 50,
+  "normal_confirmed": 50,
+  "tk_errors": [],
+  "source_sha": "454251f62573988fd5d432e79a10b3a1dc2ff0e76c528cb9e02ec3c87f74ff88",
+  "scope": "Full isolated native CompanionApp real general sync dispatch/result pump/character accept and parsed HUD. Controlled callbacks, temporary state, no capture/network/hotkeys/live game."
+}

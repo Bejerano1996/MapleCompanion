@@ -1,0 +1,13 @@
+...F...
+======================================================================
+FAIL: test_multiple_pending_rows_each_get_confirmation_budget (__main__.RetryTests.test_multiple_pending_rows_each_get_confirmation_budget)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_reward_row_retry.py", line 45, in test_multiple_pending_rows_each_get_confirmation_budget
+    self.assertEqual(total,17)
+AssertionError: 7 != 17
+
+----------------------------------------------------------------------
+Ran 7 tests in 2.228s
+
+FAILED (failures=1)

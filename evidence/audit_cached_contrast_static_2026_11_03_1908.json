@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "streams": 200,
+  "polls": 19800,
+  "failures": [],
+  "cached_contrast_ocr_sha256": "69af6506a78ad094c3e5dd1958440e3cd185f348d62f7b2a0d762a031f3aadc0",
+  "source_sha": "893de067847d7b4741a92151c30bae87483710697c25d84b61c25afe9925bbe5",
+  "scope": "Synthetic unchanged-old-image sequence replay of cached actual uncompressed contrast OCR; contrast varies independently eachpoll, syntheticpixelcondition. Anycredit is a stress falsepositive, not livegame evidence."
+}

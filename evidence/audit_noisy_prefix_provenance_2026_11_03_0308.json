@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cases": 800,
+  "source_sha": "518db60dc2ea6ae0f46c5bccdad09915a631aa084a19a29d8e4dea11ea67a0f9",
+  "scope": "Actual noisy-prefix parsing then orderedbonusrefinement/insertion/trailing and HUDoutage/recovery; no livegame"
+}

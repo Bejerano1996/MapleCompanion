@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "datasets": 500,
+  "sessions": 15000,
+  "ranked_comparisons": 1500,
+  "source_sha": "b9887a696d9ffd664c0084b59002af67a1a33f7cae72567619c34a67b4df253f",
+  "scope": "Synthetic completed history, mixedwallet/pickup elapsed epochs,zero-money-time entries,no double spending,negative netEXP,moneyweightedrates; no nativeUI/OCR/game"
+}

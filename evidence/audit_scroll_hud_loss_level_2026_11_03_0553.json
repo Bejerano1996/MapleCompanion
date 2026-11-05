@@ -1,0 +1,602 @@
+{
+  "ok": true,
+  "cases": 500,
+  "hud_recovery_exact_cases": 500,
+  "partial_yield_samples": 0,
+  "polls": 30000,
+  "overcounts": [],
+  "under_or_inexact": [
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 0,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 1,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 7,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 9,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 12,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 13,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 17,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 19,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 21,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 28,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 31,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 37,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 40,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 46,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 53,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 70,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 73,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 83,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 84,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 89,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 92,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 94,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 98,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 100,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 101,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 105,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 108,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 113,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 114,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 121,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 127,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 131,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 132,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 142,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 146,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 147,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 151,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 156,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 157,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 162,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 165,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 172,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 177,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 178,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 179,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 194,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 198,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 205,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 220,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 225,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 229,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 231,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 234,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 235,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 236,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 237,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 238,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 241,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    },
+    {
+      "fixture": "party-rewards-fixture.png",
+      "seed": 245,
+      "totals": {
+        "exp": 0,
+        "kills": 0,
+        "party_exp": 0,
+        "mesos": 17
+      }
+    }
+  ],
+  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
+  "scope": "CachedoldOCR+syntheticnewscroll/HUDoutage, recovery with netlossor27to28levelcrossing, exactnet and no partial/crosslevelyieldlearning; no livegame"
+}

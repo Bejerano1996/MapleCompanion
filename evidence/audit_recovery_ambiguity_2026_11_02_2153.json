@@ -1,0 +1,36 @@
+{
+  "ok": true,
+  "cases": 200,
+  "identical_observed_prefixes": 200,
+  "fresh_hud_correct": true,
+  "persistent_loss_recredit_cases": 200,
+  "source_sha": "2bcd1b4458796d402053dc38bad3657784f9e086585cd28b86a5bb9ce03a2bad",
+  "conclusion": "Same observed notices/HUD prefix can mean loss or HUDlag. Clearing all unmatched pending immediately would lose valid lagging gains; current fallback overstates hiddenloss until next authoritative HUD. Fresh HUD reads correct both totals, but unchanged subsequent HUD reads do NOT retire old unmatched pending; after another outage loss is recredited again. Repeated stable HUD evidence offers a bounded finalization policy to test next. Do not claim ambiguity solved.",
+  "scope": "Offline alternate-ground-truth simulations; no livegame/OCR",
+  "examples": [
+    {
+      "gain": 22,
+      "ambiguous": 1,
+      "loss_confirmed": 21,
+      "loss_recredited": 22,
+      "lag_confirmed": 22,
+      "lag_final": 22
+    },
+    {
+      "gain": 36,
+      "ambiguous": 15,
+      "loss_confirmed": 21,
+      "loss_recredited": 36,
+      "lag_confirmed": 36,
+      "lag_final": 36
+    },
+    {
+      "gain": 94,
+      "ambiguous": 35,
+      "loss_confirmed": 59,
+      "loss_recredited": 94,
+      "lag_confirmed": 94,
+      "lag_final": 94
+    }
+  ]
+}

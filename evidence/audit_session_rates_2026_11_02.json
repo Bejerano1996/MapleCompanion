@@ -1,0 +1,6 @@
+{
+  "ok": true,
+  "cycles": 2000,
+  "source_sha": "ed6e39059b11750976c8a209de8b13021b3bfb881e1ca6ef00d4998637290c69",
+  "scope": "Synthetic active/pause/save/reload timing and pickup-mode rates; no real saved-state writes or livegameplay"
+}

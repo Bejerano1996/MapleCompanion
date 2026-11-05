@@ -1,0 +1,41 @@
+....................FFFF
+======================================================================
+FAIL: test_unsupported_explicit_hud_level_never_falls_back_to_another_level (__main__.TrainingTests.test_unsupported_explicit_hud_level_never_falls_back_to_another_level) (level=0)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_model.py", line 12, in test_unsupported_explicit_hud_level_never_falls_back_to_another_level
+    with self.subTest(level=level):self.assertIsNone(character_reading([f'LV. {level}','EXP. 31,833 [50.00%]']))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'level': 27, 'exp': 31833, 'percent': 50.0, 'need': 63666, 'source': 'HUD'} is not None
+
+======================================================================
+FAIL: test_unsupported_explicit_hud_level_never_falls_back_to_another_level (__main__.TrainingTests.test_unsupported_explicit_hud_level_never_falls_back_to_another_level) (level=100)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_model.py", line 12, in test_unsupported_explicit_hud_level_never_falls_back_to_another_level
+    with self.subTest(level=level):self.assertIsNone(character_reading([f'LV. {level}','EXP. 31,833 [50.00%]']))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'level': 27, 'exp': 31833, 'percent': 50.0, 'need': 63666, 'source': 'EXP+percent'} is not None
+
+======================================================================
+FAIL: test_unsupported_explicit_hud_level_never_falls_back_to_another_level (__main__.TrainingTests.test_unsupported_explicit_hud_level_never_falls_back_to_another_level) (level=200)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_model.py", line 12, in test_unsupported_explicit_hud_level_never_falls_back_to_another_level
+    with self.subTest(level=level):self.assertIsNone(character_reading([f'LV. {level}','EXP. 31,833 [50.00%]']))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'level': 27, 'exp': 31833, 'percent': 50.0, 'need': 63666, 'source': 'EXP+percent'} is not None
+
+======================================================================
+FAIL: test_unsupported_explicit_hud_level_never_falls_back_to_another_level (__main__.TrainingTests.test_unsupported_explicit_hud_level_never_falls_back_to_another_level) (level=999)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_model.py", line 12, in test_unsupported_explicit_hud_level_never_falls_back_to_another_level
+    with self.subTest(level=level):self.assertIsNone(character_reading([f'LV. {level}','EXP. 31,833 [50.00%]']))
+                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: {'level': 27, 'exp': 31833, 'percent': 50.0, 'need': 63666, 'source': 'EXP+percent'} is not None
+
+----------------------------------------------------------------------
+Ran 21 tests in 0.005s
+
+FAILED (failures=4)

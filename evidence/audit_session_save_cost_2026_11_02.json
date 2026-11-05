@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "saves": 50,
+  "synthetic_history": 50,
+  "state_bytes": 109082,
+  "median_ms": 4.78,
+  "p95_ms": 5.114,
+  "max_ms": 5.495,
+  "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
+  "scope": "Actual save_state wrapper/atomic file writes on temporary synthetic state,no realstatewrites/UI/gameinteraction; filesystem cache affects timings"
+}

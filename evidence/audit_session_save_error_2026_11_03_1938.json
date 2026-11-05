@@ -1,0 +1,12 @@
+{
+  "ok": true,
+  "cases": 20,
+  "error_modes": [
+    "PermissionError",
+    "OSError"
+  ],
+  "retry_succeeded": true,
+  "in_memory_session_identity_preserved": true,
+  "source_sha": "893de067847d7b4741a92151c30bae87483710697c25d84b61c25afe9925bbe5",
+  "scope": "Actual CompanionApp.save_state wrapper+base, object without Tk; injected write errors then real atomic tempfile retry, no user state/game"
+}
