@@ -61,6 +61,7 @@ def utility_poll_rewards(self):
     hide=[window_rect(w) for w in windows if w.winfo_viewable()]
     tracker=self._reward_tracker;accountant=self._training_accountant;self._reward_busy=True
     gain_context=self.training_gain_context()
+    wallet_scope=getattr(self,'_wallet_scope',None)
     capture_started=time.monotonic()
     read_status=time.monotonic()-getattr(self,'_training_last_hud',0)>=1
     if read_status:self._training_last_hud=time.monotonic()
@@ -71,7 +72,7 @@ def utility_poll_rewards(self):
         reading=result.get('character') if isinstance(result,dict) else None
         self._reward_busy=False
         current=self.state['utility_session']
-        if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
+        if session_token(current)!=token or getattr(self,'_reward_token',None)!=token or getattr(self,'_training_accountant',None) is not accountant:return
         if time.monotonic()-capture_started>15:
             # A delayed capture cannot establish fresh HUD or party evidence.
             # Leave accounting untouched; a timely retry can reconcile it.
@@ -86,7 +87,7 @@ def utility_poll_rewards(self):
         previous_character=accountant.character
         changed=accountant.feed(current,token,events,reading,time.monotonic())
         wallet=result.get('wallet') if isinstance(result,dict) else None
-        if wallet is not None and current.get('wallet_auto'):
+        if wallet is not None and current.get('wallet_auto') and wallet_scope==getattr(self,'_wallet_scope',None):
             from wallet_model import checkpoint
             if getattr(self,'_wallet_scope',None)!=token:
                 current.update(wallet_start=wallet,wallet_offset=current.get('wallet_net',0))
@@ -238,7 +239,7 @@ def utility_render_session(self, parent):
         ui_button(dialog,'Apply wallet checkpoint',save_wallet,primary=True).pack(fill='x',padx=16,pady=12)
         def start_wallet():
             self.state['utility_session'].update(wallet_auto=True,money_mode='wallet',wallet_start=None,wallet_current=None,wallet_net=0,wallet_offset=0,wallet_elapsed_anchor=None,mesos=0)
-            self._wallet_scope=None
+            self._wallet_scope=object()  # invalidate in-flight balances even on repeated restarts
             self.save_state();refresh();dialog.destroy();self.utility_poll_rewards()
         ui_button(dialog,'Start automatic wallet reading',start_wallet,tip='Keep Item Inventory open in the upper-right of the game; net balance starts at the first verified reading').pack(fill='x',padx=16,pady=8)
     ui_button(parent,'Mesos · wallet checkpoints',wallet_dialog,compact=True,tip='Measure net balance directly; avoids missed loot notices').pack(anchor='w',padx=20,pady=4)
