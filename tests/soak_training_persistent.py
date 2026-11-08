@@ -6,8 +6,8 @@ import tkinter as tk
 import app,leveling
 from companion_widgets import ui_walk_widgets
 from companion_feature_model import utility_session_toggle
-parser=argparse.ArgumentParser();parser.add_argument('--minutes',type=float,default=150);args=parser.parse_args()
-project=Path(__file__).resolve().parents[1];report=project.parent/'training-persistent-soak.json'
+parser=argparse.ArgumentParser();parser.add_argument('--minutes',type=float,default=150);parser.add_argument('--report',type=Path);args=parser.parse_args()
+project=Path(__file__).resolve().parents[1];report=args.report.resolve() if args.report else project.parent/'training-persistent-soak.json'
 app.App.sync_from_game=lambda *a,**k:None;app.App.prefetch=lambda *a,**k:None;app.App.run_bg=lambda *a,**k:None
 class NoHotkey:
  def __init__(self,*a,**k):pass
@@ -17,7 +17,7 @@ source_sha=__import__('hashlib').sha256(b''.join(p.read_bytes() for p in sorted(
 start=time.monotonic();errors=[];frame=0;history=[];expected_money=0;samples=[];baseline=None;had_gap=False
 with tempfile.TemporaryDirectory(prefix='persistent-training-',dir=project.parent) as folder:
  app.STATE_FILE=str(Path(folder)/'state.json')
- Path(app.STATE_FILE).write_text(json.dumps({'auto_sync':False,'auto_on_v2':True,'level':27,'active':[],'training_target':'23','training_personal_gain':9,'map':'010005073'}))
+ Path(app.STATE_FILE).write_text(json.dumps({'auto_sync':False,'auto_on_v2':True,'training_auto_context':False,'level':27,'active':[],'training_target':'23','training_personal_gain':9,'map':'010005073'}))
  root=tk.Tk();root.report_callback_exception=lambda x,y,z:errors.append(str(y));a=app.App(root);a.db.load_indexes();a.ui_tools();root.withdraw();a._tools_window.withdraw()
  a.state['utility_session'].update(running_since=time.time(),exp=0,kills=0,mesos=0,cost=25)
  def snapshot(running=True):

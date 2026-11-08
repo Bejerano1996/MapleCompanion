@@ -31,21 +31,39 @@ def training_gain_context(self):
     target=self.training_target();reading=self.state.get('character_exp') or {}
     context=getattr(self,'_training_context',None)
     if self.state.get('training_auto_context',True) and context is not None:
-        return [str(target['id']) if target else '',context.get('map'),context.get('party_visible'),reading.get('level')]
+        party=context.get('party_visible') if context.get('party_readable') and time.time()-(context.get('party_at') or 0)<=20 else None
+        return [str(target['id']) if target else '',context.get('map'),party,reading.get('level')]
     return [str(target['id']) if target else '',self.state.get('party',1),self.state.get('party_hits','all'),self.training_party_total(),reading.get('level')]
 
 def training_forecast_now(self):
     gain=self.state.get('training_personal_gain')
     context=self.state.get('training_gain_context')
     if context is not None and context!=self.training_gain_context():gain=None
+    learner=getattr(self,'_yield_learner',None);observed=False
+    if gain is None and learner:
+        gain=learner.estimate(self.training_gain_context(),time.monotonic());observed=gain is not None
     context=getattr(self,'_training_context',None)
     if self.state.get('training_auto_context',True) and context is not None:
+        if self.training_target() is None:return {'available':False,'reason':'Target unknown / mixed mobs · use Setup or show labels','targets':tuple(context.get('mobs',[]))}
         party=context.get('party_visible') if context.get('party_readable') and time.time()-(context.get('party_at') or 0)<=20 else None
-        if not party:return {'available':False,'reason':'Party size unknown · show roster or use manual Setup'}
-        result=training_forecast(self.state.get('character_exp'),self.training_target(),party,'all',None,time.time(),self.state.get('character_exp_at'),gain)
-        if result.get('available'):result['source']='visible mob / roster · estimated share'
+        if not party and gain is None:
+            progress=learner.progress(self.training_gain_context(),time.monotonic()) if learner else 0
+            return {'available':False,'reason':f'Calibrating personal EXP · {progress}/3' if progress else 'Party size unknown · learning EXP/event or use Setup'}
+        result=training_forecast(self.state.get('character_exp'),self.training_target(),party or 1,'all',None,time.time(),self.state.get('character_exp_at'),gain)
+        result['party']=party
+        if result.get('available'):
+            if observed:result.update(source='observed EXP/event · inferred target',yield_unit='EXP/event')
+            elif gain is None:result['source']='visible mob / roster · estimated share'
         return result
-    return training_forecast(self.state.get('character_exp'),self.training_target(),self.state.get('party',1),self.state.get('party_hits','all'),self.training_party_total(),time.time(),self.state.get('character_exp_at'),gain)
+    result=training_forecast(self.state.get('character_exp'),self.training_target(),self.state.get('party',1),self.state.get('party_hits','all'),self.training_party_total(),time.time(),self.state.get('character_exp_at'),gain)
+    if observed and result.get('available'):result.update(source='observed EXP/event · estimated target',yield_unit='EXP/event')
+    return result
+
+def training_observe_yield(self,delta,previous,reading):
+    if not previous or not reading:return False
+    from training_yield import YieldLearner
+    if not hasattr(self,'_yield_learner'):self._yield_learner=YieldLearner()
+    return self._yield_learner.observe(self.training_gain_context(),delta,absolute_exp(reading)-absolute_exp(previous),time.monotonic())
 
 def training_accept_character(self,reading):
     absolute_exp(reading)
@@ -63,22 +81,35 @@ def training_on_exp_bar(self,texts,confirm):
 
 def training_forecast_text(self):
     f=self.training_forecast_now()
-    if not f['available']:return f['reason']
+    if not f['available']:
+        context=getattr(self,'_training_context',{}) or {}
+        if context.get('map_readable') and time.time()-(context.get('map_at') or 0)<=20 and time.time()-(context.get('mobs_at') or 0)<=20 and context.get('party_readable') and time.time()-(context.get('party_at') or 0)<=20:
+            rows=[];stale=False
+            for identity in f.get('targets',())[:2]:
+                mob=self.db.monsters.get(identity)
+                forecast=training_forecast(self.state.get('character_exp'),mob,context.get('party_visible',1),'all',None,time.time(),self.state.get('character_exp_at'))
+                if forecast.get('available'):
+                    rows.append(f"≈{forecast['kills']:,} {forecast['mob']}");stale=stale or forecast['stale']
+            if len(rows)>1:return ('Last read · ' if stale else '')+' / '.join(rows)+'\nFormula estimates by visible species · kill target unconfirmed'
+        return f['reason']
     mark='Last read · ' if f['stale'] else ''
-    return f"{mark}≈{f['kills']:,} {f['mob']} → Lv {f['next_level']}\n{f['remaining']:,} EXP left · {f['gain']:g} EXP/kill · {f['source']}"
+    return f"{mark}≈{f['kills']:,} {f['mob']} → Lv {f['next_level']}\n{f['remaining']:,} EXP left · {f['gain']:g} {f.get('yield_unit','EXP/kill')} · {f['source']}"
 
 def training_render_levelup(self):
     f=self.training_forecast_now();r=self.state.get('character_exp')
     spec=('training-v3',tuple(sorted((r or {}).items())),tuple(sorted(f.items())),widgets.text_scale)
     if spec==self._lvl_spec:return
     self._lvl_spec=spec
-    for child in self.lvl_strip.winfo_children():child.destroy()
-    head=tk.Frame(self.lvl_strip,bg=C['card']);head.pack(fill='x',padx=6,pady=3)
-    text=f"EXP {r.get('percent',0):.2f}%" if r else 'EXP —'
-    label(head,text,bg='card',fg='muted',size=8).pack(side='left')
-    ui_button(head,'Setup',self.companion_exp_details,compact=True,tip='Level, EXP, target & party').pack(side='right')
-    text=self.training_forecast_text().split('\n')[0]
-    label(self.lvl_strip,text,bg='card',fg='gold' if f['available'] else 'muted',size=8,anchor='w',justify='left',wraplength=max(200,self.panel_width()-35)).pack(fill='x',padx=6,pady=(0,4))
+    style=(widgets.text_scale,self.panel_width());nodes=getattr(self.lvl_strip,'_training_nodes',None)
+    if not nodes or nodes[2]!=style or not nodes[0].winfo_exists():
+        for child in self.lvl_strip.winfo_children():child.destroy()
+        head=tk.Frame(self.lvl_strip,bg=C['card']);head.pack(fill='x',padx=6,pady=3)
+        percent=label(head,bg='card',fg='muted',size=8);percent.pack(side='left')
+        ui_button(head,'Setup',self.companion_exp_details,compact=True,tip='Level, EXP, target & party').pack(side='right')
+        counter=label(self.lvl_strip,bg='card',size=8,anchor='w',justify='left',wraplength=max(200,self.panel_width()-35));counter.pack(fill='x',padx=6,pady=(0,4))
+        nodes=(percent,counter,style);self.lvl_strip._training_nodes=nodes
+    nodes[0].config(text=f"EXP {r.get('percent',0):.2f}%" if r else 'EXP —')
+    nodes[1].config(text=self.training_forecast_text().split('\n')[0],fg=C['gold'] if f['available'] else C['muted'])
     if getattr(self,'_training_setup_refresh',None):self._training_setup_refresh()
 
 def training_refresh_exp_pill(self):

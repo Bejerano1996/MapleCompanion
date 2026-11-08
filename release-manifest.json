@@ -1,101 +1,99 @@
 {
-  "version": "3.3.0-companion",
-  "source_sha": "d7924b564217f58238ba4c30954bca745289791695fa0c53b0630e788564a66a",
+  "version": "3.4.0-companion",
+  "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
   "checks": {
-    "source_sha": "d7924b564217f58238ba4c30954bca745289791695fa0c53b0630e788564a66a",
+    "ok": true,
+    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
     "cases": [
       {
+        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        },
-        "fixture": "live_exp_2560.png"
+        }
       },
       {
+        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_ant_tunnel2.png"
+        }
       },
       {
+        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_1920.png"
+        }
       },
       {
+        "fixture": "session-rewards-fixture.png",
         "totals": {
           "exp": 9,
           "mesos": 27,
           "kills": 1,
           "party_exp": 2
-        },
-        "fixture": "session-rewards-fixture.png"
+        }
       },
       {
+        "fixture": "party-rewards-fixture.png",
         "totals": {
           "exp": 4,
           "mesos": 0,
           "kills": 0,
           "party_exp": 4
-        },
-        "fixture": "party-rewards-fixture.png"
+        }
       }
-    ],
-    "ok": true
+    ]
   },
   "context_checks": {
-    "source_sha": "d7924b564217f58238ba4c30954bca745289791695fa0c53b0630e788564a66a",
     "cases": [
       {
-        "file": "context-party-four.png",
         "result": {
           "ok": true,
           "party_visible": 4,
           "roman_suffix": null,
           "labels": []
-        }
+        },
+        "file": "context-party-four.png"
       },
       {
-        "file": "context-party-five.png",
         "result": {
           "ok": true,
           "party_visible": 5,
           "roman_suffix": null,
           "labels": []
-        }
+        },
+        "file": "context-party-five.png"
       },
       {
-        "file": "live_frame_1920.png",
         "result": {
           "ok": true,
           "party_visible": null,
           "roman_suffix": "II",
           "labels": []
-        }
+        },
+        "file": "live_frame_1920.png"
       },
       {
-        "file": "live_exp_2560.png",
         "result": {
           "ok": true,
           "party_visible": 2,
           "roman_suffix": "III",
           "labels": []
-        }
+        },
+        "file": "live_exp_2560.png"
       },
       {
-        "file": "context-horny-scene.png",
         "result": {
           "ok": true,
           "party_visible": 2,
@@ -104,16 +102,83 @@
             "Lv,22HornyMushroom",
             "Lv.22 Horny M"
           ]
-        }
+        },
+        "file": "context-horny-scene.png"
       }
     ],
-    "ok": true
+    "ok": true,
+    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd"
   },
-  "validation": "Recorded minimap II/III, visible rosters4/5 and monster label tests; native context confirmation and manual override UI checks; independent live map read. Visible monsters are not definitive kill attribution, and visible roster is not eligibility telemetry.",
+  "yield_check": {
+    "ok": true,
+    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
+    "model": "frozen training_yield",
+    "gain": 9,
+    "context_reset": true
+  },
+  "synthetic_soak": {
+    "running": false,
+    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
+    "target_seconds": 120.0,
+    "ok": true,
+    "latest": {
+      "seconds": 120.0,
+      "frames": 633,
+      "exp": 5688,
+      "party_seen": 1240,
+      "mesos_observed": 9185,
+      "mesos_true": 9475,
+      "fonts": 17,
+      "images": 26,
+      "jobs": 6,
+      "callback_errors": 0
+    },
+    "samples": [
+      {
+        "seconds": 30.0,
+        "frames": 49,
+        "exp": 432,
+        "party_seen": 96,
+        "mesos_observed": 699,
+        "mesos_true": 714,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 90.0,
+        "frames": 438,
+        "exp": 3933,
+        "party_seen": 858,
+        "mesos_observed": 6348,
+        "mesos_true": 6559,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 120.0,
+        "frames": 633,
+        "exp": 5688,
+        "party_seen": 1240,
+        "mesos_observed": 9185,
+        "mesos_true": 9475,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      }
+    ],
+    "errors": [],
+    "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
+  },
+  "validation": "Focused calibration model and native callback/UI tests, current-source120second synthetic Tk stability run, frozen yield model and local OCR fixtures. No live3.4 accuracy claim. Visible species are inferred targets, not definitive kill attribution.",
   "changes": [
-    "Automatic minimap / visible roster / monster context",
-    "Independent background OCR worker",
-    "Confirmed and expiring context",
-    "Manual override and unknown state"
+    "HUD-correlated personal EXP per event",
+    "Three-sample calibration and context expiry",
+    "Mixed visible species estimates",
+    "Reuse EXP widgets"
   ]
 }

@@ -140,3 +140,10 @@ The first release under the new name: a redesigned in-game overlay.
 - Visible roster count drives explicitly estimated forecasts; unknown roster never assumes solo.
 - Manual context override and retained observed species; multiple species do not silently pick one.
 - Fixed Roman numeral map confusion and low-HP roster omission found during validation.
+
+## 3.4.0 — Empirical personal yield and smoother counters
+- Learn personal EXP/event from three HUD-correlated single reward events, including party bonus once.
+- Reset/expire learned yield on context changes; never revive an old map's calibration.
+- Unknown party size can use a validated personal yield; multiple visible species get separate formula estimates.
+- Reuse counter widgets on normal EXP updates; preserve explicit manual settings.
+- Focused model/native UI tests and synthetic stability checks; live accuracy remains to be compared.

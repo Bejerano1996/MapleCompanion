@@ -71,5 +71,17 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     next(v for v in ui_walk_widgets(root) if isinstance(v,tk.Button) and v.cget('text')=='Mesos · read pickup notices').invoke();pump()
     check('Pickup mode works without inventory',not a.state['utility_session']['wallet_auto'] and a.state['utility_session']['money_mode']=='notices')
     check('Pickup mode resets only money baseline',a.state['utility_session']['mesos']==0 and a.state['utility_session']['exp']==9)
+    a.state.update(training_auto_context=False,training_target='23',training_personal_gain=None)
+    a.state['utility_session'].update(running_since=200,exp=0,kills=0,party_exp=0)
+    a._reward_token=None;history=[]
+    def character_reward(n,events):
+        pending.clear();a._reward_busy=False;a._reward_last_poll=0;a.utility_poll_rewards()
+        pending.pop()({'events':list(events),'character':{'level':27,'exp':n}})
+    character_reward(1000,[]);character_reward(1000,[])
+    for index in range(1,4):
+        history.extend([('exp',7),('bonus',2)])
+        character_reward(1000+index*9,history)
+    check('Reward callback calibrates actual personal yield',a.training_forecast_now()['gain']==9 and a._yield_learner.progress(a.training_gain_context(),time.monotonic())==3)
+    check('Calibration does not double party EXP',a.state['utility_session']['exp']==27 and a.state['utility_session']['party_exp']==6)
     check('No callback errors',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()

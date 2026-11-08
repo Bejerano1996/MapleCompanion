@@ -7,7 +7,7 @@ class TrainingAccountant:
         self.tracker=RewardTracker(confirm_money=2);self.ledger=ExpLedger();self.bar_total=None;self.logs_since_bar=0;self.character=None;self.unavailable=False
     def feed(self,session,token,events,reading=None,now=0):
         if session_token(session)!=token or session.get('running_since') is None or not session.get('auto_rewards',True):return False
-        delta=self.tracker.feed(events)
+        delta=self.tracker.feed(events);self.last_delta=delta
         if self.bar_total is not None:
             self.logs_since_bar+=delta['exp'];log_delta=dict(delta,exp=0)
         else:log_delta=delta

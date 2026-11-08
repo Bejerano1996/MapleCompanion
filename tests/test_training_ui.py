@@ -35,6 +35,9 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     a.training_accept_character({'level':27,'exp':63600})
     a.state['training_target']='23';a.state['party']=1;a.render_levelup();pump()
     check('Counter rounds up to two Evil Eye',any('≈2 Evil Eye' in t for t in texts(a.lvl_strip)))
+    ids=[str(v) for v in ui_walk_widgets(a.lvl_strip)]
+    a.training_accept_character({'level':27,'exp':63601})
+    check('EXP updates reuse existing strip widgets',ids==[str(v) for v in ui_walk_widgets(a.lvl_strip)])
     a.state['party']=2;a.render_levelup();pump()
     check('Party share changes counter',any('≈3 Evil Eye' in t for t in texts(a.lvl_strip)))
     a.state['training_personal_gain']=9;a.render_levelup();pump()
@@ -68,6 +71,7 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     check('Hidden roster does not assume solo or saved party',not a.training_forecast_now()['available'])
     a._training_context['party_readable']=True;a._training_context['mobs']=[23,24]
     check('Multiple visible mobs do not select arbitrary target',a.training_target() is None)
+    check('Mixed targets show separate estimated counters',' / ' in a.training_forecast_text() and 'unconfirmed' in a.training_forecast_text())
     a.state['training_auto_context']=False
     check('Manual target remains available',a.training_target()['id']==23)
     a.state['training_auto_context']=True;a._context_busy=False
@@ -76,5 +80,19 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     check('First automatic context read remains unconfirmed',a._training_context.get('party_visible') is None)
     a._context_last_poll=-100;a.context_poll()
     check('Confirmed automatic context reaches session UI',a._training_context['party_visible']==4 and '4 visible' in a.context_summary())
+    from training_yield import YieldLearner
+    import leveling,math
+    a._yield_learner=YieldLearner();a._training_context.update(party_readable=False,mobs=[23])
+    for n in range(3):
+        previous={'level':32,'exp':1000+n*9};reading={'level':32,'exp':1009+n*9}
+        a.training_accept_character(reading)
+        a.training_observe_yield(dict(exp=9,kills=1,party_exp=2),previous,reading)
+    learned=a.training_forecast_now()
+    check('Observed personal gain works with unknown party size',learned['available'] and learned['party'] is None and learned['gain']==9)
+    check('Counter uses current level EXP requirement',learned['kills']==math.ceil((leveling.exp_to_next(32)-1027)/9))
+    a._training_context['map']='different-map'
+    check('Map change invalidates learned yield',not a.training_forecast_now()['available'])
+    a._training_context['mobs']=[]
+    check('Unknown target never learns from a reward',not a.training_observe_yield(dict(exp=9,kills=1),{'level':32,'exp':1027},{'level':32,'exp':1036}))
     check('No Tk callback errors',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()

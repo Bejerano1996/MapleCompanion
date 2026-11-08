@@ -53,6 +53,8 @@ def utility_poll_rewards(self):
         self._reward_token=None;return
     if getattr(self,'_reward_token',None)!=token:
         self._reward_tracker=RewardTracker();self._training_accountant=TrainingAccountant();self._reward_token=token;self._training_last_hud=0
+        from training_yield import YieldLearner
+        self._yield_learner=YieldLearner()
     if getattr(self,'_reward_busy',False) or time.monotonic()-getattr(self,'_reward_last_poll',0)<.12:return
     self._reward_last_poll=time.monotonic()
     windows=[self.root]+[w for w in self.root.winfo_children() if isinstance(w,tk.Toplevel)]
@@ -71,6 +73,7 @@ def utility_poll_rewards(self):
         if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
         self._reward_status='Game or reward area unavailable' if events is None else ('Reading reward log · some amounts unclear' if any(amount is None for kind,amount in events) else 'Reading reward log') if events else 'Waiting for visible rewards'
         if getattr(events,'partial',False):self._reward_status+=' · partially covered; visible rows only'
+        previous_character=accountant.character
         changed=accountant.feed(current,token,events,reading,time.monotonic())
         wallet=result.get('wallet') if isinstance(result,dict) else None
         if wallet is not None and current.get('wallet_auto'):
@@ -83,6 +86,7 @@ def utility_poll_rewards(self):
             current['wallet_read_at']=time.time();self.state['utility_session']=current;changed=True
         if reading and accountant.character is reading:
             self.training_accept_character(reading)
+            if self.training_observe_yield(accountant.last_delta,previous_character,reading):self.render_levelup()
             changed=True
         if changed:self.save_state()
         if getattr(self,'_utility_refresh',None):self._utility_refresh()
