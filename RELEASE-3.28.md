@@ -1,0 +1,1 @@
+3.28 expires automatic level confirmation after more than 15 seconds without a valid HUD candidate. Two fresh reads are then required; normal six-second cadence is preserved. Empty/partial HUD cannot keep old evidence fresh. Tested with controlled native/frozen callbacks and synthetic HUD, not live gameplay.

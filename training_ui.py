@@ -98,7 +98,14 @@ def training_accept_character(self,reading):
 
 def training_on_exp_bar(self,texts,confirm):
     reading=character_reading(texts)
-    if reading and confirm(('validated-character-level',),reading['level']):self.training_accept_character(reading)
+    if reading:
+        now=time.monotonic();last=getattr(self,'_training_level_confirmation_at',None)
+        # Normal auto HUD reads are six seconds apart. Old evidence cannot confirm
+        # a single new reading after a prolonged HUD outage.
+        if last is None or now-last>15:
+            getattr(self,'_reads',{}).pop(('validated-character-level',),None)
+        self._training_level_confirmation_at=now
+        if confirm(('validated-character-level',),reading['level']):self.training_accept_character(reading)
 
 def training_forecast_text(self):
     f=self.training_forecast_now()
