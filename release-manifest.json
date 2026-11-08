@@ -1,8 +1,8 @@
 {
-  "version": "3.0.3-companion",
-  "source_sha": "b446daa767e35b3c61a958678ab2888c95e4683c861e3910c2305feb7035239a",
+  "version": "3.0.4-companion",
+  "source_sha": "93f8e6eb971af0f838fc50a808b1b6bb24c0d140af320bfd56ed719709bc4c6a",
   "checks": {
-    "source_sha": "b446daa767e35b3c61a958678ab2888c95e4683c861e3910c2305feb7035239a",
+    "ok": true,
     "cases": [
       {
         "character": {
@@ -53,7 +53,7 @@
         "fixture": "party-rewards-fixture.png"
       }
     ],
-    "ok": true
+    "source_sha": "93f8e6eb971af0f838fc50a808b1b6bb24c0d140af320bfd56ed719709bc4c6a"
   },
   "validation": "Deterministic typing and callback bursts, native PQ/monster and training UI checks, packaged local OCR fixtures. No live game validation.",
   "changes": [

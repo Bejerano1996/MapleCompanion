@@ -10,7 +10,11 @@ class CaptureTests(unittest.TestCase):
    self.assertEqual(session_reader.capture_rewards([(1000,200,1200,650)]),[('exp',56)])
  def test_covered_log_is_unavailable(self):
   with patch('game_sync.find_game_window',return_value=(100,100,1100,900)),patch('PIL.ImageGrab.grab') as grab:
-   self.assertIsNone(session_reader.capture_rewards([(850,700,1050,800)]));grab.assert_not_called()
+   self.assertIsNone(session_reader.capture_rewards([(750,600,1150,850)]));grab.assert_not_called()
+ def test_narrow_edge_overlap_reads_uncovered_notices(self):
+  with patch('game_sync.find_game_window',return_value=(100,100,1100,900)),patch('PIL.ImageGrab.grab',return_value=Image.new('RGB',(300,248))),patch('session_reader.read_reward_image',return_value=[('exp',56)]):
+   events=session_reader.capture_rewards([(1080,200,1400,720)])
+   self.assertEqual(events,[('exp',56)]);self.assertTrue(events.partial)
  def test_crop_stays_in_game(self):
   with patch('game_sync.find_game_window',return_value=(100,100,1100,900)),patch('PIL.ImageGrab.grab',return_value=Image.new('RGB',(400,360))) as grab,patch('session_reader.read_reward_image',return_value=[]) as reader:
    self.assertEqual(session_reader.capture_rewards(),[]);self.assertEqual(grab.call_args.kwargs['bbox'],(800,580,1100,828));reader.assert_called_once()

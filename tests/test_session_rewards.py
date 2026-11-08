@@ -4,6 +4,11 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from session_rewards import RewardTracker,reward_event,session_token,apply_rewards
 class RewardsTests(unittest.TestCase):
+ def test_partial_empty_does_not_reset_old_notices(self):
+  from session_reader import RewardRead
+  t=RewardTracker();t.feed([('mesos',10)])
+  for _ in range(8):t.feed(RewardRead())
+  self.assertEqual(t.feed([('mesos',10)])['mesos'],0)
  def test_new_single_notice_replaces_previous_amount(self):
   t=RewardTracker(confirm_money=2);t.feed([('mesos',10)])
   self.assertEqual(t.feed([('mesos',18)])['mesos'],0)

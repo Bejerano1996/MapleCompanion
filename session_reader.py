@@ -2,6 +2,10 @@
 from session_rewards import reward_event,reward_kind
 _engine=None
 
+class RewardRead(list):
+    """Visible notices from a partially masked region."""
+    partial=True
+
 def ocr_rows(image,max_size=(1280,720)):
     global _engine
     import numpy as np
@@ -49,13 +53,22 @@ def capture_rewards(hide=()):
     # Floating notices sit above the quick-slot/HUD area. A tools window
     # touching only the scene above them must not disable the entire reader.
     log=(x+int(w*.70),y+int(h*.70),right,y+int(h*.83))
-    if any(r>log[0] and left<log[2] and b>log[1] and top<log[3] for left,top,r,b in hide):return None
+    partial=any(r>log[0] and left<log[2] and b>log[1] and top<log[3] for left,top,r,b in hide)
+    if partial:
+        from PIL import Image
+        visible=Image.new('L',(log[2]-log[0],log[3]-log[1]),255)
+        mask=ImageDraw.Draw(visible)
+        for left,top,r,b in hide:
+            if r>log[0] and left<log[2] and b>log[1] and top<log[3]:
+                mask.rectangle((max(0,left-log[0]),max(0,top-log[1]),min(visible.width,r-log[0]),min(visible.height,b-log[1])),fill=0)
+        if visible.getbbox() is None:return None
     image=ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB')
     draw=ImageDraw.Draw(image)
     for left,top,r,b in hide:
         if r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3]:
             draw.rectangle((max(0,left-crop[0]),max(0,top-crop[1]),min(image.width,r-crop[0]),min(image.height,b-crop[1])),fill='black')
-    return read_reward_image(image,include_pending=True)
+    events=read_reward_image(image,include_pending=True)
+    return RewardRead(events) if partial else events
 
 
 def read_character_image(image):

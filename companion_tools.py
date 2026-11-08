@@ -66,6 +66,7 @@ def utility_poll_rewards(self):
         current=self.state['utility_session']
         if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
         self._reward_status='Game or reward area unavailable' if events is None else ('Reading reward log · some amounts unclear' if any(amount is None for kind,amount in events) else 'Reading reward log') if events else 'Waiting for visible rewards'
+        if getattr(events,'partial',False):self._reward_status+=' · partially covered; visible rows only'
         changed=accountant.feed(current,token,events,reading,time.monotonic())
         if reading and accountant.character is reading:
             self.training_accept_character(reading)

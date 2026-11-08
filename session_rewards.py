@@ -50,6 +50,8 @@ class RewardTracker:
         if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.replacement=None;self.replacement_reads=0;return totals
         current=[tuple(row) for row in events]
         if not current:
+            # A masked empty image cannot prove the old notices disappeared.
+            if getattr(events,'partial',False):return totals
             self.replacement=None;self.replacement_reads=0
             if self.previous is None:self.previous=[];self.credited=[];self.seen=[]
             self.blanks+=1

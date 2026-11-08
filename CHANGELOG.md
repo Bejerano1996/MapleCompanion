@@ -111,3 +111,8 @@ The first release under the new name: a redesigned in-game overlay.
 - Regression covers a companion panel overlapping the upper scene while leaving actual notices visible.
 - Live installed 3.0.2 session EXP rose224 exactly with the HUD; kills stayed0 while the broad guard rejected the log. User layout confirmed the actual notices were visible.
 - Saved running_since is always null in snapshots; never infer live pause from that field alone.
+
+## 3.0.4 — Read unoccluded reward rows
+- Partial edge overlap now masks only covered pixels rather than disabling the entire reward reader. Fully covered reward band remains unavailable.
+- Preserve notice continuity across empty partially masked reads to avoid recounting old messages.
+- Report partial coverage explicitly. Live3.0.3 validation reproduced fresh HUD updates with0reward counts and unavailable status; narrow guard remained insufficient.
