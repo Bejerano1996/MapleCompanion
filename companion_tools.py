@@ -60,6 +60,7 @@ def utility_poll_rewards(self):
     windows=[self.root]+[w for w in self.root.winfo_children() if isinstance(w,tk.Toplevel)]
     hide=[window_rect(w) for w in windows if w.winfo_viewable()]
     tracker=self._reward_tracker;accountant=self._training_accountant;self._reward_busy=True
+    gain_context=self.training_gain_context()
     read_status=time.monotonic()-getattr(self,'_training_last_hud',0)>=1
     if read_status:self._training_last_hud=time.monotonic()
     read_wallet=bool(session.get('wallet_auto')) and time.monotonic()-getattr(self,'_wallet_last_poll',0)>=3
@@ -86,8 +87,14 @@ def utility_poll_rewards(self):
             current['wallet_read_at']=time.time();self.state['utility_session']=current;changed=True
         if reading and accountant.character is reading:
             self.training_accept_character(reading)
-            if self.training_buffer_yield(accountant.last_delta,previous_character,reading):self.render_levelup()
             changed=True
+        # A background capture may finish after the target, map or party changes.
+        # Keep its session totals, but never calibrate the new context with it.
+        if gain_context!=self.training_gain_context():
+            from training_yield import YieldLearner
+            self._yield_learner=YieldLearner()
+        elif reading and accountant.character is reading:
+            if self.training_buffer_yield(accountant.last_delta,previous_character,reading):self.render_levelup()
         else:self.training_buffer_yield(accountant.last_delta)
         if changed:self.save_state()
         if getattr(self,'_utility_refresh',None):self._utility_refresh()
