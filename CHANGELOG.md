@@ -105,3 +105,9 @@ The first release under the new name: a redesigned in-game overlay.
 - Confirm fully replaced same-kind reward stacks instead of suppressing all changed amounts as OCR corrections.
 - Show EXP reading age and actual reader status in Session.
 - Live inspection confirmed level 29 to 30 HUD readings; accurate full pickup/kill comparison awaits the user's return from job advancement. Notice-derived mesos/kills remain estimates, not exact wallet or kill telemetry.
+
+## 3.0.3 — Visible reward notices rejected by broad overlap guard
+- Limit the blocked-notice check to the floating reward band (70–83% of game height), instead of rejecting any overlap from65–95%. Areas above this band remain masked before OCR.
+- Regression covers a companion panel overlapping the upper scene while leaving actual notices visible.
+- Live installed 3.0.2 session EXP rose224 exactly with the HUD; kills stayed0 while the broad guard rejected the log. User layout confirmed the actual notices were visible.
+- Saved running_since is always null in snapshots; never infer live pause from that field alone.

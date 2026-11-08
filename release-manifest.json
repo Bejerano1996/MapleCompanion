@@ -1,59 +1,59 @@
 {
-  "version": "3.0.2-companion",
-  "source_sha": "cdd36b63a688c60bb92828ab5417774d17e039fe76930f921e01e19ddc821534",
+  "version": "3.0.3-companion",
+  "source_sha": "b446daa767e35b3c61a958678ab2888c95e4683c861e3910c2305feb7035239a",
   "checks": {
-    "source_sha": "cdd36b63a688c60bb92828ab5417774d17e039fe76930f921e01e19ddc821534",
-    "ok": true,
+    "source_sha": "b446daa767e35b3c61a958678ab2888c95e4683c861e3910c2305feb7035239a",
     "cases": [
       {
-        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_exp_2560.png"
       },
       {
-        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_frame_ant_tunnel2.png"
       },
       {
-        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_frame_1920.png"
       },
       {
-        "fixture": "session-rewards-fixture.png",
         "totals": {
           "exp": 9,
           "mesos": 27,
           "kills": 1,
           "party_exp": 2
-        }
+        },
+        "fixture": "session-rewards-fixture.png"
       },
       {
-        "fixture": "party-rewards-fixture.png",
         "totals": {
           "exp": 4,
           "mesos": 0,
           "kills": 0,
           "party_exp": 4
-        }
+        },
+        "fixture": "party-rewards-fixture.png"
       }
-    ]
+    ],
+    "ok": true
   },
   "validation": "Deterministic typing and callback bursts, native PQ/monster and training UI checks, packaged local OCR fixtures. No live game validation.",
   "changes": [

@@ -5,6 +5,9 @@ from PIL import Image
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import session_reader
 class CaptureTests(unittest.TestCase):
+ def test_overlay_above_notices_does_not_disable_reader(self):
+  with patch('game_sync.find_game_window',return_value=(100,100,1100,900)),patch('PIL.ImageGrab.grab',return_value=Image.new('RGB',(300,248))),patch('session_reader.read_reward_image',return_value=[('exp',56)]):
+   self.assertEqual(session_reader.capture_rewards([(1000,200,1200,650)]),[('exp',56)])
  def test_covered_log_is_unavailable(self):
   with patch('game_sync.find_game_window',return_value=(100,100,1100,900)),patch('PIL.ImageGrab.grab') as grab:
    self.assertIsNone(session_reader.capture_rewards([(850,700,1050,800)]));grab.assert_not_called()
