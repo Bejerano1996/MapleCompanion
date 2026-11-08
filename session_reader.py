@@ -1,7 +1,9 @@
 """CPU-only local OCR of the game's visible lower-right reward log. No network or inputs."""
 from session_rewards import reward_event,reward_kind
+import time
 _engine=None
 _money_retry_turn=0
+_reward_ocr_cache=None
 
 class RewardRead(list):
     """Visible notices from a partially masked region."""
@@ -49,8 +51,15 @@ def retry_money_row(image,position):
 
 
 def read_reward_image(image,include_pending=False):
-    global _money_retry_turn
-    rows=ocr_rows(image)
+    global _money_retry_turn,_reward_ocr_cache
+    fingerprint=(id(ocr_rows),image.mode,image.size,image.tobytes()) if image is not None else None
+    cached=_reward_ocr_cache
+    if fingerprint is not None and cached is not None and cached[0]==fingerprint and time.monotonic()-cached[1]<2:
+        rows=cached[2]
+    else:
+        rows=ocr_rows(image)
+        if fingerprint is not None:
+            _reward_ocr_cache=(fingerprint,time.monotonic(),rows)
     # Merge boxes on the same line: the detector can split "You" from the amount.
     groups=[]
     for box,text,score in sorted(rows or [],key=lambda row:min(p[1] for p in row[0])):
@@ -163,9 +172,14 @@ def capture_training(hide=(),read_status=True,read_wallet=False):
         box=find_game_window()
         if box:
             x,y,right,bottom=box;w=right-x;h=bottom-y
-            crop=(x+int(w*.1),y+int(h*.91),x+int(w*.92),bottom)
-            covered=any(r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3] for left,top,r,b in hide)
-            if not covered:reading=read_character_image(ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB'))
+            crop=(x,y+int(h*.91),right,bottom)
+            from PIL import ImageDraw
+            image=ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB')
+            draw=ImageDraw.Draw(image)
+            for left,top,r,b in hide:
+                if r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3]:
+                    draw.rectangle((max(0,left-crop[0]),max(0,top-crop[1]),min(image.width,r-crop[0]),min(image.height,b-crop[1])),fill='black')
+            reading=read_character_image(image)
     result={'events':events,'character':reading}
     if read_wallet:result['wallet']=capture_wallet(hide)
     return result
