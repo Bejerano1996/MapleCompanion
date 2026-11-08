@@ -152,6 +152,8 @@ def utility_compare_maps(history, metric='exp_hour', minimum_seconds=60):
             excluded['mixed_maps']+=1;continue
         try:
             seconds=utility_number(session.get('elapsed',0))
+            money_anchor=session.get('wallet_elapsed_anchor') if session.get('money_mode')=='wallet' else session.get('money_elapsed_anchor')
+            money_anchor=utility_number(0 if money_anchor is None else money_anchor,maximum=seconds)
             totals={key:utility_number(session.get(key,0),minimum=-10**15 if (key=='exp' and session.get('exp_is_net')) or (key=='mesos' and session.get('money_mode')=='wallet') else 0) for key in ('kills','exp','mesos','cost')}
             if session.get('money_mode')=='wallet':totals['cost']=0
         except ValueError:
@@ -161,7 +163,7 @@ def utility_compare_maps(history, metric='exp_hour', minimum_seconds=60):
         row=buckets.setdefault(map_id,dict(map_id=map_id,map_name=str(session.get('map_name') or map_id),
                    sessions=0,seconds=0,money_seconds=0,kills=0,exp=0,mesos=0,cost=0,log_gap_sessions=0))
         row['sessions']+=1;row['seconds']+=seconds
-        row['money_seconds']+=max(0,seconds-((session.get('wallet_elapsed_anchor') if session.get('money_mode')=='wallet' else session.get('money_elapsed_anchor')) or 0))
+        row['money_seconds']+=seconds-money_anchor
         if session.get('reading_gaps'):row['log_gap_sessions']+=1
         for key,value in totals.items():row[key]+=value
     rows=[];short_maps=0

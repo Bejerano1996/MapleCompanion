@@ -1,10 +1,23 @@
 {
+  "history_check": {
+    "ok": true,
+    "checks": [
+      "Both valid maps remain visible beside eight invalid rows",
+      "Sixty native sort and refresh actions preserve exact valid rates",
+      "Excluded count is shown",
+      "Saved-history objects are unchanged",
+      "No Tk callback errors"
+    ],
+    "refreshes": 60,
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "scope": "Frozen comparison model and tools screen, isolated withdrawn Tk synthetic history, no game/save/OCR"
+  },
   "generation_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "reports": [
       {
-        "name": "audit_frozen_wallet_component_3_21",
+        "name": "audit_frozen_wallet_component_3_22",
         "cases": 400
       }
     ],
@@ -12,10 +25,10 @@
   },
   "capture_age_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "reports": [
       {
-        "name": "audit_frozen_wallet_age_3_21",
+        "name": "audit_frozen_wallet_age_3_22",
         "cases": 200
       }
     ],
@@ -23,14 +36,14 @@
   },
   "stable_hud_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "reports": [
       {
-        "name": "audit_frozen_stable_interleaving_3_21",
+        "name": "audit_frozen_stable_interleaving_3_22",
         "cases": 1000
       },
       {
-        "name": "audit_frozen_stable_recovery_3_21",
+        "name": "audit_frozen_stable_recovery_3_22",
         "cases": 200
       }
     ],
@@ -38,22 +51,22 @@
   },
   "coverage_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "reports": [
       {
-        "name": "audit_frozen_masked_rows_3_21",
+        "name": "audit_frozen_masked_rows_3_22",
         "cases": 200,
         "missed": null,
         "max_rows": null
       },
       {
-        "name": "audit_frozen_unique_pickups_3_21",
+        "name": "audit_frozen_unique_pickups_3_22",
         "cases": 100,
         "missed": 445,
         "max_rows": 12
       },
       {
-        "name": "audit_frozen_moving_masks_3_21",
+        "name": "audit_frozen_moving_masks_3_22",
         "cases": 200,
         "missed": null,
         "max_rows": 18
@@ -65,38 +78,38 @@
     "ok": true,
     "cases": 300,
     "failures": [],
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "scope": "Frozen tracker/RewardRead modules from actualEXE,stationary periodic pre-session rows,zero newmoney; not livegameplay"
   },
   "provenance_check": {
     "ok": true,
     "cases": 800,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "scope": "Frozen model/reward/accountant modules from actualEXE,800orderedbonus/HUDfallback scenarios; not livegameplay"
   },
   "precision_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
-    "tests": 115,
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "tests": 128,
     "scope": "Frozen context/startup/label,character/accounting,reader and strip modules; mocked inputs and recorded context images; not livegameplay"
   },
   "identity_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "fairness_cases": 160,
     "scroll_cases": 200,
     "scope": "Frozen reader/reward modules from actualEXE; synthetic stationary/refinement/repeatedamount and actualscroll scenarios, not live gameplay"
   },
   "retry_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "recovered_mesos": 7,
     "known_total": 17,
     "duplicate": 0,
     "scope": "Frozen reader/reward modules from actualEXE on brightness1.2recorded fixture; not live gameplay"
   },
-  "version": "3.21.0-companion",
-  "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+  "version": "3.22.0-companion",
+  "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
   "native_ui": {
     "ok": true,
     "checks": [
@@ -133,60 +146,58 @@
   "checks": {
     "cases": [
       {
+        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        },
-        "fixture": "live_exp_2560.png"
+        }
       },
       {
+        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_ant_tunnel2.png"
+        }
       },
       {
+        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_1920.png"
+        }
       },
       {
+        "fixture": "session-rewards-fixture.png",
         "totals": {
           "exp": 9,
           "mesos": 27,
           "kills": 1,
           "party_exp": 2
-        },
-        "fixture": "session-rewards-fixture.png"
+        }
       },
       {
+        "fixture": "party-rewards-fixture.png",
         "totals": {
           "exp": 4,
           "mesos": 0,
           "kills": 0,
           "party_exp": 4
-        },
-        "fixture": "party-rewards-fixture.png"
+        }
       }
     ],
-    "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18"
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "ok": true
   },
   "context_checks": {
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
-    "ok": true,
     "cases": [
       {
         "file": "context-party-four.png",
@@ -236,18 +247,20 @@
           ]
         }
       }
-    ]
+    ],
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "ok": true
   },
   "reconciliation_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "exp": 9,
     "party_seen": 2,
     "scope": "Frozen accounting and context modules: delayed party, exact decimal counter, interrupted level confirmation and map plausibility; synthetic data"
   },
   "calibration_check": {
     "ok": true,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "gain": 9,
     "window_consumed_once": true,
     "native_ui": {
@@ -286,15 +299,15 @@
   },
   "synthetic_soak": {
     "running": false,
-    "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
+    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "target_seconds": 120.0,
     "ok": true,
     "latest": {
       "seconds": 120.0,
       "frames": 598,
-      "exp": 5373,
-      "party_seen": 1170,
-      "mesos_observed": 8661,
+      "exp": 5364,
+      "party_seen": 1168,
+      "mesos_observed": 8648,
       "mesos_true": 8949,
       "fonts": 17,
       "images": 26,
@@ -316,11 +329,11 @@
       },
       {
         "seconds": 90.0,
-        "frames": 404,
-        "exp": 3627,
-        "party_seen": 790,
-        "mesos_observed": 5835,
-        "mesos_true": 6045,
+        "frames": 405,
+        "exp": 3636,
+        "party_seen": 792,
+        "mesos_observed": 5853,
+        "mesos_true": 6064,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -329,9 +342,9 @@
       {
         "seconds": 120.0,
         "frames": 598,
-        "exp": 5373,
-        "party_seen": 1170,
-        "mesos_observed": 8661,
+        "exp": 5364,
+        "party_seen": 1168,
+        "mesos_observed": 8648,
         "mesos_true": 8949,
         "fonts": 17,
         "images": 26,
@@ -342,9 +355,10 @@
     "errors": [],
     "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "validation": "Offline in-flight target/map/party/level change callbacks plus partial cover/reveal regressions; frozen unit/periodic/bonus/scroll scenarios; native UI,current-source120second synthetic stability and local OCR fixtures. No live3.21 accuracy claim.",
+  "validation": "Offline in-flight target/map/party/level change callbacks plus partial cover/reveal regressions; frozen unit/periodic/bonus/scroll scenarios; native UI,current-source120second synthetic stability and local OCR fixtures. No live3.22 accuracy claim.",
   "stable_hud_policy": "Retire witnessed unmatched remainder only after repeated accepted unchanged HUD totals separated by more than5seconds; preserve newer notices. Longer actual HUD lag may temporarily undercount until authoritative correction.",
   "changes": [
+    "Exclude malformed historical money-time anchors without crashing valid map comparison",
     "Reject superseded reader callbacks and wallet scopes after measurement resets",
     "Reject background results older than15seconds before fresh evidence or accounting mutation",
     "Finalize old unmatched log remainder using repeated stable HUD evidence",
