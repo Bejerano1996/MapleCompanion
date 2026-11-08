@@ -52,9 +52,9 @@ def party_rows(image,lines):
         x,y,bw,bh=cv2.boundingRect(contour)
         if not (10<=bw<=w*.65 and 2<=bh<=max(20,h*.06) and bw/bh>=1.2):continue
         cy=y+bh/2
-        names=[l for l in lines if l.get('score',0)>=.85 and re.fullmatch(r'[A-Za-z][A-Za-z0-9]{2,19}',l['text'].strip()) and abs(l['y']+l['h']/2-cy)<=max(bh*1.5,12) and 0<x-(l['x']+l['w'])<w*.65]
-        bars.append((x,cy,bool(names)))
-    best=[]
+        names=[index for index,l in enumerate(lines) if l.get('score',0)>=.85 and re.fullmatch(r'[A-Za-z][A-Za-z0-9]{2,19}',l['text'].strip()) and abs(l['y']+l['h']/2-cy)<=max(bh*1.5,12) and 0<x-(l['x']+l['w'])<w*.65]
+        bars.append((x,cy,set(names)))
+    candidates={}
     for left,_,_ in bars:
         group=[(y,named) for start,y,named in bars if abs(start-left)<=5]
         if not any(named for _,named in group):continue
@@ -64,8 +64,20 @@ def party_rows(image,lines):
             if not unique or y-unique[-1]>6:unique.append(y)
         if 2<=len(unique)<=6:
             gaps=[b-a for a,b in zip(unique,unique[1:])]
-            if min(gaps)>=8 and max(gaps)<=max(45,h*.13) and max(gaps)<=min(gaps)*1.6 and len(unique)>len(best):best=unique
-    return len(best) if best else None
+            if min(gaps)>=8 and max(gaps)<=max(45,h*.13) and max(gaps)<=min(gaps)*1.6:
+                anchors=set().union(*(names for _,names in group))
+                candidates[left]=(unique,anchors)
+    # One OCR name can anchor multiple columns. Assign it to the nearest
+    # valid group, then require a single independently anchored group.
+    owners={}
+    for left,(_,anchors) in candidates.items():
+        for anchor in anchors:
+            owners[anchor]=min(left,owners.get(anchor,left))
+    selected=set(owners.values())
+    if len(selected)!=1:
+        return None
+    selected_left=selected.pop()
+    return len(candidates[selected_left][0])
 
 _engine=None
 def roman_suffix(image):
