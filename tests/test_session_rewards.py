@@ -164,6 +164,12 @@ class RewardsTests(unittest.TestCase):
   for text in ('BorusEXPforPARTY（+2）','Bonus EXPfor PARTY (+2','Bonus EXP for PARTY (+2)'):
    self.assertEqual(reward_event(text),('bonus',2))
   self.assertIsNone(reward_event('Bonus EXP for PARTY (+?'))
+ def test_recorded_ocr_prefix_errors_preserve_old_row_identity(self):
+  from session_rewards import reward_kind
+  self.assertEqual(reward_kind('You receved ExP t+T!)'),'exp')
+  self.assertIsNone(reward_event('You receved ExP t+T!)'))
+  self.assertEqual(reward_kind('Borus EXP for PAFTY (+2)'),'bonus')
+  self.assertEqual(reward_event('Borus EXP for PAFTY (+2)'),('bonus',2))
  def test_manual_mode(self):
   s=dict(id='a',running_since=1,auto_rewards=False);self.assertFalse(apply_rewards(s,session_token(s),dict(exp=7)))
 if __name__=='__main__':unittest.main()

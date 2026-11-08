@@ -1,4 +1,28 @@
 {
+  "ocr_prefix_check": {
+    "ok": true,
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
+    "reports": [
+      {
+        "ok": true,
+        "streams": 200,
+        "polls": 9800,
+        "scope": "ActualOCRresults/positions/confidences from18translated localimagevariants replayed as static pre-session messages; all deltas shouldzero; notlivegame"
+      },
+      {
+        "ok": true,
+        "cases": 800,
+        "scope": "Actual noisy-prefix parsing then orderedbonusrefinement/insertion/trailing and HUDoutage/recovery; no livegame"
+      },
+      {
+        "ok": true,
+        "fresh_reward_cases": 200,
+        "merged_rejections": 1000,
+        "scope": "Cached actualOCRbaseline+synthetic parsed new append/positions,200freshrewards;1000mergednoisy-prefixrejections; no new imageOCR/livegame"
+      }
+    ],
+    "scope": "Frozen parser/reader/accountant; actual18localimageOCRvariants staticreplay plus syntheticnew/bonus/merged scenarios, no livegame"
+  },
   "history_check": {
     "ok": true,
     "checks": [
@@ -9,15 +33,15 @@
       "No Tk callback errors"
     ],
     "refreshes": 60,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "scope": "Frozen comparison model and tools screen, isolated withdrawn Tk synthetic history, no game/save/OCR"
   },
   "generation_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "reports": [
       {
-        "name": "audit_frozen_wallet_component_3_22",
+        "name": "audit_frozen_wallet_component_3_23",
         "cases": 400
       }
     ],
@@ -25,10 +49,10 @@
   },
   "capture_age_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "reports": [
       {
-        "name": "audit_frozen_wallet_age_3_22",
+        "name": "audit_frozen_wallet_age_3_23",
         "cases": 200
       }
     ],
@@ -36,14 +60,14 @@
   },
   "stable_hud_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "reports": [
       {
-        "name": "audit_frozen_stable_interleaving_3_22",
+        "name": "audit_frozen_stable_interleaving_3_23",
         "cases": 1000
       },
       {
-        "name": "audit_frozen_stable_recovery_3_22",
+        "name": "audit_frozen_stable_recovery_3_23",
         "cases": 200
       }
     ],
@@ -51,22 +75,22 @@
   },
   "coverage_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "reports": [
       {
-        "name": "audit_frozen_masked_rows_3_22",
+        "name": "audit_frozen_masked_rows_3_23",
         "cases": 200,
         "missed": null,
         "max_rows": null
       },
       {
-        "name": "audit_frozen_unique_pickups_3_22",
+        "name": "audit_frozen_unique_pickups_3_23",
         "cases": 100,
         "missed": 445,
         "max_rows": 12
       },
       {
-        "name": "audit_frozen_moving_masks_3_22",
+        "name": "audit_frozen_moving_masks_3_23",
         "cases": 200,
         "missed": null,
         "max_rows": 18
@@ -78,38 +102,38 @@
     "ok": true,
     "cases": 300,
     "failures": [],
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "scope": "Frozen tracker/RewardRead modules from actualEXE,stationary periodic pre-session rows,zero newmoney; not livegameplay"
   },
   "provenance_check": {
     "ok": true,
     "cases": 800,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "scope": "Frozen model/reward/accountant modules from actualEXE,800orderedbonus/HUDfallback scenarios; not livegameplay"
   },
   "precision_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
-    "tests": 128,
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
+    "tests": 129,
     "scope": "Frozen context/startup/label,character/accounting,reader and strip modules; mocked inputs and recorded context images; not livegameplay"
   },
   "identity_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "fairness_cases": 160,
     "scroll_cases": 200,
     "scope": "Frozen reader/reward modules from actualEXE; synthetic stationary/refinement/repeatedamount and actualscroll scenarios, not live gameplay"
   },
   "retry_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "recovered_mesos": 7,
     "known_total": 17,
     "duplicate": 0,
     "scope": "Frozen reader/reward modules from actualEXE on brightness1.2recorded fixture; not live gameplay"
   },
-  "version": "3.22.0-companion",
-  "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+  "version": "3.23.0-companion",
+  "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
   "native_ui": {
     "ok": true,
     "checks": [
@@ -144,6 +168,7 @@
     ]
   },
   "checks": {
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "cases": [
       {
         "fixture": "live_exp_2560.png",
@@ -194,10 +219,10 @@
         }
       }
     ],
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "ok": true
   },
   "context_checks": {
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "cases": [
       {
         "file": "context-party-four.png",
@@ -248,19 +273,18 @@
         }
       }
     ],
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
     "ok": true
   },
   "reconciliation_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "exp": 9,
     "party_seen": 2,
     "scope": "Frozen accounting and context modules: delayed party, exact decimal counter, interrupted level confirmation and map plausibility; synthetic data"
   },
   "calibration_check": {
     "ok": true,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "gain": 9,
     "window_consumed_once": true,
     "native_ui": {
@@ -299,7 +323,7 @@
   },
   "synthetic_soak": {
     "running": false,
-    "source_sha": "624910e972c89ebf0ce834b38fb3c69265d93a0883f153728cde15327ac7e1eb",
+    "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
     "target_seconds": 120.0,
     "ok": true,
     "latest": {
@@ -355,9 +379,10 @@
     "errors": [],
     "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "validation": "Offline in-flight target/map/party/level change callbacks plus partial cover/reveal regressions; frozen unit/periodic/bonus/scroll scenarios; native UI,current-source120second synthetic stability and local OCR fixtures. No live3.22 accuracy claim.",
+  "validation": "Offline in-flight target/map/party/level change callbacks plus partial cover/reveal regressions; frozen unit/periodic/bonus/scroll scenarios; native UI,current-source120second synthetic stability and local OCR fixtures. No live3.23 accuracy claim.",
   "stable_hud_policy": "Retire witnessed unmatched remainder only after repeated accepted unchanged HUD totals separated by more than5seconds; preserve newer notices. Longer actual HUD lag may temporarily undercount until authoritative correction.",
   "changes": [
+    "Preserve old reward row identity across recorded OCR prefix errors without guessing digits",
     "Exclude malformed historical money-time anchors without crashing valid map comparison",
     "Reject superseded reader callbacks and wallet scopes after measurement resets",
     "Reject background results older than15seconds before fresh evidence or accounting mutation",
