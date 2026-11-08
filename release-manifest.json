@@ -2,32 +2,32 @@
   "provenance_check": {
     "ok": true,
     "cases": 800,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "scope": "Frozen model/reward/accountant modules from actualEXE,800orderedbonus/HUDfallback scenarios; not livegameplay"
   },
   "precision_check": {
     "ok": true,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
-    "tests": 79,
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
+    "tests": 84,
     "scope": "Frozen context/startup/label,character/accounting,reader and strip modules; mocked inputs and recorded context images; not livegameplay"
   },
   "identity_check": {
     "ok": true,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "fairness_cases": 160,
     "scroll_cases": 200,
     "scope": "Frozen reader/reward modules from actualEXE; synthetic stationary/refinement/repeatedamount and actualscroll scenarios, not live gameplay"
   },
   "retry_check": {
     "ok": true,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "recovered_mesos": 7,
     "known_total": 17,
     "duplicate": 0,
     "scope": "Frozen reader/reward modules from actualEXE on brightness1.2recorded fixture; not live gameplay"
   },
-  "version": "3.13.0-companion",
-  "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+  "version": "3.14.0-companion",
+  "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
   "native_ui": {
     "ok": true,
     "checks": [
@@ -62,101 +62,99 @@
     ]
   },
   "checks": {
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "ok": true,
     "cases": [
       {
+        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        },
-        "fixture": "live_exp_2560.png"
+        }
       },
       {
+        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_ant_tunnel2.png"
+        }
       },
       {
+        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_1920.png"
+        }
       },
       {
+        "fixture": "session-rewards-fixture.png",
         "totals": {
           "exp": 9,
           "mesos": 27,
           "kills": 1,
           "party_exp": 2
-        },
-        "fixture": "session-rewards-fixture.png"
+        }
       },
       {
+        "fixture": "party-rewards-fixture.png",
         "totals": {
           "exp": 4,
           "mesos": 0,
           "kills": 0,
           "party_exp": 4
-        },
-        "fixture": "party-rewards-fixture.png"
+        }
       }
     ]
   },
   "context_checks": {
-    "ok": true,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "cases": [
       {
-        "file": "context-party-four.png",
         "result": {
           "ok": true,
           "party_visible": 4,
           "roman_suffix": null,
           "labels": []
-        }
+        },
+        "file": "context-party-four.png"
       },
       {
-        "file": "context-party-five.png",
         "result": {
           "ok": true,
           "party_visible": 5,
           "roman_suffix": null,
           "labels": []
-        }
+        },
+        "file": "context-party-five.png"
       },
       {
-        "file": "live_frame_1920.png",
         "result": {
           "ok": true,
           "party_visible": null,
           "roman_suffix": "II",
           "labels": []
-        }
+        },
+        "file": "live_frame_1920.png"
       },
       {
-        "file": "live_exp_2560.png",
         "result": {
           "ok": true,
           "party_visible": 2,
           "roman_suffix": "III",
           "labels": []
-        }
+        },
+        "file": "live_exp_2560.png"
       },
       {
-        "file": "context-horny-scene.png",
         "result": {
           "ok": true,
           "party_visible": 2,
@@ -165,20 +163,22 @@
             "Lv,22HornyMushroom",
             "Lv.22 Horny M"
           ]
-        }
+        },
+        "file": "context-horny-scene.png"
       }
-    ]
+    ],
+    "ok": true
   },
   "reconciliation_check": {
     "ok": true,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "exp": 9,
     "party_seen": 2,
     "scope": "Frozen accounting and context modules: delayed party, exact decimal counter, interrupted level confirmation and map plausibility; synthetic data"
   },
   "calibration_check": {
     "ok": true,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "gain": 9,
     "window_consumed_once": true,
     "native_ui": {
@@ -212,16 +212,16 @@
   },
   "synthetic_soak": {
     "running": false,
-    "source_sha": "450d08c7bd23ccd5e3e26b95b388ccf7c24936796084f1e70fd6504cf3b10bf6",
+    "source_sha": "9ecf711167c40e8f0b662062bc7503fb6355c9065dd398119b4fec54a918f23b",
     "target_seconds": 120.0,
     "ok": true,
     "latest": {
       "seconds": 120.0,
-      "frames": 626,
-      "exp": 5625,
-      "party_seen": 1226,
-      "mesos_observed": 9090,
-      "mesos_true": 9384,
+      "frames": 604,
+      "exp": 5427,
+      "party_seen": 1182,
+      "mesos_observed": 8760,
+      "mesos_true": 9054,
       "fonts": 17,
       "images": 26,
       "jobs": 6,
@@ -230,11 +230,11 @@
     "samples": [
       {
         "seconds": 30.0,
-        "frames": 47,
-        "exp": 414,
-        "party_seen": 92,
-        "mesos_observed": 672,
-        "mesos_true": 685,
+        "frames": 25,
+        "exp": 216,
+        "party_seen": 48,
+        "mesos_observed": 342,
+        "mesos_true": 355,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -242,11 +242,11 @@
       },
       {
         "seconds": 90.0,
-        "frames": 433,
-        "exp": 3888,
-        "party_seen": 848,
-        "mesos_observed": 6268,
-        "mesos_true": 6474,
+        "frames": 411,
+        "exp": 3690,
+        "party_seen": 804,
+        "mesos_observed": 5938,
+        "mesos_true": 6144,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -254,11 +254,11 @@
       },
       {
         "seconds": 120.0,
-        "frames": 626,
-        "exp": 5625,
-        "party_seen": 1226,
-        "mesos_observed": 9090,
-        "mesos_true": 9384,
+        "frames": 604,
+        "exp": 5427,
+        "party_seen": 1182,
+        "mesos_observed": 8760,
+        "mesos_true": 9054,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -268,10 +268,10 @@
     "errors": [],
     "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "validation": "Offline monster-label prefix and automatic-startup context regressions; frozen model/accounting/context/reader/strip tests plus800bonus and360notice scenarios; native UI,current-source120second synthetic stability and local OCR fixtures. No live3.13 accuracy claim.",
+  "validation": "Offline malformed-grouping and merged-reward regressions; frozen model/accounting/context/reader/strip tests plus800bonus and360notice scenarios; native UI,current-source120second synthetic stability and local OCR fixtures. No live3.14 accuracy claim.",
   "changes": [
-    "Require a monster level label at the start of an OCR line",
-    "Keep automatic startup target unknown until fresh context arrives",
-    "Preserve explicit manual target override"
+    "Keep malformed comma-grouped amounts pending instead of silently deleting separators",
+    "Reject detectably merged reward rows with multiple amount introducers",
+    "Preserve valid plain, grouped and space-split reward amounts"
   ]
 }

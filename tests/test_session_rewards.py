@@ -49,6 +49,20 @@ class RewardsTests(unittest.TestCase):
  def test_parser(self):
   for text,event in [('You received EXP (+7)',('exp',7)),('Bonus EXP for PARTY (+2)',('bonus',2)),('You have gained mesos (+10)',('mesos',10)),('have qained mesos f+7)',('mesos',7))]:self.assertEqual(reward_event(text),event)
   for text in ('Salad 220 mesos','Quest EXP 500','You lost mesos (-7)','You received EXP (+100000001)'):self.assertIsNone(reward_event(text))
+ def test_malformed_thousands_groups_are_not_concrete_rewards(self):
+  for amount in ('1,2','1,,000','1,234,','12,34','1234,567'):
+   for prefix in ('You have gained mesos','You received EXP','Bonus EXP for PARTY'):
+    with self.subTest(amount=amount,prefix=prefix):self.assertIsNone(reward_event(prefix+' (+'+amount+')'))
+ def test_valid_grouped_and_space_split_amounts_remain_supported(self):
+  for amount,value in [('1,234',1234),('12,345,678',12345678),('1234',1234),('1 234',1234),('1, 234',1234)]:
+   self.assertEqual(reward_event('You have gained mesos (+'+amount+')'),('mesos',value))
+ def test_merged_reward_messages_are_not_one_relabelled_amount(self):
+  for text in ('You received EXP (+7) Bonus EXP for PARTY (+2)',
+               'You received EXP (+7) You have gained mesos (+10)',
+               'You have gained mesos (+10) You have gained mesos (+20)',
+               'You received EXP (+7) Bonus EXP for PARTY (+?)',
+               'You received EXP (+?) You have gained mesos (+10)'):
+   with self.subTest(text=text):self.assertIsNone(reward_event(text))
  def test_baseline_and_duplicate(self):
   t=RewardTracker();a=[('mesos',10)];self.assertFalse(any(t.feed(a).values()));self.assertFalse(any(t.feed(a).values()))
   b=a+[('exp',7),('bonus',2),('mesos',7)]

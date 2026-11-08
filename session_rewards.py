@@ -5,9 +5,12 @@ import unicodedata
 _AMOUNT=re.compile(r'[\(f]\s*\+\s*([0-9][0-9, ]*)\s*(?:\)|$)')
 
 def reward_event(text):
-    text=unicodedata.normalize('NFKC',str(text)).strip();amount=_AMOUNT.search(text)
-    if not amount:return None
-    value=int(amount[1].replace(',','').replace(' ',''))
+    text=unicodedata.normalize('NFKC',str(text)).strip();amounts=list(_AMOUNT.finditer(text))
+    if len(amounts)!=1 or len(re.findall(r'[\(f]\s*\+',text))!=1:return None
+    amount=amounts[0]
+    digits=amount[1].replace(' ','')
+    if ',' in digits and not re.fullmatch(r'[0-9]{1,3}(?:,[0-9]{3})+',digits):return None
+    value=int(digits.replace(',',''))
     if not 0<value<=100000000:return None
     lower=text.casefold().replace('qained','gained').replace('receited','received')
     if 'mesos' in lower and ('gained' in lower or 'received' in lower):return ('mesos',value)
