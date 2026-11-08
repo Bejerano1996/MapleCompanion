@@ -21,10 +21,24 @@ class TrainingTests(unittest.TestCase):
   x=ExpLedger();x.observe({'level':27,'exp':100},20,0)
   self.assertIsNone(x.observe({'level':25,'exp':200},20,5))
   self.assertEqual(x.observe({'level':25,'exp':200},20,10),20)
+ def test_jump_confirmation_requires_consecutive_samples(self):
+  for target in (25,30):
+   with self.subTest(target=target):
+    x=ExpLedger();x.observe({'level':27,'exp':1000},0,0)
+    self.assertIsNone(x.observe({'level':target,'exp':100},0,1))
+    self.assertEqual(x.observe({'level':27,'exp':1009},0,2),9)
+    self.assertIsNone(x.observe({'level':target,'exp':100},9,3))
+    self.assertEqual(x.last['level'],27)
  def test_death_is_net_loss(self):
   x=ExpLedger();x.observe({'level':27,'exp':1000},0,0);self.assertEqual(x.observe({'level':27,'exp':900},0,5),-100)
  def test_round_up_kills(self):
   r=training_forecast({'level':27,'exp':63600},{'name':'Evil Eye','exp':50});self.assertEqual(r['kills'],2)
+ def test_decimal_personal_yield_exact_boundary(self):
+  r=training_forecast({'level':5,'exp':114},{'name':'probe','exp':1},personal_gain=1.4)
+  self.assertEqual(r['kills'],15)
+ def test_decimal_personal_yield_rounds_up_only_remainder(self):
+  r=training_forecast({'level':5,'exp':113},{'name':'probe','exp':1},personal_gain=1.4)
+  self.assertEqual(r['kills'],16)
  def test_party_total_tracks_only_own_level_change(self):
   self.assertEqual(adjusted_party_total(54,27,28),55)
   self.assertEqual(adjusted_party_total(None,27,28),None)

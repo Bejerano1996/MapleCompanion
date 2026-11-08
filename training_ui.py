@@ -8,11 +8,17 @@ from companion_widgets import ui_button
 from training_model import training_forecast,character_reading,absolute_exp,adjusted_party_total
 
 
+def training_plausible_targets(self):
+    from training_context import plausible_monsters
+    context=getattr(self,'_training_context',None) or {}
+    return plausible_monsters(context.get('mobs',[]),context.get('map'),self.db.map_data)
+
+
 def training_target(self):
     context=getattr(self,'_training_context',None)
     if self.state.get('training_auto_context',True) and context is not None:
         if not context.get('map_readable') or not context.get('map') or time.time()-(context.get('map_at') or 0)>20 or time.time()-(context.get('mobs_at') or 0)>20:return None
-        candidates=[self.db.monsters[i] for i in context.get('mobs',[]) if i in self.db.monsters]
+        candidates=[self.db.monsters[i] for i in self.training_plausible_targets() if i in self.db.monsters]
         return candidates[0] if len(candidates)==1 else None
     selected=str(self.state.get('training_target') or '')
     if selected:
@@ -44,7 +50,7 @@ def training_forecast_now(self):
         gain=learner.estimate(self.training_gain_context(),time.monotonic());observed=gain is not None
     context=getattr(self,'_training_context',None)
     if self.state.get('training_auto_context',True) and context is not None:
-        if self.training_target() is None:return {'available':False,'reason':'Target unknown / mixed mobs · use Setup or show labels','targets':tuple(context.get('mobs',[]))}
+        if self.training_target() is None:return {'available':False,'reason':'Target unknown / mixed mobs · use Setup or show labels','targets':tuple(self.training_plausible_targets())}
         party=context.get('party_visible') if context.get('party_readable') and time.time()-(context.get('party_at') or 0)<=20 else None
         if not party and gain is None:
             progress=learner.progress(self.training_gain_context(),time.monotonic()) if learner else 0

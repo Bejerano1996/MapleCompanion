@@ -64,6 +64,7 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     next(v for v in ui_walk_widgets(a._tools_window) if isinstance(v,tk.Button) and v.cget('text')=='Save totals').invoke();pump()
     check('Negative net EXP does not break Save',session['exp']==-100)
     now=time.time()
+    a.db.map_data[a.state['map']]={'monsters':[{'id':'23'},{'id':'24'}]}
     a._training_context=dict(game=True,at=now,map=a.state['map'],map_at=now,map_readable=True,mobs=[23],mobs_at=now,party_visible=4,party_at=now,party_readable=True)
     a.state['training_auto_context']=True
     check('Automatic forecast uses visible roster',a.training_forecast_now()['party']==4)
@@ -94,5 +95,14 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     check('Map change invalidates learned yield',not a.training_forecast_now()['available'])
     a._training_context['mobs']=[]
     check('Unknown target never learns from a reward',not a.training_observe_yield(dict(exp=9,kills=1),{'level':32,'exp':1027},{'level':32,'exp':1036}))
+    now=time.time();a.state['training_auto_context']=True
+    a.db.map_data['context-fixture']={'monsters':[{'id':'24'}]}
+    a._training_context.update(map='context-fixture',map_at=now,map_readable=True,mobs=[23],mobs_at=now)
+    check('Automatic target rejects species absent from known map spawns',a.training_target() is None)
+    check('Unsupported label cannot calibrate',not a.training_observe_yield(dict(exp=9,kills=1),{'level':32,'exp':1027},{'level':32,'exp':1036}))
+    a._training_context['mobs']=[23,24]
+    check('Only supported visible species becomes inferred target',a.training_target()['id']==24)
+    a._training_context.update(map='missing-fixture',mobs=[23])
+    check('Missing map metadata does not invent spawn knowledge',a.training_target()['id']==23)
     check('No Tk callback errors',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()

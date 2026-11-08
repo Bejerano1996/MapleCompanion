@@ -1,5 +1,6 @@
 """Validated character EXP readings and honest training forecasts (Classic levels 1-99)."""
 import math,re,time
+from decimal import Decimal
 from collections import Counter
 import leveling
 
@@ -47,6 +48,7 @@ class ExpLedger:
             if difference<0:
                 self.anchor=total;self.session_anchor=session_exp
             self.pending_jump=None
+        self.pending_jump=None
         self.confirmed=True;self.last=reading;self.last_at=now
         return self.session_anchor+total-self.anchor
 
@@ -67,4 +69,6 @@ def training_forecast(reading,mob,party=1,hits='all',party_levels=None,now=None,
     if party_levels is not None and (not isinstance(party_levels,int) or isinstance(party_levels,bool) or party_levels<lv+party-1):return {'available':False,'reason':'Check the party level total'}
     if personal_gain is not None and (not isinstance(personal_gain,(int,float)) or isinstance(personal_gain,bool) or not math.isfinite(personal_gain) or personal_gain<1):return {'available':False,'reason':'Check personal EXP per kill'}
     gain=personal_gain if personal_gain is not None else leveling.party_exp(mob['exp'],lv,party,hits,party_levels)
-    return {'available':True,'remaining':left,'gain':gain,'kills':math.ceil(left/gain),'mob':mob.get('display') or mob.get('name') or str(mob.get('id')),'level':lv,'next_level':lv+1,'party':party,'stale':read_at is not None and now is not None and now-read_at>15,'source':'your EXP/kill' if personal_gain is not None else 'formula · party share' if party>1 else 'monster base EXP'}
+    numerator,denominator=Decimal(str(gain)).as_integer_ratio()
+    kills=(left*denominator+numerator-1)//numerator
+    return {'available':True,'remaining':left,'gain':gain,'kills':kills,'mob':mob.get('display') or mob.get('name') or str(mob.get('id')),'level':lv,'next_level':lv+1,'party':party,'stale':read_at is not None and now is not None and now-read_at>15,'source':'your EXP/kill' if personal_gain is not None else 'formula · party share' if party>1 else 'monster base EXP'}

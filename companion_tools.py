@@ -67,10 +67,10 @@ def utility_poll_rewards(self):
     def loaded(result):
         events=result.get('events') if isinstance(result,dict) else result
         reading=result.get('character') if isinstance(result,dict) else None
-        if events and any(kind=='bonus' for kind,amount in events):self._training_party_seen_at=time.time()
         self._reward_busy=False
         current=self.state['utility_session']
         if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
+        if events and any(kind=='bonus' for kind,amount in events):self._training_party_seen_at=time.time()
         self._reward_status='Game or reward area unavailable' if events is None else ('Reading reward log · some amounts unclear' if any(amount is None for kind,amount in events) else 'Reading reward log') if events else 'Waiting for visible rewards'
         if getattr(events,'partial',False):self._reward_status+=' · partially covered; visible rows only'
         previous_character=accountant.character

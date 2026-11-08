@@ -3,6 +3,15 @@ import re,time
 
 def key(text):return re.sub(r'[^a-z0-9]','',str(text).casefold())
 
+def plausible_monsters(identities,map_id,map_data):
+    """Reject labels outside indexed normal spawns; unknown metadata stays unknown."""
+    record=map_data.get(map_id)
+    spawns=record.get('monsters') if isinstance(record,dict) else None
+    if not isinstance(spawns,list) or any(not isinstance(row,dict) or row.get('id') is None for row in spawns):
+        return list(identities)
+    allowed={str(row['id']) for row in spawns}
+    return [identity for identity in identities if str(identity) in allowed]
+
 def visible_monsters(lines,monsters):
     found=[]
     for line in lines:

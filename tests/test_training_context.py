@@ -3,10 +3,18 @@ from pathlib import Path
 from unittest.mock import patch
 from PIL import Image
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
-from training_context import ContextTracker,visible_monsters,capture_context,party_rows,context_lines,map_from_title
+from training_context import plausible_monsters,ContextTracker,visible_monsters,capture_context,party_rows,context_lines,map_from_title
 from game_sync import find_minimap,minimap_title
 
 class ContextTests(unittest.TestCase):
+    def test_spawn_plausibility_distinguishes_unknown_and_empty(self):
+        records={'known':{'monsters':[{'id':'24'}]},'empty':{'monsters':[]},'unknown':{},'bad':{'monsters':[{}]}}
+        self.assertEqual(plausible_monsters([23,24],'known',records),[24])
+        self.assertEqual(plausible_monsters([23],'empty',records),[])
+        for map_id in ('missing','unknown','bad'):
+            self.assertEqual(plausible_monsters([23],map_id,records),[23])
+        self.assertEqual(plausible_monsters(['24'],'known',records),['24'])
+
     def test_confirm_and_expire_without_inventing_solo(self):
         t=ContextTracker();r=dict(game=True,map='a',party_visible=4,mobs=[1])
         self.assertIsNone(t.feed(r,0).get('map'))
