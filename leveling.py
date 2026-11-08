@@ -73,7 +73,7 @@ def fmt_percent(p):
 _DIGIT_LOOKALIKES = str.maketrans("SsZzGBOoDlIi|", "5522680001111")
 _PERCENT = re.compile(r"(?<![\d.,])(\d{1,3}) ?[.,] ?(\d{2})(?!\d)")
 _FRACTION = re.compile(r"[.,] ?(\d{2}) ?[%*+]")             # ".87%": the percent's end alone
-_NUMBER = re.compile(r"(?<![\d.,])\d{1,3}(?:[.,]\d{3})+(?![\d])|(?<![\d.,])\d{1,9}(?![\d.,])")
+_NUMBER = re.compile(r"(?<![\d.,])\d{1,3}(?:[.,]\d{3})+(?![\d])|(?<![\d.,])\d{1,10}(?![\d.,])")
 
 
 def _digits(text):
