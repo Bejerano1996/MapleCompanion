@@ -9,6 +9,11 @@ from training_model import training_forecast,character_reading,absolute_exp,adju
 
 
 def training_target(self):
+    context=getattr(self,'_training_context',None)
+    if self.state.get('training_auto_context',True) and context is not None:
+        if not context.get('map_readable') or not context.get('map') or time.time()-(context.get('map_at') or 0)>20 or time.time()-(context.get('mobs_at') or 0)>20:return None
+        candidates=[self.db.monsters[i] for i in context.get('mobs',[]) if i in self.db.monsters]
+        return candidates[0] if len(candidates)==1 else None
     selected=str(self.state.get('training_target') or '')
     if selected:
         return next((m for m in self.db.monsters.values() if str(m['id'])==selected),None)
@@ -24,12 +29,22 @@ def training_party_total(self):
 
 def training_gain_context(self):
     target=self.training_target();reading=self.state.get('character_exp') or {}
+    context=getattr(self,'_training_context',None)
+    if self.state.get('training_auto_context',True) and context is not None:
+        return [str(target['id']) if target else '',context.get('map'),context.get('party_visible'),reading.get('level')]
     return [str(target['id']) if target else '',self.state.get('party',1),self.state.get('party_hits','all'),self.training_party_total(),reading.get('level')]
 
 def training_forecast_now(self):
     gain=self.state.get('training_personal_gain')
     context=self.state.get('training_gain_context')
     if context is not None and context!=self.training_gain_context():gain=None
+    context=getattr(self,'_training_context',None)
+    if self.state.get('training_auto_context',True) and context is not None:
+        party=context.get('party_visible') if context.get('party_readable') and time.time()-(context.get('party_at') or 0)<=20 else None
+        if not party:return {'available':False,'reason':'Party size unknown · show roster or use manual Setup'}
+        result=training_forecast(self.state.get('character_exp'),self.training_target(),party,'all',None,time.time(),self.state.get('character_exp_at'),gain)
+        if result.get('available'):result['source']='visible mob / roster · estimated share'
+        return result
     return training_forecast(self.state.get('character_exp'),self.training_target(),self.state.get('party',1),self.state.get('party_hits','all'),self.training_party_total(),time.time(),self.state.get('character_exp_at'),gain)
 
 def training_accept_character(self,reading):
@@ -79,6 +94,8 @@ def training_setup(self):
     w=self.ui_dialog('Training · level & party');self._training_setup_window=w;self._companion_exp_window=w;w.geometry('460x600');w.minsize(400,380)
     dialog=w;area=ScrollArea(dialog);area.pack(fill='both',expand=True);w=area.inner
     r=self.state.get('character_exp') or {}
+    automatic=tk.BooleanVar(value=self.state.get('training_auto_context',True))
+    tk.Checkbutton(w,text='Detect map, visible monsters and party automatically',variable=automatic,bg=C['bg'],fg=C['text'],selectcolor=C['card']).pack(anchor='w',padx=18,pady=8)
     values={}
     def field(title,key,value):
         label(w,title,fg='muted',size=9).pack(anchor='w',padx=18,pady=(6,1))
@@ -111,7 +128,7 @@ def training_setup(self):
             if gain is not None and (not math.isfinite(gain) or gain<1):raise ValueError('EXP per kill must be at least 1')
             if n is not None:absolute_exp({'level':lv,'exp':n})
         except (ValueError,TypeError) as error:feedback.config(text=str(error));return
-        self.state.update(party=int(party.get()),party_hits=hits.get(),training_party_levels=levels,training_party_reference_level=lv if levels is not None else None,training_personal_gain=gain)
+        self.state.update(training_auto_context=automatic.get(),party=int(party.get()),party_hits=hits.get(),training_party_levels=levels,training_party_reference_level=lv if levels is not None else None,training_personal_gain=gain)
         if target_var.get() in names:self.state['training_target']=str(names[target_var.get()]['id'])
         if n is not None:
             import leveling
@@ -131,6 +148,8 @@ def training_session_counter(self,parent):
     self._training_session_forecast_label=text
 
 def install_training_ui(cls):
+    from training_context import context_poll,context_summary
+    cls.context_poll=context_poll;cls.context_summary=context_summary
     for name,fn in list(globals().items()):
         if name.startswith('training_') and callable(fn):setattr(cls,name,fn)
     cls.companion_exp_details=training_setup;cls.render_levelup=training_render_levelup;cls.refresh_exp_pill=training_refresh_exp_pill;cls.on_exp_bar=training_on_exp_bar

@@ -3761,6 +3761,18 @@ App = integrate(App, globals())
 
 
 if __name__ == "__main__":
+    if len(sys.argv)==4 and sys.argv[1]=='--check-context-image':
+        try:
+            from training_context import context_lines,party_rows,roman_suffix
+            image=Image.open(sys.argv[2]).convert('RGB');lines=context_lines(image)
+            from game_sync import minimap_title,find_minimap
+            frame=find_minimap(image)
+            report={'ok':True,'party_visible':party_rows(image,lines),'roman_suffix':roman_suffix(minimap_title(image,frame)) if frame else None,'labels':[l['text'] for l in lines if re.search(r'\bLv[\s.,:]*\d',l['text'],re.I)]}
+        except Exception:
+            import traceback
+            report={'ok':False,'error':traceback.format_exc()}
+        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
+        sys.exit()
     if len(sys.argv)==4 and sys.argv[1]=='--check-wallet-image':
         try:
             from session_reader import ocr_rows,wallet_from_rows

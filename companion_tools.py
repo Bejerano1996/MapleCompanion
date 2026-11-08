@@ -19,6 +19,7 @@ def ui_tools_indicator(self):
         if tip:tip.text='Companion tools · Ctrl+K'+(f' · {due} reminders due' if due else '')
 
 def utility_tick(self):
+    self.context_poll()
     if self.state['utility_session'].get('running_since') is not None:
         utility_track_current_map(self)
     self.utility_poll_rewards()
@@ -64,6 +65,7 @@ def utility_poll_rewards(self):
     def loaded(result):
         events=result.get('events') if isinstance(result,dict) else result
         reading=result.get('character') if isinstance(result,dict) else None
+        if events and any(kind=='bonus' for kind,amount in events):self._training_party_seen_at=time.time()
         self._reward_busy=False
         current=self.state['utility_session']
         if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
@@ -139,6 +141,9 @@ def utility_track_current_map(self):
     current=str(self.state.get('map') or '')
     readable=getattr(self,'_live_last_result',{}) or {}
     known=current in self.db.maps
+    if self.state.get('training_auto_context',True) and hasattr(self,'_training_context'):
+        context=self._training_context
+        known=known and context.get('map_readable') and context.get('map')==current and time.time()-context.get('map_at',0)<=20
     if self.state.get('auto_sync') and readable.get('_minimap_readable') is False:known=False
     record=self.db.maps.get(current,{})
     self.state['utility_session']=utility_session_track_map(self.state['utility_session'],
@@ -259,7 +264,7 @@ def utility_render_session(self, parent):
         elif current.get('map_id'):
             map_text='Session map: '+str(current.get('map_name') or current['map_id'])
         else:map_text='The session map is recorded when you start.'
-        map_label.config(text=map_text)
+        map_label.config(text=self.context_summary() if self.state.get('training_auto_context',True) else map_text)
         target_label=getattr(self,'_training_session_forecast_label',None)
         if target_label is not None and target_label.winfo_exists():target_label.config(text=self.training_forecast_text())
         source=current.get('exp_source','Reward log · observed') if automatic else 'Manual totals'

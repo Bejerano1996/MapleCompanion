@@ -133,3 +133,10 @@ The first release under the new name: a redesigned in-game overlay.
 - Geometry-aware matching uses surviving text rows to estimate scroll movement, avoiding inappropriate row matches after scroll.
 -120ms post-read interval instead of450ms; low-confidence money still requires confirmation.
 - Native UI, capture masking, repeated reward/scroll and saved OCR fixtures pass. Live accuracy remains to be measured; no exact-count claim.
+
+## 3.3.0 — Automatic training context
+- Separate background context reader for minimap, visible roster and monster level/name labels.
+- Confirmed map changes update native location/GPS handling; stale or covered context is not reused as known data.
+- Visible roster count drives explicitly estimated forecasts; unknown roster never assumes solo.
+- Manual context override and retained observed species; multiple species do not silently pick one.
+- Fixed Roman numeral map confusion and low-HP roster omission found during validation.

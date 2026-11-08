@@ -1,38 +1,38 @@
 {
-  "version": "3.2.0-companion",
-  "source_sha": "6d98a57e13cd3a9a809a6e1a891c3ea328c6d03d7411a4532fef9e1e6e36274c",
+  "version": "3.3.0-companion",
+  "source_sha": "d7924b564217f58238ba4c30954bca745289791695fa0c53b0630e788564a66a",
   "checks": {
-    "ok": true,
+    "source_sha": "d7924b564217f58238ba4c30954bca745289791695fa0c53b0630e788564a66a",
     "cases": [
       {
-        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_exp_2560.png"
       },
       {
-        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_frame_ant_tunnel2.png"
       },
       {
-        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_frame_1920.png"
       },
       {
         "totals": {
@@ -53,13 +53,67 @@
         "fixture": "party-rewards-fixture.png"
       }
     ],
-    "source_sha": "6d98a57e13cd3a9a809a6e1a891c3ea328c6d03d7411a4532fef9e1e6e36274c"
+    "ok": true
   },
-  "validation": "Deterministic notice scroll/repeated-amount tests, native session/source-switch checks, capture and local packaged OCR fixtures. No live3.2 comparison; game was closed. Counts remain observed estimates.",
+  "context_checks": {
+    "source_sha": "d7924b564217f58238ba4c30954bca745289791695fa0c53b0630e788564a66a",
+    "cases": [
+      {
+        "file": "context-party-four.png",
+        "result": {
+          "ok": true,
+          "party_visible": 4,
+          "roman_suffix": null,
+          "labels": []
+        }
+      },
+      {
+        "file": "context-party-five.png",
+        "result": {
+          "ok": true,
+          "party_visible": 5,
+          "roman_suffix": null,
+          "labels": []
+        }
+      },
+      {
+        "file": "live_frame_1920.png",
+        "result": {
+          "ok": true,
+          "party_visible": null,
+          "roman_suffix": "II",
+          "labels": []
+        }
+      },
+      {
+        "file": "live_exp_2560.png",
+        "result": {
+          "ok": true,
+          "party_visible": 2,
+          "roman_suffix": "III",
+          "labels": []
+        }
+      },
+      {
+        "file": "context-horny-scene.png",
+        "result": {
+          "ok": true,
+          "party_visible": 2,
+          "roman_suffix": null,
+          "labels": [
+            "Lv,22HornyMushroom",
+            "Lv.22 Horny M"
+          ]
+        }
+      }
+    ],
+    "ok": true
+  },
+  "validation": "Recorded minimap II/III, visible rosters4/5 and monster label tests; native context confirmation and manual override UI checks; independent live map read. Visible monsters are not definitive kill attribution, and visible roster is not eligibility telemetry.",
   "changes": [
-    "Lower-right pickup notice source",
-    "Scroll-aware OCR row matching",
-    "120ms post-read wait",
-    "Source-specific money baseline"
+    "Automatic minimap / visible roster / monster context",
+    "Independent background OCR worker",
+    "Confirmed and expiring context",
+    "Manual override and unknown state"
   ]
 }

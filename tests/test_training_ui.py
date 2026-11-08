@@ -60,5 +60,21 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     a._utility_show('session');pump()
     next(v for v in ui_walk_widgets(a._tools_window) if isinstance(v,tk.Button) and v.cget('text')=='Save totals').invoke();pump()
     check('Negative net EXP does not break Save',session['exp']==-100)
+    now=time.time()
+    a._training_context=dict(game=True,at=now,map=a.state['map'],map_at=now,map_readable=True,mobs=[23],mobs_at=now,party_visible=4,party_at=now,party_readable=True)
+    a.state['training_auto_context']=True
+    check('Automatic forecast uses visible roster',a.training_forecast_now()['party']==4)
+    a._training_context['party_readable']=False
+    check('Hidden roster does not assume solo or saved party',not a.training_forecast_now()['available'])
+    a._training_context['party_readable']=True;a._training_context['mobs']=[23,24]
+    check('Multiple visible mobs do not select arbitrary target',a.training_target() is None)
+    a.state['training_auto_context']=False
+    check('Manual target remains available',a.training_target()['id']==23)
+    a.state['training_auto_context']=True;a._context_busy=False
+    a.run_bg=lambda fn,callback,on_error=None:callback(dict(game=True,map=a.state['map'],party_visible=4,mobs=[23],captured_at=time.time()))
+    a._context_last_poll=-100;a.context_poll()
+    check('First automatic context read remains unconfirmed',a._training_context.get('party_visible') is None)
+    a._context_last_poll=-100;a.context_poll()
+    check('Confirmed automatic context reaches session UI',a._training_context['party_visible']==4 and '4 visible' in a.context_summary())
     check('No Tk callback errors',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()
