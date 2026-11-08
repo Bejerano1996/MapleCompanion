@@ -11,7 +11,8 @@ def character_reading(texts,level_hint=None):
     clean=[str(t) for t in texts]
     hud=[]
     for t in clean:
-        hud += [int(m) for m in re.findall(r'\bL[Vv][\s.:]*(\d{1,2})(?!\d)',t)]
+        hud += [int(m) for m in re.findall(r'\bL[Vv][\s.:]*(\d+)(?!\d)',t)]
+    if hud and any(not valid_level(v) for v in hud):return None
     numbers,pcts,_=leveling.bar_numbers([t for t in clean if 'exp' in t.casefold() or '%' in t])
     if not numbers or not pcts:return None
     levels=[v for v in hud if valid_level(v)] or list(range(1,100))
@@ -35,7 +36,7 @@ def absolute_exp(reading):
 
 class ExpLedger:
     """Two validated samples establish a baseline; bar deltas replace log totals, never add twice."""
-    def __init__(self):self.anchor=None;self.session_anchor=0;self.last=None;self.confirmed=False;self.last_at=None;self.pending_jump=None
+    def __init__(self):self.anchor=None;self.session_anchor=0;self.last=None;self.confirmed=False;self.last_at=None;self.pending_jump=None;self.pending_jump_at=None
     def observe(self,reading,session_exp,now=None):
         if reading is None:return None
         now=time.monotonic() if now is None else now;total=absolute_exp(reading)
@@ -43,12 +44,11 @@ class ExpLedger:
             self.anchor=total;self.session_anchor=session_exp;self.last=reading;self.last_at=now;return None
         difference=reading['level']-self.last['level']
         if difference<0 or difference>1:
-            if self.pending_jump is None or self.pending_jump['level']!=reading['level']:
-                self.pending_jump=reading;return None
+            if self.pending_jump is None or self.pending_jump['level']!=reading['level'] or now-self.pending_jump_at>15:
+                self.pending_jump=reading;self.pending_jump_at=now;return None
             if difference<0:
                 self.anchor=total;self.session_anchor=session_exp
-            self.pending_jump=None
-        self.pending_jump=None
+        self.pending_jump=None;self.pending_jump_at=None
         self.confirmed=True;self.last=reading;self.last_at=now
         return self.session_anchor+total-self.anchor
 

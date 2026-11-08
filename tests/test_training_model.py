@@ -7,6 +7,11 @@ class TrainingTests(unittest.TestCase):
   r=character_reading(['LV. 27','EXP. 31,833 [50.00%]'],level_hint=2);self.assertEqual((r['level'],r['exp']),(27,31833))
  def test_no_guess_from_percent(self):self.assertIsNone(character_reading(['EXP 50.00%']))
  def test_conflicting_hud(self):self.assertIsNone(character_reading(['LV. 2','EXP. 31,833 [50.00%]']))
+ def test_unsupported_explicit_hud_level_never_falls_back_to_another_level(self):
+  for level in (0,100,200,999):
+   with self.subTest(level=level):self.assertIsNone(character_reading([f'LV. {level}','EXP. 31,833 [50.00%]']))
+ def test_supported_level_can_still_be_inferred_without_hud(self):
+  self.assertEqual(character_reading(['EXP. 31,833 [50.00%]'])['level'],27)
  def test_ledger_not_double_log(self):
   x=ExpLedger();self.assertIsNone(x.observe({'level':27,'exp':1000},session_exp=50,now=0))
   self.assertEqual(x.observe({'level':27,'exp':1100},session_exp=150,now=5),150)
@@ -29,6 +34,18 @@ class TrainingTests(unittest.TestCase):
     self.assertEqual(x.observe({'level':27,'exp':1009},0,2),9)
     self.assertIsNone(x.observe({'level':target,'exp':100},9,3))
     self.assertEqual(x.last['level'],27)
+ def test_pending_jump_expires_before_later_confirmation(self):
+  for target in (25,30):
+   with self.subTest(target=target):
+    x=ExpLedger();x.observe({'level':27,'exp':1000},0,0)
+    self.assertIsNone(x.observe({'level':target,'exp':100},0,1))
+    self.assertIsNone(x.observe({'level':target,'exp':100},0,1000))
+    self.assertEqual(x.last['level'],27)
+    self.assertIsNotNone(x.observe({'level':target,'exp':100},0,1001))
+ def test_pending_jump_confirmation_freshness_boundary(self):
+  x=ExpLedger();x.observe({'level':27,'exp':1000},0,0)
+  x.observe({'level':30,'exp':100},0,1)
+  self.assertIsNotNone(x.observe({'level':30,'exp':100},0,16))
  def test_death_is_net_loss(self):
   x=ExpLedger();x.observe({'level':27,'exp':1000},0,0);self.assertEqual(x.observe({'level':27,'exp':900},0,5),-100)
  def test_round_up_kills(self):
