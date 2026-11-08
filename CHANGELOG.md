@@ -92,3 +92,9 @@ The first release under the new name: a redesigned in-game overlay.
   corrected and are remembered.
 - Slim quest cards with progress bars; the panel reopens after "Reset from Quest window".
 - Opening UMBRΛLE again brings the running one forward instead of starting a second copy.
+
+## 3.0.1 — UI responsiveness
+- Monster typing bursts coalesce into one render after 150 ms; switching tabs cancels the visual update.
+- Background callback batches yield after 8 ms or 12 results; pending results continue after 10 ms, preserving order.
+- A single expensive callback can still exceed the budget; OCR recognition settings are unchanged.
+- Verified synthetic burst scheduling and native monster/PQ/training UI regression.

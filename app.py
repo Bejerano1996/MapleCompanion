@@ -174,18 +174,27 @@ class App:
         threading.Thread(target=work, daemon=True).start()
 
     def _poll(self):
-        while not self.results.empty():
-            callback, value, error = self.results.get()
+        # Yield to input/paint even when many network results arrive together.
+        deadline = time.perf_counter() + .008
+        processed = 0
+        while processed < 12:
+            try:
+                callback, value, error = self.results.get_nowait()
+            except queue.Empty:
+                break
             if error:
                 self.set_status(f"Error: {error}", "red")
             callback(value)
+            processed += 1
+            if time.perf_counter() >= deadline:
+                break
         if os.path.exists(SHOW_REQUEST):
             try:
                 os.remove(SHOW_REQUEST)
             except OSError:
                 pass
             self.show_again()
-        self.root.after(100, self._poll)
+        self.root.after(10 if not self.results.empty() else 100, self._poll)
 
     def show_again(self):
         """Opening UMBRΛLE while it already runs lands here: bring the open one forward, on a
@@ -284,7 +293,7 @@ class App:
                 self._build_level_filter(frame)  # "Lv [  ] - [  ]" to the right of the name box
             box.pack(fill="x", padx=6, pady=4, ipady=2)
             self.search_bars[tab], self.search_entries[tab] = frame, box
-        self.mob_query.trace_add("write", lambda *_: self.render(keep_scroll=False))
+        self.mob_query.trace_add("write", lambda *_: self._debounce_mob_search())
         # item search asks the website, so wait until typing pauses
         self._item_search_job = None
         self.item_query.trace_add("write", lambda *_: self._debounce_item_search())
@@ -2657,6 +2666,16 @@ class App:
         if low is not None and high is not None and low > high:
             low, high = high, low  # typed the other way round
         return low, high
+
+    def _debounce_mob_search(self):
+        job = getattr(self, '_mob_search_job', None)
+        if job:
+            self.root.after_cancel(job)
+        def finish():
+            self._mob_search_job = None
+            if self.state['tab'] == 'mobs':
+                self.render(keep_scroll=False)
+        self._mob_search_job = self.root.after(150, finish)
 
     def render_monsters(self):
         inner = self.scroll.inner
