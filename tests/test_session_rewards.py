@@ -17,6 +17,11 @@ class RewardsTests(unittest.TestCase):
   new=[('bonus',2),('mesos',10),('mesos',18)]
   positions=[(0,12),(20,12),(40,12)]
   self.assertEqual(RewardTracker._align(old,new,positions,positions),[(1,0),(2,1)])
+ def test_partial_equal_rows_do_not_invent_scroll_from_one_amount(self):
+  positions=[(0,12),(20,12),(40,12)]
+  old=[('mesos',None),('mesos',23),('mesos',None)]
+  new=[('mesos',None),('mesos',None),('mesos',23)]
+  self.assertEqual(RewardTracker._align(old,new,positions,positions),[(0,0),(1,1),(2,2)])
  def test_clear_money_does_not_require_second_frame(self):
   from session_reader import RewardRead
   t=RewardTracker(confirm_money=2);t.feed([])

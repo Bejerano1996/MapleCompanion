@@ -38,6 +38,15 @@ class RewardTracker:
             if shifts:
                 tolerance=max(5,min(p[1] for p in positions)*.4)
                 shift=max(shifts,key=lambda s:(sum(abs(v-s)<=tolerance for v in shifts),-abs(s)))
+                stable_partial=(n==m and any(a[1] is None for a in old+current)
+                    and all(a[0]==b[0] for a,b in zip(old,current))
+                    and all(abs(a[0]-b[0])<=tolerance for a,b in zip(old_positions,positions)))
+                if stable_partial and abs(shift)>tolerance:
+                    anchors={a for i,a in enumerate(old) for j,b in enumerate(current)
+                        if a==b and a[1] is not None and abs(positions[j][0]-old_positions[i][0]-shift)<=tolerance}
+                    # One repeated amount cannot prove movement when stable row
+                    # geometry also permits ordinary missing-amount refinement.
+                    if len(anchors)<2:shift=0
         def weight(i,j):
             a,b=old[i],current[j]
             if a[0]!=b[0]:return 0

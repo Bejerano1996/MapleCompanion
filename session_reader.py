@@ -1,6 +1,7 @@
 """CPU-only local OCR of the game's visible lower-right reward log. No network or inputs."""
 from session_rewards import reward_event,reward_kind
 _engine=None
+_money_retry_turn=0
 
 class RewardRead(list):
     """Visible notices from a partially masked region."""
@@ -48,6 +49,7 @@ def retry_money_row(image,position):
 
 
 def read_reward_image(image,include_pending=False):
+    global _money_retry_turn
     rows=ocr_rows(image)
     # Merge boxes on the same line: the detector can split "You" from the amount.
     groups=[]
@@ -70,11 +72,14 @@ def read_reward_image(image,include_pending=False):
             if kind:
                 result.append((kind,None));positions.append((group['y'],group['h']))
     if include_pending:
-        for index,event in enumerate(result):
-            if event==('mesos',None):
-                amount=retry_money_row(image,positions[index])
-                if amount is not None:result[index]=('mesos',amount)
-                break  # At most one row/two recognitions per poll.
+        pending=[index for index,event in enumerate(result) if event==('mesos',None)]
+        if pending:
+            # Two consecutive attempts allow the normal across-poll confirmation.
+            index=pending[(_money_retry_turn//2)%len(pending)]
+            _money_retry_turn=(_money_retry_turn+1)%(2*len(pending))
+            amount=retry_money_row(image,positions[index])
+            if amount is not None:result[index]=('mesos',amount)
+        else:_money_retry_turn=0
     return RewardRead(result,partial=False,trusted_money=trusted_money,positions=positions)
 
 def capture_rewards(hide=()):

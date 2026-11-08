@@ -32,10 +32,18 @@ class RetryTests(unittest.TestCase):
    self.assertIsNone(reader.retry_money_row(Image.new('RGB',(300,100)),(90,30)))
  def test_at_most_one_pending_money_row_and_positions_unchanged(self):
   rows=[([[0,y],[100,y],[100,y+12],[0,y+12]],'You have gained mesos (+?)',.9) for y in (10,30)]
-  with patch.object(reader,'ocr_rows',return_value=rows),patch.object(reader,'retry_money_row',return_value=7) as retry:
+  with patch.object(reader,'_money_retry_turn',0),patch.object(reader,'ocr_rows',return_value=rows),patch.object(reader,'retry_money_row',return_value=7) as retry:
    events=reader.read_reward_image(Image.new('RGB',(300,100)),True)
    self.assertEqual(list(events),[('mesos',7),('mesos',None)])
    self.assertEqual(len(events.positions),2);self.assertEqual(retry.call_count,1);self.assertFalse(events.trusted_money)
+ def test_multiple_pending_rows_each_get_confirmation_budget(self):
+  rows=[([[0,y],[100,y],[100,y+12],[0,y+12]],'You have gained mesos (+?)',.9) for y in (10,30)]
+  image=Image.new('RGB',(300,100));tracker=RewardTracker(confirm_money=2);tracker.feed([]);total=0
+  with patch.object(reader,'_money_retry_turn',0,create=True),patch.object(reader,'ocr_rows',return_value=rows),patch.object(reader,'retry_money_row',side_effect=lambda image,pos:7 if pos[0]<30 else 10) as retry:
+   for _ in range(12):
+    events=reader.read_reward_image(image,True);total+=tracker.feed(events)['mesos']
+   self.assertEqual(total,17)
+   self.assertEqual(retry.call_count,12)
  def test_no_retry_for_normal_or_nonpending_reads(self):
   rows=[([[0,10],[100,10],[100,22],[0,22]],'You have gained mesos (+7)',.99)]
   with patch.object(reader,'ocr_rows',return_value=rows),patch.object(reader,'retry_money_row') as retry:
