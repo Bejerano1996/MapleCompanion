@@ -116,3 +116,8 @@ The first release under the new name: a redesigned in-game overlay.
 - Partial edge overlap now masks only covered pixels rather than disabling the entire reward reader. Fully covered reward band remains unavailable.
 - Preserve notice continuity across empty partially masked reads to avoid recounting old messages.
 - Report partial coverage explicitly. Live3.0.3 validation reproduced fresh HUD updates with0reward counts and unavailable status; narrow guard remained insufficient.
+
+## 3.0.5 — Fresh high-confidence money notices
+- Money notices with OCR confidence at least0.95 can credit once; weaker notices still require agreement across two reads.
+- Handle observed received-to-receited OCR spelling. Live3.0.4 reader now shows rewards and kill events, but fast fading money notices missed the two-frame requirement.
+- Full live accuracy remains under validation; no exact wallet or kill telemetry is available.

@@ -173,7 +173,7 @@ def utility_render_session(self, parent):
     ui_button(controls, 'Finish & archive', finish, compact=True).pack(side='right')
     message = label(parent, 'Auto: visible EXP and mesos messages. Kills ≈ EXP events (including party). Costs are entered manually.', fg='muted', size=9, wraplength=400, justify='left')
     message.pack(fill='x', padx=20, pady=4)
-    message._training_tip=Tooltip(message,'EXP-bar totals include party, quests and losses. Party and mesos amounts come from visible notices and may be partial. Mesos require two matching reads before credit. Kills are EXP-event estimates, including party/shared rewards. Covered or unclear log messages are not guessed.')
+    message._training_tip=Tooltip(message,'EXP-bar totals include party, quests and losses. Party and mesos amounts come from visible notices and may be partial. Clear mesos notices use high-confidence OCR; weaker readings require two matching reads. Kills are EXP-event estimates, including party/shared rewards. Covered or unclear log messages are not guessed.')
     auto=tk.BooleanVar(value=s.get('auto_rewards',True))
     def auto_changed():
         self.state['utility_session']['auto_rewards']=auto.get();self._reward_token=None;self.save_state();refresh()
@@ -430,3 +430,4 @@ def install_tools(cls):
     for name,value in list(globals().items()):
         if name.startswith('utility_') and callable(value):setattr(cls,name,value)
     cls.ui_tools=utility_open
+

@@ -9,7 +9,7 @@ def reward_event(text):
     if not amount:return None
     value=int(amount[1].replace(',','').replace(' ',''))
     if not 0<value<=100000000:return None
-    lower=text.casefold().replace('qained','gained')
+    lower=text.casefold().replace('qained','gained').replace('receited','received')
     if 'mesos' in lower and ('gained' in lower or 'received' in lower):return ('mesos',value)
     if re.search(r'exp(?=$|[\W\d]|for)',lower):
         if 'bonus' in lower or 'party' in lower:return ('bonus',value)
@@ -17,7 +17,7 @@ def reward_event(text):
     return None
 
 def reward_kind(text):
-    lower=unicodedata.normalize('NFKC',str(text)).casefold().replace('qained','gained')
+    lower=unicodedata.normalize('NFKC',str(text)).casefold().replace('qained','gained').replace('receited','received')
     if 'mesos' in lower and ('gained' in lower or 'received' in lower):return 'mesos'
     if re.search(r'exp(?=$|[\W\d]|for)',lower):
         if 'party' in lower or 'bonus' in lower:return 'bonus'
@@ -80,6 +80,9 @@ class RewardTracker:
             credited[j]=previous_credit[i]
             seen[j]=previous_seen[i]+1 if old[i]==current[j] and current[j][1] is not None else seen[j]
         for j,(kind,amount) in enumerate(current):
+            # Fresh, high-confidence money notices can disappear before another
+            # OCR pass. Low-confidence amounts still require repeated agreement.
+            if kind=='mesos' and j in getattr(events,'trusted_money',()):seen[j]=max(seen[j],self.confirm_money)
             if credited[j] or amount is None or (kind=='mesos' and seen[j]<self.confirm_money):continue
             credited[j]=True
             if kind=='mesos':totals['mesos']+=amount

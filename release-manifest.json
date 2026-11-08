@@ -1,59 +1,59 @@
 {
-  "version": "3.0.4-companion",
-  "source_sha": "93f8e6eb971af0f838fc50a808b1b6bb24c0d140af320bfd56ed719709bc4c6a",
+  "version": "3.0.5-companion",
+  "source_sha": "65c5b6da65d5abc0752fdb7d698a27ebb4988025cedf5ad5125b11a890e35f07",
   "checks": {
     "ok": true,
     "cases": [
       {
+        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        },
-        "fixture": "live_exp_2560.png"
+        }
       },
       {
+        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_ant_tunnel2.png"
+        }
       },
       {
+        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_1920.png"
+        }
       },
       {
+        "fixture": "session-rewards-fixture.png",
         "totals": {
           "exp": 9,
           "mesos": 27,
           "kills": 1,
           "party_exp": 2
-        },
-        "fixture": "session-rewards-fixture.png"
+        }
       },
       {
+        "fixture": "party-rewards-fixture.png",
         "totals": {
           "exp": 4,
           "mesos": 0,
           "kills": 0,
           "party_exp": 4
-        },
-        "fixture": "party-rewards-fixture.png"
+        }
       }
     ],
-    "source_sha": "93f8e6eb971af0f838fc50a808b1b6bb24c0d140af320bfd56ed719709bc4c6a"
+    "source_sha": "65c5b6da65d5abc0752fdb7d698a27ebb4988025cedf5ad5125b11a890e35f07"
   },
   "validation": "Deterministic typing and callback bursts, native PQ/monster and training UI checks, packaged local OCR fixtures. No live game validation.",
   "changes": [

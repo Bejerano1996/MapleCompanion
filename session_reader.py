@@ -4,7 +4,8 @@ _engine=None
 
 class RewardRead(list):
     """Visible notices from a partially masked region."""
-    partial=True
+    def __init__(self,events=(),partial=True,trusted_money=()):
+        super().__init__(events);self.partial=partial;self.trusted_money=set(trusted_money)
 
 def ocr_rows(image,max_size=(1280,720)):
     global _engine
@@ -29,16 +30,18 @@ def read_reward_image(image,include_pending=False):
         group=next((g for g in groups if abs(g['y']-y)<max(5,min(g['h'],h)*.45)),None)
         if group is None:group={'y':y,'h':h,'parts':[]};groups.append(group)
         group['parts'].append((min(p[0] for p in box),text,score))
-    result=[]
+    result=[];trusted_money=[]
     for group in sorted(groups,key=lambda g:g['y']):
         parts=sorted(group['parts']);text=' '.join(p[1] for p in parts)
         score=sum(len(p[1])*p[2] for p in parts)/max(1,sum(len(p[1]) for p in parts))
         event=reward_event(text)
-        if event and score>=.75:result.append(event)
+        if event and score>=.75:
+            if event[0]=='mesos' and score>=.95:trusted_money.append(len(result))
+            result.append(event)
         elif include_pending and score>=.7:
             kind=reward_kind(text)
             if kind:result.append((kind,None))
-    return result
+    return RewardRead(result,partial=False,trusted_money=trusted_money)
 
 def capture_rewards(hide=()):
     from game_sync import find_game_window
@@ -68,7 +71,10 @@ def capture_rewards(hide=()):
         if r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3]:
             draw.rectangle((max(0,left-crop[0]),max(0,top-crop[1]),min(image.width,r-crop[0]),min(image.height,b-crop[1])),fill='black')
     events=read_reward_image(image,include_pending=True)
-    return RewardRead(events) if partial else events
+    if partial:
+        if isinstance(events,RewardRead):events.partial=True
+        else:events=RewardRead(events)
+    return events
 
 
 def read_character_image(image):
