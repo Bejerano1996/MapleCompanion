@@ -1425,8 +1425,12 @@ class App:
         if abs(h - self.root.winfo_height()) > 2:
             self._place(self.state["panel_size"][0], h, at=(self.root.winfo_x(), self.root.winfo_y()))
 
+    def quest_display_order(self):
+        tracked = set(self.state["tracked"])
+        return sorted(self.state["active"], key=lambda qid: qid not in tracked)
+
     def render_quests(self):
-        active = self.state["active"]
+        active = self.quest_display_order()
         if self.state.get("trainer_on"):
             self.render_trainer_card()
         if not active:
@@ -3155,7 +3159,11 @@ class App:
         windows = [self.root] + [w for w in self.root.winfo_children() if isinstance(w, tk.Toplevel)]
         ours = [window_rect(w) for w in windows if w.winfo_viewable()]
         # auto syncs re-read only the areas found by the last full scan (quest helper + map name)
-        regions = self.focus if auto else None
+        # Existing titles can keep an old crop alive after the helper grows or moves.
+        # Rediscover its bounds regularly even when another old quest is still readable.
+        if auto and not map_only:
+            self._quest_scan_tick = (getattr(self, "_quest_scan_tick", 0) + 1) % 5
+        regions = self.focus if auto and (map_only or self._quest_scan_tick != 0) else None
         # the EXP bar takes ~0.5 s to read: on manual syncs and every EXP_BAR_EVERY-th auto sync
         self._exp_tick = (getattr(self, "_exp_tick", 0) + 1) % EXP_BAR_EVERY
         exp_bar = not auto or self._exp_tick == 0
