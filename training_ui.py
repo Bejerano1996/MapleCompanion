@@ -188,6 +188,9 @@ def training_setup(self):
             if gain is not None and (not math.isfinite(gain) or gain<1):raise ValueError('EXP per kill must be at least 1')
             if n is not None:absolute_exp({'level':lv,'exp':n})
         except (ValueError,TypeError) as error:feedback.config(text=str(error));return
+        if automatic.get()!=self.state.get('training_auto_context',True):
+            self._context_generation=getattr(self,'_context_generation',0)+1
+            self._context_scope=None;self._training_context={}
         self.state.update(training_auto_context=automatic.get(),party=int(party.get()),party_hits=hits.get(),training_party_levels=levels,training_party_reference_level=lv if levels is not None else None,training_personal_gain=gain)
         if target_var.get() in names:self.state['training_target']=str(names[target_var.get()]['id'])
         if n is not None:

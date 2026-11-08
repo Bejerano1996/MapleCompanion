@@ -1,4 +1,4 @@
-"""Read-only training context; visible roster/mobs are evidence, not kill telemetry."""
+﻿"""Read-only training context; visible roster/mobs are evidence, not kill telemetry."""
 import re,time
 
 def key(text):return re.sub(r'[^a-z0-9]','',str(text).casefold())
@@ -145,6 +145,7 @@ def context_poll(self):
     from session_rewards import session_token
     windows=[self.root]+[v for v in self.root.winfo_children() if isinstance(v,tk.Toplevel)]
     hide=[window_rect(v) for v in windows if v.winfo_viewable()]
+    generation=getattr(self,'_context_generation',0)
     token=session_token(session);self._context_busy=True;self._context_last_poll=time.monotonic()
     if getattr(self,'_context_scope',None)!=token:
         self._context_tracker=ContextTracker();self._context_scope=token
@@ -152,7 +153,7 @@ def context_poll(self):
         self._training_context=dict(game=True,at=time.time(),map=None,mobs=[],party_visible=None)
     def loaded(reading):
         self._context_busy=False
-        if token!=session_token(self.state['utility_session']) or not self.state.get('training_auto_context',True):return
+        if generation!=getattr(self,'_context_generation',0) or token!=session_token(self.state['utility_session']) or not self.state.get('training_auto_context',True):return
         data=self._context_tracker.feed(reading,reading.get('captured_at',time.time()));self._training_context=data
         seen=self.state['utility_session'].setdefault('observed_monsters',{})
         for mob in data.get('mobs',[]):

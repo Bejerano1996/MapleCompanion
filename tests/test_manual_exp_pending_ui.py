@@ -32,6 +32,11 @@ try:
     events=[('exp',13),('bonus',3)];old(dict(events=RewardRead(events,False),character=dict(level=27,exp=1016)))
     assert app.state['character_exp']['exp']==2000,(initial,seed,app.state['character_exp'])
     assert session['exp']==0
+    if app.state['training_auto_context']:
+     assert app.training_target() is None  # Mode restart cannot reuse the old screen context.
+     from training_context import ContextTracker
+     tracker=ContextTracker()
+     for _ in range(2):app._training_context=tracker.feed(dict(game=True,map='a',mobs=[23],party_visible=2),clock[0])
     for _ in range(2):dispatch()(dict(events=RewardRead(events,False),character=dict(level=27,exp=2000)))
     for i in range(3):events += [('exp',11),('bonus',3)];dispatch()(dict(events=RewardRead(events,False),character=dict(level=27,exp=2014+14*i)))
     assert (session['exp'],session['party_exp'],session['kills'])==(42,9,3)
