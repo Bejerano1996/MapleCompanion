@@ -1,85 +1,19 @@
 {
-  "version": "2.2.0-companion",
-  "lifecycle": {
-    "cycles": 432,
-    "elapsed_seconds": 7200.1,
-    "font_objects": 45,
-    "image_objects": 18,
-    "scheduled_jobs": 5,
-    "toplevels": 0,
-    "callback_errors": 0
+  "version": "2.2.1-companion",
+  "network_check": {
+    "ok": true,
+    "tls_verification": true,
+    "quests": 401,
+    "maps": 453,
+    "monsters": 206,
+    "game_window": [
+      75,
+      39,
+      2011,
+      1158
+    ]
   },
-  "files": {
-    "app.py": "439587aa20202978a258f842ee5d26742565c55e9b13ede2c3296306f26de1a3",
-    "build_release.py": "508a0aca7a9b612aae32e16c6bf7dd981c49de926ece4fcd3cb4b4af1bfb2f07",
-    "companion_feature_model.py": "a15747e9df1aee35aa70824fb42d7ad7645c8308ec6484de7520d958682bf055",
-    "companion_integration.py": "520d565eed1bed4539241fec235fdeb7bf462e2e0fef41deadcf2b661057e2f5",
-    "companion_market.py": "d6957d58773eba2bdbaab99b6d70ed15fa833a7385a9c76223b2e54716b784ac",
-    "companion_planner_model.py": "c39503011e0b654bd88fe709c39ab9a826c2e10e0dbebdd3c40103b9c8f14b8f",
-    "companion_tools.py": "afae0d4c9eb58d605e5ce4fc49f2b83644ba20dfea4365d1943dd790cb6922f6",
-    "companion_widgets.py": "3d27483df34ada18ff6e5e17861e51228d62f3bc75396bf59e0d6aa960f63930",
-    "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",
-    "gps_image.py": "b493f610536a9209524cd939afe653d57852c2c7f929b17ca1436b599dec0928",
-    "guides.py": "cebc0d2b931c6553f1d9a45f99327a6ea7a446de33d0a86a68ced9f95f7afc86",
-    "leveling.py": "3a3f07648eeecd3dc565cf1fe15a922aa6e3ded726996936ba47de4f7955984e",
-    "make_icon.py": "c1ccb27f30cd6e22a137ce00cfc09e85a37b58b2093e795e3152dd70e43aeb7f",
-    "meowdb.py": "6023ea27a13293f49c5e1158286ff1bdef0e00fb63f95ab83605e48ea3763f12",
-    "minimap.py": "0d1f78d9a709b29e6837eb0955c15d42b90fc41b0d2681ec3aa1c4c33f3baedc",
-    "party_quests.py": "9fac6ceb563df214bc3ee6496607d2251a05d61dbce1cec4b0e4148971c31ecc",
-    "quest_rank.py": "64a26ce43760de47169198a9d82e8703658533f77cfbad9819d79fb882d7e998",
-    "screen_ocr.py": "41e0dcad93c1ca3186b206643c07554334dfb96d35dc6ae29ffee59d5696b46b",
-    "sync.py": "51f74c4e783ffd96b14b0eabfcc884709625bc9be389ffae6088b1469461fdaa",
-    "trainer.py": "0af9830fb152e60d8202f5941a5b2b308c8ae133480ed7bdf8eeea6c58fbd20b",
-    "widgets.py": "dcef13be50d13d3f8f357b252ac904aeffce4dfde791b9296860c5cac6a358cd",
-    "tests/run_regression.py": "d98ed9b242a046368d5dd7265ad2bfd9aa92fb8c4f662ff39823e2c5e213cbbe",
-    "tests/soak_compact_ui.py": "7b910010ac668d78080d712722c536794c5c16c1cd0f8993c5cdadd8561a6648",
-    "tests/test_compact_ui.py": "5da5d35dcea69598aef61bc543467811b78c6b9e241120b8a795078bf57b5274",
-    "tests/test_comparison_model.py": "e229ddb4cfb296abcf7afa52f3df13225ccc5094cbbfcbe69546701329cde629",
-    "tests/test_feature_model.py": "517bf5195e6d5914aba0fc33afc9fccb44f0fbbbf75f1efa1abda54c44b3be2d",
-    "tests/test_flicker.py": "67d30301c4f7f066ec79baf3e458b519e5488a3bdcf05a107e178b2186a5f796",
-    "tests/test_gps_docking.py": "2df12f24a330ca9d575166194f9e01b37b21f045cf7e53a91e431ceeefc1f096",
-    "tests/test_integration.py": "c81cb44472d38f0b6df6a2c016f4ed0c06c16e63e58f8030cd1613fb5bd24b3b",
-    "tests/test_logic.py": "0b8abfe302d1463a637f07247225e8f7592ab3d9337ab6bd2228248fb22d3109",
-    "tests/test_market_model.py": "e6b02c219c9c245907ec16a8fc3e336da19ed8c76234b2b777419cea72f089ed",
-    "tests/test_planner_model.py": "5a2ccb567a5287345d446e92a476a34720d1a2ee53390794c5548c0565d3609b",
-    "tests/test_tool_sizes.py": "3bf8c0545c220d043a55490c5919a0f4afff2852a58ec048f5fe346456d4105d"
-  },
-  "build": {
-    "version": "2.2.0-companion",
-    "python": "3.12.14",
-    "dependencies": {
-      "Pillow": "13.0.0",
-      "PyInstaller": "6.22.3",
-      "winrt-runtime": "4.0.3"
-    },
-    "source_sha256": {
-      "app.py": "439587aa20202978a258f842ee5d26742565c55e9b13ede2c3296306f26de1a3",
-      "build_release.py": "508a0aca7a9b612aae32e16c6bf7dd981c49de926ece4fcd3cb4b4af1bfb2f07",
-      "companion_feature_model.py": "a15747e9df1aee35aa70824fb42d7ad7645c8308ec6484de7520d958682bf055",
-      "companion_integration.py": "520d565eed1bed4539241fec235fdeb7bf462e2e0fef41deadcf2b661057e2f5",
-      "companion_market.py": "d6957d58773eba2bdbaab99b6d70ed15fa833a7385a9c76223b2e54716b784ac",
-      "companion_planner_model.py": "c39503011e0b654bd88fe709c39ab9a826c2e10e0dbebdd3c40103b9c8f14b8f",
-      "companion_tools.py": "afae0d4c9eb58d605e5ce4fc49f2b83644ba20dfea4365d1943dd790cb6922f6",
-      "companion_widgets.py": "3d27483df34ada18ff6e5e17861e51228d62f3bc75396bf59e0d6aa960f63930",
-      "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",
-      "gps_image.py": "b493f610536a9209524cd939afe653d57852c2c7f929b17ca1436b599dec0928",
-      "guides.py": "cebc0d2b931c6553f1d9a45f99327a6ea7a446de33d0a86a68ced9f95f7afc86",
-      "leveling.py": "3a3f07648eeecd3dc565cf1fe15a922aa6e3ded726996936ba47de4f7955984e",
-      "make_icon.py": "c1ccb27f30cd6e22a137ce00cfc09e85a37b58b2093e795e3152dd70e43aeb7f",
-      "meowdb.py": "6023ea27a13293f49c5e1158286ff1bdef0e00fb63f95ab83605e48ea3763f12",
-      "minimap.py": "0d1f78d9a709b29e6837eb0955c15d42b90fc41b0d2681ec3aa1c4c33f3baedc",
-      "party_quests.py": "9fac6ceb563df214bc3ee6496607d2251a05d61dbce1cec4b0e4148971c31ecc",
-      "quest_rank.py": "64a26ce43760de47169198a9d82e8703658533f77cfbad9819d79fb882d7e998",
-      "screen_ocr.py": "41e0dcad93c1ca3186b206643c07554334dfb96d35dc6ae29ffee59d5696b46b",
-      "sync.py": "51f74c4e783ffd96b14b0eabfcc884709625bc9be389ffae6088b1469461fdaa",
-      "trainer.py": "0af9830fb152e60d8202f5941a5b2b308c8ae133480ed7bdf8eeea6c58fbd20b",
-      "widgets.py": "dcef13be50d13d3f8f357b252ac904aeffce4dfde791b9296860c5cac6a358cd"
-    },
-    "executable_sha256": "bc985eb2b75687ff3e0ef25ab38c37bb4932f93db5de85b5bba07afa90c17c2b",
-    "packaged_ocr": {
-      "ok": true,
-      "line_count": 1
-    }
-  },
-  "executable_sha256": "bc985eb2b75687ff3e0ef25ab38c37bb4932f93db5de85b5bba07afa90c17c2b"
+  "tls_policy_sha256": "c916ce1b14ed8ca69e9b5c9fab22799a900dd610d6d4ec9b1347f4fd48e53718",
+  "executable_sha256": "01d3b7464bb8d4d39160a0d661d3572891a0614f9eacbed99402a01dd0482744",
+  "scope": "Network/bootstrap fix; the two-hour GUI lifecycle report belongs to 2.2.0. No new two-hour test is claimed for this hotfix."
 }

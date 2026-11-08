@@ -3715,6 +3715,19 @@ if __name__ == "__main__":
     if len(sys.argv) == 4 and sys.argv[1] == "--selftest-image":
         self_test_image(sys.argv[2], sys.argv[3])
         sys.exit()
+    if len(sys.argv) == 3 and sys.argv[1] == '--check-data':
+        import traceback,ssl
+        try:
+            context=ssl.create_default_context()
+            if not context.check_hostname or context.verify_mode!=ssl.CERT_REQUIRED:
+                raise RuntimeError('HTTPS certificate verification must remain enabled')
+            database=MeowDB()
+            database.load_indexes()
+            report={'ok':True,'tls_verification':True,'quests':len(database.quests),'maps':len(database.maps),'monsters':len(database.monsters),'game_window':find_game_window()}
+        except Exception:
+            report={'ok':False,'traceback':traceback.format_exc(),'game_window':find_game_window()}
+        with open(sys.argv[2],'w',encoding='utf-8') as f:json.dump(report,f)
+        sys.exit()
     # one overlay at a time: opening it again brings the one already running forward
     _instance = ctypes.windll.kernel32.CreateMutexW(None, False, r"Local\UmbraleOverlay")
     if ctypes.windll.kernel32.GetLastError() == 183:  # ERROR_ALREADY_EXISTS

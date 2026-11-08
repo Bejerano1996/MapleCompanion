@@ -1,6 +1,6 @@
 """Build a staged app without deleting state/cache in an existing output."""
 from pathlib import Path
-import argparse,sys,subprocess,shutil,tempfile
+import argparse,sys,subprocess,shutil,tempfile,ssl
 def main():
     root=Path(__file__).resolve().parent
     parser=argparse.ArgumentParser()
@@ -10,6 +10,11 @@ def main():
     builds=root/'.build';builds.mkdir(exist_ok=True)
     stage=Path(tempfile.mkdtemp(prefix='release-',dir=builds))
     command=[sys.executable,'-m','PyInstaller','--noconfirm','--windowed','--onedir','--name','Umbrale Companion','--icon',str(root/'icon.ico'),'--add-data',str(root/'icon.ico')+';.','--add-data',str(root/'icon.png')+';.','--add-data',str(root/'assets')+';assets','--collect-submodules','winrt','--hidden-import','screen_ocr','--exclude-module','numpy','--distpath',str(stage/'dist'),'--workpath',str(stage/'work'),'--specpath',str(stage),str(root/'app.py')]
+    # This Python runtime's ssl module loads a supplemental certificate policy
+    # beside ssl.py. Frozen apps must carry the same file; TLS verification stays on.
+    certificate_policy=Path(ssl.__file__).parent/'codex-rejected-cas.pem'
+    if certificate_policy.is_file():
+        command[-1:-1]=['--add-data',str(certificate_policy)+';.']
     subprocess.run(command,cwd=root,check=True)
     built=stage/'dist/Umbrale Companion';output.mkdir(parents=True,exist_ok=True)
     for file in built.rglob('*'):

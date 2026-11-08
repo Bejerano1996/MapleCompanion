@@ -1,4 +1,4 @@
-# Umbrale Companion 2.2
+# Umbrale Companion 2.2.1
 
 A compact MapleStory Classic overlay: your current objective, quests and GPS, with extra tools one click away.
 

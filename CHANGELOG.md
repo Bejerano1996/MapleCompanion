@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.2.1-companion — first-run HTTPS fix
+
+- Include the SSL runtime's required certificate-policy resource in Windows builds. Fresh installations can load game data without relying on a pre-existing cache.
+- Preserve certificate and hostname verification.
+- Add `--check-data report.json` for validating HTTPS initialization, game indexes and window detection in the packaged application.
+- Verified loading 401 quests, 453 maps and 206 monsters from a fresh packaged installation; the desktop copy resumed reading live maps and quests after the missing resource was restored.
+
 ## 2.2.0-companion — compact presentation
 
 - 360-pixel default panel, a single profile row, and search on demand.
