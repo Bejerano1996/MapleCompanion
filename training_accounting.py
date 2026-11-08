@@ -5,7 +5,7 @@ import math
 
 class NoticeReconciliation:
     """Match notice gains to HUD gains across short display/OCR timing offsets."""
-    def __init__(self):self.pending=0;self.base_pending=0;self.bonus_credit=0;self.credit_at=None
+    def __init__(self):self.pending=0;self.base_pending=0;self.bonus_credit=0;self.credit_at=None;self.stable_pending=0;self.stable_at=None
     def feed(self,delta,hud_change,now,baseline=False,refined_party_exp=0,trailing_party_exp=0):
         if baseline:
             self.__init__();return 0
@@ -18,6 +18,7 @@ class NoticeReconciliation:
             possible_late=max(refined_party_exp,possible_late-trailing_party_exp)
         late=min(self.bonus_credit,possible_late,delta.get('exp',0))
         self.bonus_credit-=late
+        old_pending=self.pending
         self.pending+=delta.get('exp',0)-late
         self.base_pending+=max(0,delta.get('exp',0)-delta.get('party_exp',0))
         if hud_change is not None:
@@ -26,7 +27,7 @@ class NoticeReconciliation:
                 # interval. Never extrapolate them back over the recorded loss.
                 # Keep short-lived credit for bonuses already covered before
                 # this loss, so their delayed OCR refinement cannot add them twice.
-                self.pending=0;self.base_pending=0;return 0
+                self.pending=0;self.base_pending=0;self.stable_pending=0;self.stable_at=None;return 0
             covered=min(self.pending,hud_change);self.pending-=covered
             missing=hud_change-covered
             # A small gap beside a known base reward can be an unread party
@@ -34,6 +35,17 @@ class NoticeReconciliation:
             if 0<missing<=max(1,math.ceil(self.base_pending*.6)) and self.base_pending:
                 self.bonus_credit+=missing;self.credit_at=now
             self.base_pending=min(self.base_pending,self.pending)
+            # Repeated accepted, unchanged HUD totals are stronger evidence than
+            # an old unmatched log remainder. Allow the existing five-second
+            # reconciliation grace, and retire only the witnessed old amount.
+            # Notices arriving in this callback must remain pending separately.
+            if hud_change==0 and self.stable_at is not None and now-self.stable_at>5:
+                self.pending-=min(self.stable_pending,old_pending,self.pending)
+                self.base_pending=min(self.base_pending,self.pending)
+                self.stable_at=None;self.stable_pending=0
+            if not self.pending:self.stable_at=None;self.stable_pending=0
+            elif hud_change>0 or self.stable_at is None:
+                self.stable_pending=self.pending;self.stable_at=now
         return self.pending
 
 class TrainingAccountant:
