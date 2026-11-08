@@ -127,3 +127,9 @@ The first release under the new name: a redesigned in-game overlay.
 - Net balance replaces partial pickup totals; pauses rebaseline; historical comparisons handle wallet losses without double costs.
 - Manual checkpoints and last-read age; clear requirement for visible inventory in upper-right of game.
 - Live independent OCR read179029,179069,179103,179126,179152;123mesos difference. Packaged wallet fixture and installed UI still require final verification.
+
+## 3.2.0 — Lower-right pickup notice mode
+- Explicit notice source; inventory need not stay open.
+- Geometry-aware matching uses surviving text rows to estimate scroll movement, avoiding inappropriate row matches after scroll.
+-120ms post-read interval instead of450ms; low-confidence money still requires confirmation.
+- Native UI, capture masking, repeated reward/scroll and saved OCR fixtures pass. Live accuracy remains to be measured; no exact-count claim.

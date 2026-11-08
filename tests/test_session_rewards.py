@@ -4,6 +4,19 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from session_rewards import RewardTracker,reward_event,session_token,apply_rewards
 class RewardsTests(unittest.TestCase):
+ def test_spatial_scroll_counts_equal_pickup_again(self):
+  from session_reader import RewardRead
+  def rows(events):return RewardRead(events,False,range(len(events)),[(20*i,12) for i in range(len(events))])
+  t=RewardTracker(confirm_money=2)
+  t.feed(rows([('exp',7),('bonus',2),('mesos',10)]))
+  result=t.feed(rows([('bonus',2),('mesos',10),('mesos',10)]))
+  self.assertEqual(result['mesos'],10)
+  self.assertEqual(t.feed(rows([('bonus',2),('mesos',10),('mesos',10)]))['mesos'],0)
+ def test_spatial_alignment_respects_scroll_offset(self):
+  old=[('exp',7),('bonus',2),('mesos',10)]
+  new=[('bonus',2),('mesos',10),('mesos',18)]
+  positions=[(0,12),(20,12),(40,12)]
+  self.assertEqual(RewardTracker._align(old,new,positions,positions),[(1,0),(2,1)])
  def test_clear_money_does_not_require_second_frame(self):
   from session_reader import RewardRead
   t=RewardTracker(confirm_money=2);t.feed([])

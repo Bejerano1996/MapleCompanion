@@ -25,40 +25,51 @@ def reward_kind(text):
     return None
 
 class RewardTracker:
-    def __init__(self,confirm_money=1):self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.confirm_money=max(1,int(confirm_money));self.replacement=None;self.replacement_reads=0
+    def __init__(self,confirm_money=1):self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.confirm_money=max(1,int(confirm_money));self.replacement=None;self.replacement_reads=0;self.positions=[]
     @staticmethod
-    def _align(old,current):
+    def _align(old,current,old_positions=(),positions=()):
         # Preserve row identity when OCR temporarily misses an amount or inserts a row.
         n,m=len(old),len(current);dp=[[0]*(m+1) for _ in range(n+1)]
-        def weight(a,b):
+        spatial=len(old_positions)==n and len(positions)==m and bool(n and m)
+        shift=0
+        if spatial:
+            # Exact surviving notices tell us how far the stack scrolled.
+            shifts=[positions[j][0]-old_positions[i][0] for i,a in enumerate(old) for j,b in enumerate(current) if a==b and a[1] is not None]
+            if shifts:
+                tolerance=max(5,min(p[1] for p in positions)*.4)
+                shift=max(shifts,key=lambda s:(sum(abs(v-s)<=tolerance for v in shifts),-abs(s)))
+        def weight(i,j):
+            a,b=old[i],current[j]
             if a[0]!=b[0]:return 0
+            if spatial and abs(positions[j][0]-old_positions[i][0]-shift)>max(5,min(old_positions[i][1],positions[j][1])*.4):return 0
             if a[1]==b[1]:return 3
             return 1  # same-kind OCR refinement must not turn an old row into new money
         for i in range(n-1,-1,-1):
             for j in range(m-1,-1,-1):
-                w=weight(old[i],current[j])
+                w=weight(i,j)
                 dp[i][j]=max(dp[i+1][j],dp[i][j+1],w+dp[i+1][j+1] if w else 0)
         pairs=[];i=j=0
         while i<n and j<m:
-            w=weight(old[i],current[j])
+            w=weight(i,j)
             if w and dp[i][j]==w+dp[i+1][j+1]:pairs.append((i,j));i+=1;j+=1
             elif dp[i][j]==dp[i+1][j]:i+=1
             else:j+=1
         return pairs
     def feed(self,events):
         totals={'exp':0,'mesos':0,'kills':0,'party_exp':0}
-        if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.replacement=None;self.replacement_reads=0;return totals
+        if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.replacement=None;self.replacement_reads=0;self.positions=[];return totals
         current=[tuple(row) for row in events]
+        positions=getattr(events,'positions',())
         if not current:
             # A masked empty image cannot prove the old notices disappeared.
             if getattr(events,'partial',False):return totals
             self.replacement=None;self.replacement_reads=0
             if self.previous is None:self.previous=[];self.credited=[];self.seen=[]
             self.blanks+=1
-            if self.blanks>=4:self.previous=[];self.credited=[];self.seen=[]
+            if self.blanks>=4:self.previous=[];self.credited=[];self.seen=[];self.positions=[]
             return totals
         self.blanks=0;old=self.previous
-        if old is None:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);return totals
+        if old is None:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);self.positions=positions;return totals
         # A fully replaced notice stack of the same kinds used to align forever
         # as OCR corrections, suppressing genuine later pickups. Require stable
         # replacement readings; a one-frame fading digit must still add nothing.
@@ -70,8 +81,8 @@ class RewardTracker:
             if self.replacement_reads<max(2,self.confirm_money):return totals
             replacement_reads=self.replacement_reads;old=[]
         self.replacement=None;self.replacement_reads=0
-        pairs=self._align(old,current)
-        if old and not pairs:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);return totals
+        pairs=self._align(old,current,self.positions,positions)
+        if old and not pairs:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);self.positions=positions;return totals
         previous_credit=self.credited;previous_seen=self.seen
         last=pairs[-1][1] if pairs else -1
         credited=[j<=last for j in range(len(current))]
@@ -90,7 +101,7 @@ class RewardTracker:
                 totals['exp']+=amount
                 if kind=='exp':totals['kills']+=1
                 else:totals['party_exp']+=amount
-        self.previous=current;self.credited=credited;self.seen=seen
+        self.previous=current;self.credited=credited;self.seen=seen;self.positions=positions
         return totals
 
 

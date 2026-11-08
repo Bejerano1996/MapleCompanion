@@ -48,7 +48,7 @@ def utility_session_rates(session, now=None):
     seconds = utility_session_elapsed(session, now)
     factor = 3600 / seconds if seconds >= 1 else 0
     net=session.get('wallet_net',0) if session.get('money_mode')=='wallet' else session.get('mesos',0)-session.get('cost',0)
-    money_seconds=max(0,seconds-(session.get('wallet_elapsed_anchor') or 0)) if session.get('money_mode')=='wallet' else seconds
+    money_seconds=max(0,seconds-((session.get('wallet_elapsed_anchor') if session.get('money_mode')=='wallet' else session.get('money_elapsed_anchor')) or 0))
     return {'seconds': seconds, 'kills_hour': session.get('kills', 0) * factor,
             'exp_hour': session.get('exp', 0) * factor,
             'net_mesos': net,
@@ -161,7 +161,7 @@ def utility_compare_maps(history, metric='exp_hour', minimum_seconds=60):
         row=buckets.setdefault(map_id,dict(map_id=map_id,map_name=str(session.get('map_name') or map_id),
                    sessions=0,seconds=0,money_seconds=0,kills=0,exp=0,mesos=0,cost=0,log_gap_sessions=0))
         row['sessions']+=1;row['seconds']+=seconds
-        row['money_seconds']+=max(0,seconds-(session.get('wallet_elapsed_anchor') or 0)) if session.get('money_mode')=='wallet' else seconds
+        row['money_seconds']+=max(0,seconds-((session.get('wallet_elapsed_anchor') if session.get('money_mode')=='wallet' else session.get('money_elapsed_anchor')) or 0))
         if session.get('reading_gaps'):row['log_gap_sessions']+=1
         for key,value in totals.items():row[key]+=value
     rows=[];short_maps=0

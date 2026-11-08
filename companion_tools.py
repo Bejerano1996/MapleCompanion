@@ -52,7 +52,7 @@ def utility_poll_rewards(self):
         self._reward_token=None;return
     if getattr(self,'_reward_token',None)!=token:
         self._reward_tracker=RewardTracker();self._training_accountant=TrainingAccountant();self._reward_token=token;self._training_last_hud=0
-    if getattr(self,'_reward_busy',False) or time.monotonic()-getattr(self,'_reward_last_poll',0)<.45:return
+    if getattr(self,'_reward_busy',False) or time.monotonic()-getattr(self,'_reward_last_poll',0)<.12:return
     self._reward_last_poll=time.monotonic()
     windows=[self.root]+[w for w in self.root.winfo_children() if isinstance(w,tk.Toplevel)]
     hide=[window_rect(w) for w in windows if w.winfo_viewable()]
@@ -84,7 +84,7 @@ def utility_poll_rewards(self):
             changed=True
         if changed:self.save_state()
         if getattr(self,'_utility_refresh',None):self._utility_refresh()
-        self.root.after(450,self.utility_poll_rewards)
+        self.root.after(120,self.utility_poll_rewards)
     def failed(error):
         self._reward_busy=False;self._reward_status='Reader unavailable · '+str(error)[:90]
     self.run_bg(lambda:capture_training(hide,read_status,read_wallet=True) if read_wallet else capture_training(hide,read_status),loaded,on_error=failed)
@@ -189,6 +189,13 @@ def utility_render_session(self, parent):
     def auto_changed():
         self.state['utility_session']['auto_rewards']=auto.get();self._reward_token=None;self.save_state();refresh()
     tk.Checkbutton(parent,text='Auto read game',variable=auto,command=auto_changed,bg=C['bg'],fg=C['text'],selectcolor=C['card']).pack(anchor='w',padx=20)
+    def notice_mode():
+        current=self.state['utility_session']
+        if current.get('money_mode')=='wallet':
+            current.update(mesos=0,cost=0,money_elapsed_anchor=utility_session_elapsed(current))
+        current.update(wallet_auto=False,money_mode='notices')
+        self._reward_token=None;self.save_state();refresh();self.utility_poll_rewards()
+    ui_button(parent,'Mesos · read pickup notices',notice_mode,compact=True,tip='Count gained mesos messages in the lower-right game log; inventory can stay closed').pack(anchor='w',padx=20,pady=4)
     def wallet_dialog():
         from wallet_model import checkpoint
         dialog=self.ui_dialog('Mesos · wallet checkpoints')
@@ -234,7 +241,7 @@ def utility_render_session(self, parent):
         rates = utility_session_rates(current)
         elapsed.config(text=utility_format_time(rates['seconds']))
         start.config(text='Pause' if current.get('running_since') is not None else 'Start / resume')
-        money_label='wallet net' if current.get('money_mode')=='wallet' else 'mesos observed ≈'
+        money_label='wallet net' if current.get('money_mode')=='wallet' else 'mesos from notices ≈'
         metrics.config(text=f"{current.get('exp',0):,} EXP · party +{current.get('party_exp',0):,} seen\n≈{current.get('kills',0):,} kills · {current.get('mesos',0):,} {money_label}\n{rates['exp_hour']:,.0f} EXP/h · {rates['net_hour']:,.0f} net mesos/h")
         automatic=current.get('auto_rewards',True)
         auto.set(automatic)

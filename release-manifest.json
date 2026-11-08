@@ -1,39 +1,38 @@
 {
-  "version": "3.1.0-companion",
-  "source_sha": "e1a22c7565317ea3ecb33321f89d7dd6847cb462f5454dbdeea8fed844424600",
+  "version": "3.2.0-companion",
+  "source_sha": "6d98a57e13cd3a9a809a6e1a891c3ea328c6d03d7411a4532fef9e1e6e36274c",
   "checks": {
-    "source_sha": "e1a22c7565317ea3ecb33321f89d7dd6847cb462f5454dbdeea8fed844424600",
     "ok": true,
     "cases": [
       {
+        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        },
-        "fixture": "live_exp_2560.png"
+        }
       },
       {
+        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_ant_tunnel2.png"
+        }
       },
       {
+        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        },
-        "fixture": "live_frame_1920.png"
+        }
       },
       {
         "totals": {
@@ -53,17 +52,14 @@
         },
         "fixture": "party-rewards-fixture.png"
       }
-    ]
+    ],
+    "source_sha": "6d98a57e13cd3a9a809a6e1a891c3ea328c6d03d7411a4532fef9e1e6e36274c"
   },
-  "wallet_check": {
-    "ok": true,
-    "wallet": 180543
-  },
-  "validation": "Live independent wallet OCR readings and packaged local inventory/EXP/reward fixtures; native UI tests for net balance, cost reconciliation and pause baselines. Installed automatic wallet flow still awaits user activation and live comparison.",
+  "validation": "Deterministic notice scroll/repeated-amount tests, native session/source-switch checks, capture and local packaged OCR fixtures. No live3.2 comparison; game was closed. Counts remain observed estimates.",
   "changes": [
-    "Automatic inventory wallet checkpoints",
-    "Net balance without duplicate log gains or costs",
-    "Pause/resume wallet baselines",
-    "Wallet reading age"
+    "Lower-right pickup notice source",
+    "Scroll-aware OCR row matching",
+    "120ms post-read wait",
+    "Source-specific money baseline"
   ]
 }
