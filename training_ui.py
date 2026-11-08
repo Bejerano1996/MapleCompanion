@@ -181,6 +181,9 @@ def training_setup(self):
         if n is not None:
             import leveling
             self.training_accept_character({'level':lv,'exp':n,'percent':leveling.percent(n,lv),'need':leveling.exp_to_next(lv),'source':'Manual calibration'})
+            # An earlier capture must not overwrite this explicit correction.
+            # Rebaseline the next reader; blank EXP keeps normal continuity.
+            self._reward_token=None
         self.state['training_gain_context']=self.training_gain_context()
         self.save_state();self._lvl_spec=None;self.render_levelup();dialog.destroy()
     ui_button(w,'Apply',save,primary=True).pack(fill='x',padx=18,pady=5)
