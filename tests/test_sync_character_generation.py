@@ -38,4 +38,15 @@ class SyncCharacterGenerationTests(unittest.TestCase):
    training_ui.training_accept_character(a,{"level":27,"exp":exp})
    self.assertEqual(a._character_read_revision,2)
    self.assertEqual(a.state["character_exp"]["exp"],exp)
+ def test_contradictory_checkpoint_clears_only_character_confirmation(self):
+  key=('validated-character-level',)
+  for previous in (28,29):
+   a=SimpleNamespace(state={"level":27},render_levelup=lambda:None,_reads={key:(previous,1),("map",):("x",2)})
+   training_ui.training_accept_character(a,{"level":27,"exp":2000})
+   self.assertNotIn(key,a._reads);self.assertEqual(a._reads[("map",)],("x",2))
+ def test_matching_checkpoint_keeps_character_confirmation(self):
+  key=('validated-character-level',)
+  a=SimpleNamespace(state={"level":27},render_levelup=lambda:None,_reads={key:(27,2)})
+  training_ui.training_accept_character(a,{"level":27,"exp":2000})
+  self.assertEqual(a._reads[key],(27,2))
 if __name__=="__main__":unittest.main()

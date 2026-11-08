@@ -85,6 +85,10 @@ def training_accept_character(self,reading):
     absolute_exp(reading)
     import leveling
     reading=dict(reading);reading['need']=leveling.exp_to_next(reading['level']);reading.setdefault('percent',leveling.percent(reading['exp'],reading['level']))
+    # Accepted evidence contradicts any pending automatic level confirmation.
+    reads=getattr(self,'_reads',{})
+    key=('validated-character-level',)
+    if key in reads and reads[key][0]!=reading['level']:reads.pop(key)
     self.state['character_exp']=reading;self.state['character_exp_at']=time.time()
     self._character_read_revision=getattr(self,'_character_read_revision',0)+1
     self.state['exp_bar']=[reading['exp'],reading.get('percent',100*reading['exp']/reading['need'])]
