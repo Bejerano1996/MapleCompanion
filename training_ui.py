@@ -38,7 +38,7 @@ def training_gain_context(self):
     context=getattr(self,'_training_context',None) or {}
     if self.state.get('training_auto_context',True):
         party=context.get('party_visible') if context.get('party_readable') and time.time()-(context.get('party_at') or 0)<=20 else None
-        return [str(target['id']) if target else '',context.get('map'),party,reading.get('level')]
+        return [str(target['id']) if target else ('visible-rewards:'+str(context['map']) if context.get('map_readable') and context.get('map') else ''),context.get('map'),party,reading.get('level')]
     return [str(target['id']) if target else '',self.state.get('party',1),self.state.get('party_hits','all'),self.training_party_total(),reading.get('level')]
 
 def training_forecast_now(self):
@@ -50,7 +50,13 @@ def training_forecast_now(self):
         gain=learner.estimate(self.training_gain_context(),time.monotonic());observed=gain is not None
     context=getattr(self,'_training_context',None) or {}
     if self.state.get('training_auto_context',True):
-        if self.training_target() is None:return {'available':False,'reason':'Target unknown / mixed mobs · use Setup or show labels','targets':tuple(self.training_plausible_targets())}
+        if self.training_target() is None:
+            if observed:
+                result=training_forecast(self.state.get('character_exp'),{'name':'recent EXP events','exp':gain},personal_gain=gain,now=time.time(),read_at=self.state.get('character_exp_at'))
+                result.update(source='observed EXP/event - target unconfirmed',yield_unit='EXP/event',party=None)
+                return result
+            progress=learner.progress(self.training_gain_context(),time.monotonic()) if learner else 0
+            return {'available':False,'reason':f'Calibrating recent EXP - {progress}/3','targets':tuple(self.training_plausible_targets())}
         party=context.get('party_visible') if context.get('party_readable') and time.time()-(context.get('party_at') or 0)<=20 else None
         if not party and gain is None:
             progress=learner.progress(self.training_gain_context(),time.monotonic()) if learner else 0
