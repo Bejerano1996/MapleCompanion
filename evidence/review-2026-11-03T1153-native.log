@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_general_sync_native_2026_11_03_1153.py", line 32, in <module>
-    assert a.state['character_exp']['exp']==expected,(seed,a.state['character_exp'])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: (1, {'level': 27, 'exp': 1000, 'need': 63666, 'percent': 1.5706970753620457})

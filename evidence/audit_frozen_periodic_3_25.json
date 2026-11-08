@@ -1,7 +1,0 @@
-{
-  "ok": true,
-  "cases": 300,
-  "failures": [],
-  "source_sha": "586afc05fd42a71a44fbf7a541bf0399d1940236d01c45b4ea0601366d77403e",
-  "scope": "Synthetic stationary pre-session alternating10/20mesosrows with partial OCR changes; no new rewards and no livegameplay"
-}

@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "scope": "Production utility_poll_rewards callbacks with simulated delayed workers, pause/resume, partial cover and new pickup; no game capture",
-  "source_sha": "83b488a9d1f01c225cf730b5b8b78a0b78ba13363c83442cb0782269c7f74d03"
-}

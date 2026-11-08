@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 20,
-  "source_sha": "f13c33db5f0f5034379c79ab53f433cb32871d61a3533b0e6d1ddf9374b227be",
-  "scope": "ActualSetup same-mode explicitEXP/levelcorrection, oldpendingHUDignored; newbaseline differs+50/-20 without false sessiongain,3new14windows count42; save mocked,noOCR/game"
-}

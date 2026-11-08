@@ -1,9 +1,0 @@
-{
-  "ok": true,
-  "cases": 500,
-  "polls": 30000,
-  "overcounts": [],
-  "under_or_inexact": [],
-  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
-  "scope": "Counterfactual unique-concrete-old-amount control on measuredOCRpositions, synthetic3rowscroll/newrewards; amountsNOTobservedpixels, no livegame"
-}

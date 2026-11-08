@@ -21,9 +21,7 @@ with tempfile.TemporaryDirectory(prefix='gps-dock-',dir=here) as folder:
     Path(app.STATE_FILE).write_text(json.dumps({'auto_sync':False,'auto_on_v2':True,'active':[],'level':26,'map':'010005061','gps_alpha':1.0,'idle_alpha':1.0,'panel_size':[470,640],'compact_v3':True}),encoding='utf-8')
     root=tk.Tk();root.withdraw();a=app.App(root);a.db.load_indexes();root.update()
     errors=[];root.report_callback_exception=lambda x,y,z:errors.append(str(y))
-    scenarios=[(scale,filename,map_id) for scale in (1.0,1.15,1.3) for filename,map_id in [('henesys_gps_masked.png','010001000'),('live_frame_ant_tunnel2.png','010005061'),('live_frame_1920.png','010005061')]]
-    for scale,filename,map_id in scenarios:
-        a.set_text_size(scale)
+    for filename,map_id in [('henesys_gps_masked.png','010001000'),('live_frame_ant_tunnel2.png','010005061'),('live_frame_1920.png','010005061')]:
         frame=game_sync.find_minimap(Image.open(here/filename).convert('RGB'))
         check('Minimap frame detected: '+filename,frame is not None)
         a._minimap=tuple(value+(620 if index%2==0 else 132) for index,value in enumerate(frame))

@@ -1,7 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "polls": 5000,
-  "source_sha": "de82c804a6373a0f6c5446f8e59a71be5ce157bb494859cc547721acbb459ef7",
-  "scope": "Synthetic stationary2-6money rows with changing known/pending subset,distinct/repeatedvalues,finalstableknownreadings; no game capture"
-}

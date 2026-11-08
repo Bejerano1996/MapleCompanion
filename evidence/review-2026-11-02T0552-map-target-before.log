@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_ui.py", line 100, in <module>
-    check('Automatic target rejects species absent from known map spawns',a.training_target() is None)
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_training_ui.py", line 19, in check
-    if not value:raise AssertionError(name)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Automatic target rejects species absent from known map spawns

@@ -47,12 +47,10 @@ def utility_session_toggle(session, now=None):
 def utility_session_rates(session, now=None):
     seconds = utility_session_elapsed(session, now)
     factor = 3600 / seconds if seconds >= 1 else 0
-    net=session.get('wallet_net',0) if session.get('money_mode')=='wallet' else session.get('mesos',0)-session.get('cost',0)
-    money_seconds=max(0,seconds-((session.get('wallet_elapsed_anchor') if session.get('money_mode')=='wallet' else session.get('money_elapsed_anchor')) or 0))
     return {'seconds': seconds, 'kills_hour': session.get('kills', 0) * factor,
             'exp_hour': session.get('exp', 0) * factor,
-            'net_mesos': net,
-            'net_hour': net * (3600/money_seconds if money_seconds>=1 else 0)}
+            'net_mesos': session.get('mesos', 0) - session.get('cost', 0),
+            'net_hour': (session.get('mesos', 0) - session.get('cost', 0)) * factor}
 
 
 def utility_session_snapshot(session, now=None):
@@ -152,19 +150,14 @@ def utility_compare_maps(history, metric='exp_hour', minimum_seconds=60):
             excluded['mixed_maps']+=1;continue
         try:
             seconds=utility_number(session.get('elapsed',0))
-            money_anchor=session.get('wallet_elapsed_anchor') if session.get('money_mode')=='wallet' else session.get('money_elapsed_anchor')
-            money_anchor=utility_number(0 if money_anchor is None else money_anchor,maximum=seconds)
-            totals={key:utility_number(session.get(key,0),minimum=-10**15 if (key=='exp' and session.get('exp_is_net')) or (key=='mesos' and session.get('money_mode')=='wallet') else 0) for key in ('kills','exp','mesos','cost')}
-            if session.get('money_mode')=='wallet':totals['cost']=0
+            totals={key:utility_number(session.get(key,0)) for key in ('kills','exp','mesos','cost')}
         except ValueError:
             excluded['invalid']+=1;continue
         if seconds<=0:
             excluded['no_time']+=1;continue
         row=buckets.setdefault(map_id,dict(map_id=map_id,map_name=str(session.get('map_name') or map_id),
-                   sessions=0,seconds=0,money_seconds=0,kills=0,exp=0,mesos=0,cost=0,log_gap_sessions=0))
+                   sessions=0,seconds=0,kills=0,exp=0,mesos=0,cost=0))
         row['sessions']+=1;row['seconds']+=seconds
-        row['money_seconds']+=seconds-money_anchor
-        if session.get('reading_gaps'):row['log_gap_sessions']+=1
         for key,value in totals.items():row[key]+=value
     rows=[];short_maps=0
     for row in buckets.values():
@@ -172,9 +165,9 @@ def utility_compare_maps(history, metric='exp_hour', minimum_seconds=60):
             short_maps+=1;continue
         row['net_mesos']=row['mesos']-row['cost']
         factor=3600/row['seconds']
-        row.update(exp_hour=row['exp']*factor,kills_hour=row['kills']*factor,net_hour=row['net_mesos']*(3600/row['money_seconds'] if row['money_seconds']>=1 else 0))
+        row.update(exp_hour=row['exp']*factor,kills_hour=row['kills']*factor,net_hour=row['net_mesos']*factor)
         rows.append(row)
     if metric not in ('exp_hour','kills_hour','net_hour'):metric='exp_hour'
     rows.sort(key=lambda row:(-row[metric],row['map_name'].casefold(),row['map_id']))
     return {'maps':rows,'excluded':excluded,'below_minimum_maps':short_maps,'metric':metric,
-            'minimum_seconds':minimum_seconds,'scope':'Recorded totals from completed sessions observed on one map; auto kills are estimates.'}
+            'minimum_seconds':minimum_seconds,'scope':'Manual totals from completed sessions observed on one map.'}

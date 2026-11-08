@@ -1,9 +1,0 @@
-{
-  "ok": true,
-  "cases": 100,
-  "failures": [],
-  "unseen_or_unconfirmed_pickups": 445,
-  "max_rows": 12,
-  "source_sha": "586afc05fd42a71a44fbf7a541bf0399d1940236d01c45b4ea0601366d77403e",
-  "scope": "Synthetic8unique base8encodedmoneyamounts under100million perstream; per-frame decoded identities exclude duplicates/pre-sessioncoins,real append/scroll and contiguousmaskchanges; no livegameplay"
-}

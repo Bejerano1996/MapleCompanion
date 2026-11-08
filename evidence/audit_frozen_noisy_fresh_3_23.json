@@ -1,7 +1,0 @@
-{
-  "ok": true,
-  "fresh_reward_cases": 200,
-  "merged_rejections": 1000,
-  "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
-  "scope": "Cached actualOCRbaseline+synthetic parsed new append/positions,200freshrewards;1000mergednoisy-prefixrejections; no new imageOCR/livegame"
-}

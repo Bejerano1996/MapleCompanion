@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 500,
-  "source_sha": "d8019221f8cfbbea29c17a170f0cb6ab3243d15e25e86a91b531333449c7cf17",
-  "scope": "Randomized15secondHUDfallback then authoritative HUD recovery, definitenegativeHUDnetloss, moneyconfirmation, repeatednotices and freshpartyreward; synthetic only, no OCR/livegame"
-}

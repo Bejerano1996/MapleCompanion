@@ -1,7 +1,0 @@
-{
-  "ok": true,
-  "cases": 160,
-  "ambiguous_incomplete": [],
-  "source_sha": "2a062d8f21cb35759e7c6db039634f7db6ee29c7b9509b26f6a103845e7b840c",
-  "scope": "Synthetic fixed row geometry,2-6pending money rows,all scheduler phases,optional unreadablefirstrow; no live gameplay"
-}

@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 300,
-  "scope": "Callback age boundary0/.2/14.999seconds accepted,15.001/30/120seconds discarded before fresh evidence/totals/calibration; next timely capture recovers rewards once; offline only",
-  "source_sha": "6859358aa94862475bdfd273568932ec2c829b71ae69c66f3c69ee74e8e8edf7"
-}

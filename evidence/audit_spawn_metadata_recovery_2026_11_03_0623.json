@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 400,
-  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
-  "scope": "Production target/forecast/learner across empty,contradictory,missing,malformed mapindices; savedmanualtarget never used in auto; missingmetadata staysunknown not proofspawn. Synthetic only"
-}

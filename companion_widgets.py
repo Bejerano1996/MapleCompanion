@@ -1,4 +1,3 @@
-from widgets import font_size
 """Maple Companion visual components, adapted for the Umbrale source project."""
 import tkinter as tk
 from PIL import Image,ImageDraw,ImageTk
@@ -7,7 +6,7 @@ from widgets import C,FONT,Tooltip
 def ui_button(parent, text, command, primary=False, compact=False, tip=None):
     color = '#ed973f' if primary else C['card']
     ink = '#41240d' if primary else C['text']
-    b = tk.Button(parent, text=text, command=command, bg=color, fg=ink, activebackground='#e88b2f' if primary else C['button'], activeforeground=ink, relief='flat', bd=0, cursor='hand2', font=(FONT, font_size(9), 'bold' if primary else 'normal'), padx=10 if compact else 14, pady=5 if compact else 8, highlightthickness=1, highlightbackground=color, highlightcolor=C['text'] if primary else C['gold'], takefocus=True)
+    b = tk.Button(parent, text=text, command=command, bg=color, fg=ink, activebackground='#e88b2f' if primary else C['button'], activeforeground=ink, relief='flat', bd=0, cursor='hand2', font=(FONT, 9, 'bold' if primary else 'normal'), padx=10 if compact else 14, pady=5 if compact else 8, highlightthickness=1, highlightbackground=color, highlightcolor=C['text'] if primary else C['gold'], takefocus=True)
     if tip:
         Tooltip(b, tip)
     return b
@@ -70,18 +69,6 @@ def ui_nav_icon(master, key, selected=False):
         line([(3,16),(8,11),(11,13),(17,5)]);line([(12,5),(17,5),(17,10)])
     elif key == 'items':
         rect((4,6,16,17));pen.arc((7*scale,2*scale,13*scale,10*scale),180,360,fill=ink,width=scale);line([(7,7),(7,9)]);line([(13,7),(13,9)])
-    elif key == 'pq':
-        oval((7,2,13,8));oval((1,5,5,9));oval((15,5,19,9))
-        line([(5,18),(5,14),(7,11),(13,11),(15,14),(15,18)])
-        line([(1,16),(1,13),(3,11),(5,12)])
-        line([(19,16),(19,13),(17,11),(15,12)])
-    elif key == 'money':
-        oval((2,7,12,17));oval((8,2,18,12));line([(13,4),(13,10)]);line([(11,6),(15,6)]);line([(7,9),(7,15)])
-    elif key == 'tools':
-        for x,y in ((3,3),(11,3),(3,11),(11,11)):rect((x,y,x+6,y+6))
-    elif key == 'settings':
-        oval((3,3,17,17));oval((7,7,13,13))
-        for a,b in [((10,0),(10,4)),((10,16),(10,20)),((0,10),(4,10)),((16,10),(20,10))]:line([a,b])
     elif key == 'watch':
         line([(10,2),(12.3,7),(18,8),(14,12),(15,18),(10,15),(5,18),(6,12),(2,8),(7.7,7),(10,2)])
     else:

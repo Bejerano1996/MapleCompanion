@@ -16,7 +16,6 @@ import urllib.parse
 import urllib.request
 
 import guides
-import item_sources
 
 BASE = "https://meowdb.com/msclassic"
 MAP_DATA_URL = "https://meowdb.com/_data/maps.json"  # every map with portals, NPCs and spawns
@@ -162,7 +161,7 @@ class MeowDB:
         self.maps = {m["id"]: m for m in maps}
 
         mobs = self._largest_list(self._rsc(self._get("/monsters", INDEX_MAX_AGE)), r'\[\{"id":', "level")
-        self.monsters = {m["id"]: m for m in mobs if not is_job_test_monster(m)}
+        self.monsters = {m["id"]: m for m in mobs}
 
         self.map_data = {m["id"]: m for m in json.loads(self._get(MAP_DATA_URL, INDEX_MAX_AGE))}
 
@@ -274,21 +273,6 @@ class MeowDB:
             if mid not in ids:
                 ids.append(mid)
         return sorted(ids, key=lambda m: (self.monsters.get(m) or {}).get("level", 999))
-
-    def item_acquisition_sources(self,item_id,item_name):
-        """Verified shops and linked breakable spawn maps for a game item id."""
-        sources=item_sources.shop_sources(self.sold_by.get(str(item_id)) or [],self.maps)
-        results=self.search_items(item_name)
-        page_id=next((row['id'] for row in results if str(row.get('iconKey'))==str(item_id)),None)
-        if page_id is None:return sources
-        rsc=self._rsc(self._get(f'/item-db/{page_id}',DETAIL_MAX_AGE))
-        for breakable in item_sources.breakable_links(rsc):
-            detail=self._rsc(self._get('/breakables/'+breakable['id'],DETAIL_MAX_AGE))
-            maps=item_sources.breakable_maps(detail,self.maps)
-            if maps:
-                sources.append({'kind':'breakable','id':breakable['id'],'name':breakable['name'],
-                                'maps':maps,'community':True,'source':BASE+'/breakables/'+breakable['id']})
-        return sources
 
     def map_detail(self, map_id):
         """Minimap size/centre plus NPC, monster-spawn and portal coordinates for one map."""
@@ -410,9 +394,3 @@ class MeowDB:
         rows = [m for m in self.maps.values()
                 if m.get("totalMobCount") and level - below <= m.get("avgMobLevel", 0) <= level + above]
         return sorted(rows, key=lambda m: -(m.get("expPerHour") or 0))[:limit]  # limit=None: all
-
-
-def is_job_test_monster(monster):
-    """Exclude advancement-test variants, preserving normal and PQ monsters."""
-    text=" ".join(str(monster.get(k) or "") for k in ("name","display","englishDisplay","tag")).casefold()
-    return bool(re.search(r"job\s*(?:test|advancement)|(?:advancement|job).*test",text))

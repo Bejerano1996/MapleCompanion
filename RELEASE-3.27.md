@@ -1,1 +1,0 @@
-3.27 clears an old automatic level confirmation when newly accepted character evidence contradicts that level, including manual Setup Apply. Two fresh automatic reads are required again. Matching level confirmation and unrelated map/quest confirmations are preserved. Isolated native Setup and synthetic callback tests; no live-game validation.

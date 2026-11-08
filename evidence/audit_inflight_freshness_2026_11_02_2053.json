@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "source_sha": "0db0a3760fde975eac68640c8437f1490c5b5717db160599efce8d48ac581239",
-  "scope": "Production context selectors and background callbacks: map/mob/party expiry during capture, same-species map change and accepted level27-to28; offline simulation only"
-}

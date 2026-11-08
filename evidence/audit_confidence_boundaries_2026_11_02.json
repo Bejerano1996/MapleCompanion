@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 126,
-  "source_sha": "ed6e39059b11750976c8a209de8b13021b3bfb881e1ca6ef00d4998637290c69",
-  "scope": "Synthetic OCR confidence boundary/split-digit boxes; no actual OCR recognition or livegameplay"
-}

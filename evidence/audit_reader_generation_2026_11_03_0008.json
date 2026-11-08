@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 100,
-  "scope": "Rapid auto/manual roundtrip or pickup baseline reset with old worker pending; superseded accountant callback must not mutate totals/evidence; offline only",
-  "source_sha": "97419cb17668ffa5c6a358d56d5f8de2efea1fc417a5ac7fec951d1188959a29"
-}

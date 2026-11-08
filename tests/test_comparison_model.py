@@ -40,11 +40,6 @@ class ComparisonTests(unittest.TestCase):
         self.assertEqual(result['maps'],[])
         self.assertEqual(result['below_minimum_maps'],1)
         self.assertEqual(sum(result['excluded'].values()),4)
-    def test_validated_net_exp_loss_is_included(self):
-        record=completed('A',3600,exp=-100,exp_is_net=True,reading_gaps=1)
-        row=utility_compare_maps([record])['maps'][0]
-        self.assertEqual(row['exp_hour'],-100);self.assertEqual(row['log_gap_sessions'],1)
-        self.assertEqual(utility_compare_maps([completed('A',3600,exp=-100)])['excluded']['invalid'],1)
     def test_net_sort_and_negative_profit(self):
         rows=utility_compare_maps([completed('A',3600,1000,100,300),completed('B',3600,100,500,0)],'net_hour')['maps']
         self.assertEqual([row['map_id'] for row in rows],['B','A'])

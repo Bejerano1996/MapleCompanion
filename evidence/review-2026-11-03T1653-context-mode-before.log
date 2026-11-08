@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_context_mode_restart_2026_11_03_1653.py", line 39, in <module>
-    assert a._training_context==before and a.state['utility_session']==session,'Old context survived off/on Setup'
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Old context survived off/on Setup

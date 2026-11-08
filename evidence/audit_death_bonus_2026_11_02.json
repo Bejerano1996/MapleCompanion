@@ -1,7 +1,0 @@
-{
-  "ok": true,
-  "seeds": 200,
-  "assertions": 400,
-  "source_sha": "8cbd55ff62ecb9c1647ad9729b4d32c9422e5fd95574ab2325ae7797897275c1",
-  "scope": "Synthetic death/HUD-loss and late bonus within existing5second reconciliation window; no live gameplay"
-}

@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 500,
-  "source_sha": "454251f62573988fd5d432e79a10b3a1dc2ff0e76c528cb9e02ec3c87f74ff88",
-  "scope": "Production ContextTracker + target/forecast, synthetic hide/reveal/map-change/species-freshness sequences; not real monster kills or OCR/livegame"
-}

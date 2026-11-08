@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_wallet_restart_2026_11_03_0023.py", line 25, in <module>
-    assert a.state['utility_session']['wallet_start'] is None,(seed,a.state['utility_session'])
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: (0, {'id': 'wallet-audit', 'running_since': 1.0, 'auto_rewards': True, 'wallet_auto': True, 'money_mode': 'wallet', 'wallet_start': 9999, 'wallet_current': 9999, 'wallet_net': 0, 'wallet_offset': 0, 'exp': 0, 'mesos': 0, 'kills': 0, 'party_exp': 0, 'wallet_elapsed_anchor': 1793665466.7069888, 'exp_source': 'Reward log � observed', 'wallet_read_at': 1793665467.7069888})

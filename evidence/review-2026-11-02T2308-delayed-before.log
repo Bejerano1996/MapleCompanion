@@ -1,5 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_delayed_capture_2026_11_02_2308.py", line 29, in <module>
-    assert a._yield_learner.samples==[],(seed,delay,a._yield_learner.samples)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: (0, 15.001, [9])

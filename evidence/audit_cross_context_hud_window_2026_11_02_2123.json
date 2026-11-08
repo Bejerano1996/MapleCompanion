@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "scope": "Context change BETWEEN captures with unconsumed old-context notices and HUD interval spanning both contexts; reject cross-context calibration, preserve totals, three fresh samples relearn9; offline only",
-  "source_sha": "2bcd1b4458796d402053dc38bad3657784f9e086585cd28b86a5bb9ce03a2bad"
-}

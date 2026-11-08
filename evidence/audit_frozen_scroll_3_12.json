@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
-  "scope": "Synthetic actual one-row scroll with missing amount,two distinct surviving amounts,small geometry jitter,new pickup may equal surviving amount; no live gameplay"
-}

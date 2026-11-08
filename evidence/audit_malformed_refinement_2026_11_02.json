@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "source_sha": "bdc9a45d6774483db52a526ec290506c5db73c4a834e5ca73153fe195579df79",
-  "scope": "Synthetic malformedamount->pending->resolvedOCR->RewardTracker atweak/strongconfidence,baselineexclusionandredropouts; no realcapture"
-}

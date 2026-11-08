@@ -79,7 +79,6 @@ with tempfile.TemporaryDirectory(prefix='integration-state-',dir=str(Path(__file
     if '--preview' in sys.argv:
         for child in root.winfo_children():
             if isinstance(child,tk.Toplevel):child.destroy()
-        if '--large-preview' in sys.argv:a.set_text_size(1.3)
         a.set_tab('quests');root.title('UMBRΛLE · Companion integration preview');root.after(120000,root.destroy);root.mainloop()
     else:
         for job in root.tk.call('after','info'):root.tk.call('after','cancel',job)

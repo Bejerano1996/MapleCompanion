@@ -1,7 +1,0 @@
-{
-  "ok": true,
-  "cases": 500,
-  "rate_checkpoints": 3000,
-  "source_sha": "c64710da36baf35ae5030eb6827f7aab4028db97ebe9ff6a3d8b7998d81e6d18",
-  "scope": "Synthetic automatic-wallet then pickup mode elapsed anchors across pauses/resumes, gains/spending, rate denominator epochs; no wallet/OCR/livegame"
-}

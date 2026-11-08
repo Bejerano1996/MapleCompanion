@@ -1,9 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "failures": [],
-  "max_retained_rows": 18,
-  "partial_undercount_streams": 200,
-  "source_sha": "3de844076ad7f3a0dd4ba0072c9ab3164af66f49fd0f683b3f8d1bf58d7fba8d",
-  "scope": "Synthetic actual append/scroll plus changing contiguous masks; safety compares aggregate observed<=actualnew rewards,unseenrewardundercountallowed; no livegameplay"
-}

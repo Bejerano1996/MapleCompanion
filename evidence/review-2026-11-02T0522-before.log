@@ -1,7 +1,0 @@
-Traceback (most recent call last):
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_session_rewards_ui.py", line 93, in <module>
-    check('Calibration retains notices between HUD polls',a._yield_learner.estimate(a.training_gain_context(),time.monotonic())==9)
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\umbrale-companion\tests\test_session_rewards_ui.py", line 19, in check
-    if not value:raise AssertionError(name)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
-AssertionError: Calibration retains notices between HUD polls

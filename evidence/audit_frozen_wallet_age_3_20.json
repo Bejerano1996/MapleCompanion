@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 200,
-  "scope": "Delayed optional wallet result ignored without save; timely checkpoint recovers, random reader failure clears busy and later polling succeeds. Synthetic callbacks only, no wallet/game reads",
-  "source_sha": "b3d235543353b54936d06e81e5934fae14b10d7cdbcb6bbb703c9486757ca17c"
-}

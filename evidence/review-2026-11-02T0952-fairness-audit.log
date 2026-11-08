@@ -1,4 +1,0 @@
-  File "C:\Users\User\Documents\Codex\2026-10-25\new-chat-2\work\audit_retry_fairness_2026_11_02T0952.py", line 24
-    elif total<expected:ambiguous.append(dict(rows=n,phase=phase,blocked=blocked,observed=total,reference=expected))
-    ^^^^
-SyntaxError: invalid syntax

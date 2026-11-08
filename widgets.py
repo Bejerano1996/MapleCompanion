@@ -138,7 +138,7 @@ class Tooltip:
         self.win.overrideredirect(True)
         self.win.attributes('-topmost', True)
         tk.Label(self.win, text=self.text, bg=C['tip_bg'], fg=C['tip_text'],
-                 font=(FONT, font_size(10)), padx=10, pady=6, wraplength=320,
+                 font=(FONT, 10), padx=10, pady=6, wraplength=320,
                  justify='left', highlightthickness=1,
                  highlightbackground='#596579').pack()
         self.win.update_idletasks()
@@ -234,7 +234,7 @@ def menu_item(parent, text, command, hint="", bg="header"):
 def entry(parent, textvariable, width=None, size=9, **kw):
     """A text box: elevated surface, thin rim that turns violet while you type in it."""
     return tk.Entry(parent, textvariable=textvariable, width=width, bg=C["card_hi"], fg=C["text"],
-                    insertbackground=C["text"], relief="flat", font=(FONT, font_size(size)), highlightthickness=1,
+                    insertbackground=C["text"], relief="flat", font=(FONT, size), highlightthickness=1,
                     highlightbackground=C["border"], highlightcolor=C["accent_hi"],
                     selectbackground=C["accent"], selectforeground=C["text"], **kw)
 

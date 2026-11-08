@@ -1,4 +1,4 @@
-﻿"""UMBRΛLE: a compact always-on-top overlay that floats above
+"""UMBRΛLE: a compact always-on-top overlay that floats above
 MapleStory Classic and guides you through your quests, monsters, items, training maps and
 party quests. It collapses to a small title row and expands into a floating panel.
 
@@ -27,8 +27,6 @@ import party_quests
 import quest_rank
 import trainer
 import widgets
-import item_sources
-from companion_portraits import portrait
 from game_sync import MINIMAP_CORNER, HotkeyThread, capture_and_read, find_game_window, window_rect
 from minimap import portal_direction, portal_side, render_minimap
 from widgets import BRAND_FONT, C, FONT, ICON, TEXT_SCALES, ScrollArea, Tooltip, button, entry, frozen, label, link
@@ -40,7 +38,7 @@ BUNDLE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(APP_DIR, "state.json")
 SHOW_REQUEST = os.path.join(APP_DIR, "show.request")  # left by a second launch: "show yourself"
 GUIDES_FILE = os.path.join(CACHE_DIR, "guides.json")
-GUIDES_VERSION = 4     # includes shops and breakable acquisition sources per objective
+GUIDES_VERSION = 3     # bump when the saved guide format changes (3: more maps kept)
 MAX_MAPS = 3          # map suggestions shown per objective
 KEEP_MAPS = 8         # maps saved per objective, so enough stay after unreachable ones are left out
 MAX_DROPPERS = 2      # monsters shown per item
@@ -174,27 +172,18 @@ class App:
         threading.Thread(target=work, daemon=True).start()
 
     def _poll(self):
-        # Yield to input/paint even when many network results arrive together.
-        deadline = time.perf_counter() + .008
-        processed = 0
-        while processed < 12:
-            try:
-                callback, value, error = self.results.get_nowait()
-            except queue.Empty:
-                break
+        while not self.results.empty():
+            callback, value, error = self.results.get()
             if error:
                 self.set_status(f"Error: {error}", "red")
             callback(value)
-            processed += 1
-            if time.perf_counter() >= deadline:
-                break
         if os.path.exists(SHOW_REQUEST):
             try:
                 os.remove(SHOW_REQUEST)
             except OSError:
                 pass
             self.show_again()
-        self.root.after(10 if not self.results.empty() else 100, self._poll)
+        self.root.after(100, self._poll)
 
     def show_again(self):
         """Opening UMBRΛLE while it already runs lands here: bring the open one forward, on a
@@ -293,7 +282,7 @@ class App:
                 self._build_level_filter(frame)  # "Lv [  ] - [  ]" to the right of the name box
             box.pack(fill="x", padx=6, pady=4, ipady=2)
             self.search_bars[tab], self.search_entries[tab] = frame, box
-        self.mob_query.trace_add("write", lambda *_: self._debounce_mob_search())
+        self.mob_query.trace_add("write", lambda *_: self.render(keep_scroll=False))
         # item search asks the website, so wait until typing pauses
         self._item_search_job = None
         self.item_query.trace_add("write", lambda *_: self._debounce_item_search())
@@ -1693,8 +1682,6 @@ class App:
         head.pack(fill="x", pady=(p(2), 0))
         arrow = label(head, "▾" if expanded else "▸", fg="muted", bg=bg, padx=4)
         arrow.pack(side="left")
-        npc=self.db.npc(q.get("npc") or "")
-        if npc:portrait(self,head,"npc",npc["id"],npc.get("name") or q["npc"],C[bg],28)
         title = label(head, q["name"], fg="gold", bg=bg, bold=True, anchor="w", justify="left",
                       wraplength=self.panel_width() - p(130), cursor="hand2")
         title.pack(side="left", fill="x", expand=True)
@@ -1721,12 +1708,13 @@ class App:
             Tooltip(dot, "Live: in the game's Quest Helper, its counts update by themselves")
         bar = self.quest_bars[qid] = widgets.Bar(card, self.quest_share(qid), bg=bg, done=ready)
         bar.pack(fill="x", padx=(p(22), p(10)), pady=(p(2), p(5) if not expanded else p(3)))
-        self.render_quest_rewards(card,bg,qid)
         if not expanded:
             return
 
         body = tk.Frame(card, bg=C[bg])
         body.pack(fill="x", padx=(p(22), 6), pady=(0, 4))
+        label(body, f"🎁 {quest_rank.reward_text(q, limit=4)}", fg="gold", bg=bg, size=8, anchor="w",
+              justify="left", wraplength=self.wrap(70)).pack(fill="x", pady=(0, 3))
         self.render_quest_guide(body, bg, qid)
         turn_in = q.get("completeNpc") or q.get("npc")
         nm = npc_map(self.db, turn_in)
@@ -1754,8 +1742,6 @@ class App:
         elif steps is None:
             label(body, "Finding where to go...", fg="muted", bg=bg, size=8).pack(anchor="w", pady=2)
 
-        if any(need.get('mobId') is not None for need in q.get('need') or []) or any(step.get('lines') for step in steps or []):
-            self.render_objective_map_sort(body,bg)
         # objectives, written like the game: "have / need Name"
         for i, need in enumerate(q.get("need") or []):
             step = steps[i] if steps and i < len(steps) else {}
@@ -1777,10 +1763,9 @@ class App:
             self.objective_labels[(qid, i)] = text_label
             if step.get("level"):
                 Tooltip(text_label, f"{'Kill' if 'mobId' in need else 'Loot'} · monster Lv {step['level']}")
-            if not is_done and step.get('sources'):
-                self.render_acquisition_sources(body,bg,qid,step)
-            self.render_objective_monster_maps(body,bg,qid,i,need,step,is_done)
             if not is_done and steps and self.all_maps.get(qid):
+                for line in step.get("lines", []):
+                    self.render_map_line(body, bg, qid, line)
                 if step.get("note"):
                     label(body, step["note"], fg="muted", bg=bg, size=8, wraplength=self.wrap(80),
                           justify="left").pack(anchor="w", padx=16)
@@ -1804,7 +1789,7 @@ class App:
         actions.pack(fill="x", pady=(4, 2))
         if steps and not ready:
             showing = self.all_maps.get(qid)
-            link(actions, "▾ Hide notes" if showing else "▸ Notes",
+            link(actions, "▾ Hide maps per objective" if showing else "▸ Maps per objective",
                  lambda: self.toggle_all_maps(qid), bg=bg, fg="muted", size=8).pack(side="left")
         button(actions, "✓ Complete", lambda: self.complete_quest(qid), bg="button", fg="green", size=8,
                tip="Turned in: remove it and suggest the next quest").pack(side="right")
@@ -1821,34 +1806,6 @@ class App:
         if sort == "near":
             return sorted(options, key=lambda m: (dist.get(m[0], 999), -count(m[0])))
         return sorted(options, key=lambda m: (-count(m[0]), dist.get(m[0], 999)))
-
-    def render_acquisition_sources(self,parent,bg,qid,step,all_sources=False):
-        sources=item_sources.ranked_sources(step.get('sources') or [],self.distances())
-        for source in sources if all_sources else sources[:1]:
-            target=item_sources.nearest_target(source,self.distances())
-            if not target:continue
-            row=tk.Frame(parent,bg=C[bg]);row.pack(fill='x',padx=14,pady=(2,4))
-            route=lambda source=source,target=target:self.start_route(qid,target[0],None,source.get('npc'))
-            button(row,'GPS',route,bg='button',fg='green',size=8,padx=4,
-                   tip='Route to '+target[1]).pack(side='right',padx=(4,0))
-            verb='Buy' if source['kind']=='shop' else 'Break / collect'
-            title=f"{verb}: {source['name']}"
-            if source.get('price') is not None:title+=f" · {source['price']:,.0f} mesos each"
-            title+='\n'+target[1]
-            if source.get('citizen'):title+=' · '+str(source['citizen'])+' required'
-            info=link(row,title,route,bg=bg,size=8,anchor='w',justify='left',wraplength=max(140,self.wrap(110)))
-            info.pack(side='left',fill='x',expand=True)
-            Tooltip(info,('Break the named object and collect its drops. Drop reports are community sourced; drops are not guaranteed.\n' if source['kind']=='breakable' else 'Buy from the named NPC. Any citizenship requirement is shown.\n')+source.get('source',''))
-        if sources and not all_sources and (len(sources)>1 or len(sources[0].get('maps',[]))>1):
-            button(parent,'Other sources…',lambda:self.open_acquisition_sources(qid,step),bg=bg,size=8,padx=6).pack(anchor='w',padx=14,pady=(0,3))
-
-    def open_acquisition_sources(self,qid,step):
-        window=self.ui_dialog('Sources · '+step['name'])
-        area=ScrollArea(window);area.pack(fill='both',expand=True)
-        for source in item_sources.ranked_sources(step.get('sources') or [],self.distances()):
-            for target in sorted(source.get('maps') or [],key=lambda row:self.distances().get(row[0],10**9)):
-                self.render_acquisition_sources(area.inner,'bg',qid,{'sources':[{**source,'maps':[target]}]},True)
-        area.commit()
 
     def render_map_line(self, parent, bg, qid, line, sort="mobs", limit=MAX_MAPS):
         row = tk.Frame(parent, bg=C[bg])
@@ -2667,16 +2624,6 @@ class App:
             low, high = high, low  # typed the other way round
         return low, high
 
-    def _debounce_mob_search(self):
-        job = getattr(self, '_mob_search_job', None)
-        if job:
-            self.root.after_cancel(job)
-        def finish():
-            self._mob_search_job = None
-            if self.state['tab'] == 'mobs':
-                self.render(keep_scroll=False)
-        self._mob_search_job = self.root.after(150, finish)
-
     def render_monsters(self):
         inner = self.scroll.inner
         words = self.mob_query.get().lower().split()
@@ -2694,7 +2641,7 @@ class App:
         else:  # nothing typed yet: monsters around your level
             mobs = sorted((m for m in self.db.monsters.values() if abs(m.get("level", 0) - level) <= 4),
                           key=lambda m: m.get("level", 0))
-            hint = f"Near Lv {level} · Search by name or level"
+            hint = f"Type a name or a level range. Showing monsters near Lv {level}:"
         label(inner, hint, fg="muted", size=8, padx=6, pady=2, anchor="w", justify="left",
               wraplength=self.wrap(30)).pack(fill="x")
         opened = self.state.get("mob_open")
@@ -2705,16 +2652,13 @@ class App:
             card.pack(fill="x", padx=5, pady=2)
             bg = "card_hi" if mid == opened else "card"
             row = tk.Frame(card, bg=C[bg], cursor="hand2")
-            row.pack(fill="x",padx=10,pady=5)
-            picture=portrait(self,row,"mob",mid,m.get("display") or m["name"],C[bg],32)
-            details=tk.Frame(row,bg=C[bg]);details.pack(side="left",fill="x",expand=True,padx=(4,0))
-            name = label(details, m.get("display") or m["name"], fg="gold", bg=bg, bold=True, anchor="w",
-                         justify="left",wraplength=self.wrap(105))
-            name.pack(fill="x",anchor="w")
-            stats = label(details, f"Lv {m.get('level', '?')} · {m.get('hp', 0):,} HP · {m.get('exp', 0)} EXP",
-                          fg="muted", bg=bg, size=8,anchor="w",justify="left",wraplength=self.wrap(105))
-            stats.pack(fill="x",anchor="w")
-            for w in (row,details,name,stats,*([picture] if picture is not None else [])):
+            row.pack(fill="x")
+            name = label(row, m.get("display") or m["name"], fg="gold", bg=bg, bold=True, anchor="w")
+            name.pack(side="left", padx=6, pady=2)
+            stats = label(row, f"Lv {m.get('level', '?')} · {m.get('hp', 0):,} HP · {m.get('exp', 0)} EXP",
+                          fg="muted", bg=bg, size=8)
+            stats.pack(side="right", padx=6)
+            for w in (row, name, stats):
                 w.bind("<Button-1>", lambda e, mid=mid: self.toggle_monster(mid))
             if mid != opened:
                 continue
@@ -3159,15 +3103,7 @@ class App:
         # the EXP bar takes ~0.5 s to read: on manual syncs and every EXP_BAR_EVERY-th auto sync
         self._exp_tick = (getattr(self, "_exp_tick", 0) + 1) % EXP_BAR_EVERY
         exp_bar = not auto or self._exp_tick == 0
-        character_revision = getattr(self, "_character_read_revision", 0)
-        def loaded(result):
-            # Another reader or manual calibration may have accepted newer character evidence.
-            # Keep this scan's map/quest evidence, but never overwrite that newer EXP reading.
-            if result and character_revision != getattr(self, "_character_read_revision", 0):
-                result = dict(result)
-                result.pop("exp_bar", None)
-            self._on_synced(result)
-        self.run_bg(lambda: capture_and_read(self.db, auto, ours, regions, map_only, exp_bar), loaded,
+        self.run_bg(lambda: capture_and_read(self.db, auto, ours, regions, map_only, exp_bar), self._on_synced,
                     on_error=lambda _: setattr(self, "syncing", False))
 
     def _snapshot(self):
@@ -3573,18 +3509,14 @@ class App:
                               "note": "" if maps else "Location unknown"})
             else:
                 lines = []
-                try:droppers=self.rank_droppers(q,need)[:MAX_DROPPERS]
-                except Exception:droppers=[]
-                for mid in droppers:
+                for mid in self.rank_droppers(q, need)[:MAX_DROPPERS]:
                     mob = self.db.monsters.get(mid, {})
                     maps = self._maps(self.db.mob_locations(mid))
                     if maps:
                         lines.append({"prefix": f"Drops from {mob.get('display', 'Monster ' + str(mid))} "
                                                 f"(Lv {mob.get('level', '?')}):", "mob": mid, "maps": maps})
-                try:sources=self.db.item_acquisition_sources(need['itemId'],need['name'])
-                except Exception:sources=item_sources.shop_sources(self.db.sold_by.get(str(need['itemId'])) or [],self.db.maps)
-                steps.append({"name": need["name"], "count": count, "lines": lines,'sources':sources,
-                              "note": "" if lines or sources else "Source not listed yet"})
+                steps.append({"name": need["name"], "count": count, "lines": lines,
+                              "note": "" if lines else "Not a monster drop: check the quest text"})
         return steps
 
     def rank_droppers(self, q, need):
@@ -3752,77 +3684,11 @@ def self_test(out_path):
         f.write(result)
 
 
-def self_test_image(image_path, out_path):
-    """Check packaged Windows OCR on an explicit fixture, without capturing the desktop."""
-    try:
-        import screen_ocr
-        lines = screen_ocr.read_lines(Image.open(image_path).convert("RGB"))
-        result = {"ok": True, "line_count": len(lines)}
-    except Exception as e:
-        result = {"ok": False, "error": repr(e)}
-    with open(out_path, "w", encoding="utf-8") as f:
-        json.dump(result, f)
-
-
 from companion_integration import integrate
 App = integrate(App, globals())
 
 
 if __name__ == "__main__":
-    if len(sys.argv)==4 and sys.argv[1]=='--check-context-image':
-        try:
-            from training_context import context_lines,party_rows,roman_suffix
-            image=Image.open(sys.argv[2]).convert('RGB');lines=context_lines(image)
-            from game_sync import minimap_title,find_minimap
-            frame=find_minimap(image)
-            report={'ok':True,'party_visible':party_rows(image,lines),'roman_suffix':roman_suffix(minimap_title(image,frame)) if frame else None,'labels':[l['text'] for l in lines if re.search(r'\bLv[\s.,:]*\d',l['text'],re.I)]}
-        except Exception:
-            import traceback
-            report={'ok':False,'error':traceback.format_exc()}
-        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
-        sys.exit()
-    if len(sys.argv)==4 and sys.argv[1]=='--check-wallet-image':
-        try:
-            from session_reader import ocr_rows,wallet_from_rows
-            value=wallet_from_rows(ocr_rows(Image.open(sys.argv[2])))
-            report={'ok':value is not None,'wallet':value}
-        except Exception:
-            import traceback
-            report={'ok':False,'error':traceback.format_exc()}
-        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
-        sys.exit()
-    if len(sys.argv)==4 and sys.argv[1]=='--check-character-image':
-        from session_reader import read_character_image
-        try:
-            image=Image.open(sys.argv[2]).convert('RGB');w,h=image.size
-            reading=read_character_image(image.crop((int(w*.1),int(h*.91),int(w*.92),h)))
-            report={'ok':reading is not None,'character':reading}
-        except Exception:
-            import traceback
-            report={'ok':False,'error':traceback.format_exc()}
-        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
-        sys.exit()
-
-    if len(sys.argv)==4 and sys.argv[1]=='--check-rewards-image':
-        from session_reader import read_reward_image
-        from session_rewards import RewardTracker
-        try:
-            events=read_reward_image(Image.open(sys.argv[2]));tracker=RewardTracker();tracker.previous=[]
-            report={'ok':True,'events':events,'totals':tracker.feed(events)}
-        except Exception:
-            import traceback
-            report={'ok':False,'error':traceback.format_exc()}
-        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
-        sys.exit()
-
-    if len(sys.argv)==3 and sys.argv[1]=='--mesowatch-search':
-        from mesowatch_browser import run_browser
-        try:run_browser(sys.argv[2])
-        except Exception:
-            import traceback
-            with open(os.path.join(APP_DIR,'mesowatch-error.log'),'w',encoding='utf-8') as f:traceback.print_exc(file=f)
-        sys.exit()
-
     try:  # crisp text on high-DPI Windows screens; also makes screen capture use real pixels
         # 2 = per-monitor aware: window positions and screenshots are then both in real pixels on
         # every monitor. With 1 (system-aware) a monitor scaled differently from the main one gets
@@ -3833,22 +3699,6 @@ if __name__ == "__main__":
         pass
     if len(sys.argv) == 3 and sys.argv[1] == "--selftest":
         self_test(sys.argv[2])
-        sys.exit()
-    if len(sys.argv) == 4 and sys.argv[1] == "--selftest-image":
-        self_test_image(sys.argv[2], sys.argv[3])
-        sys.exit()
-    if len(sys.argv) == 3 and sys.argv[1] == '--check-data':
-        import traceback,ssl
-        try:
-            context=ssl.create_default_context()
-            if not context.check_hostname or context.verify_mode!=ssl.CERT_REQUIRED:
-                raise RuntimeError('HTTPS certificate verification must remain enabled')
-            database=MeowDB()
-            database.load_indexes()
-            report={'ok':True,'tls_verification':True,'quests':len(database.quests),'maps':len(database.maps),'monsters':len(database.monsters),'game_window':find_game_window()}
-        except Exception:
-            report={'ok':False,'traceback':traceback.format_exc(),'game_window':find_game_window()}
-        with open(sys.argv[2],'w',encoding='utf-8') as f:json.dump(report,f)
         sys.exit()
     # one overlay at a time: opening it again brings the one already running forward
     _instance = ctypes.windll.kernel32.CreateMutexW(None, False, r"Local\UmbraleOverlay")

@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 800,
-  "source_sha": "83b488a9d1f01c225cf730b5b8b78a0b78ba13363c83442cb0782269c7f74d03",
-  "scope": "Synthetic ordered old/new bonus refinement/insertion and trailing sequence,HDUoutage/recovery; not livegameplay"
-}

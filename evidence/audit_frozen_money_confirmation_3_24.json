@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 1000,
-  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
-  "scope": "Synthetic observedmoney-prefixvariants:unknownamountpending,tworeadconfirmation,newpickupcreditedonce,malformed/zero/negative/mergedrejection; no liveOCR/game"
-}

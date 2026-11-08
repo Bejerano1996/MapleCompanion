@@ -1,6 +1,0 @@
-{
-  "ok": true,
-  "cases": 6,
-  "source_sha": "7bd28919900c04b7dbf1bdbd7df53b0faf454d087ca25e545f016652d47068fd",
-  "scope": "Actual Setup/Apply on withdrawnTk, blankEXP keeps existingHUDlevel/EXP/time even editedlevelfield; manualtarget/autoobservedtarget distinct, optionalgain contextscoped. Save mocked only,no game"
-}
