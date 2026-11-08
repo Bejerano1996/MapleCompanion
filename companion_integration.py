@@ -1,4 +1,4 @@
-from widgets import font_size
+﻿from widgets import font_size
 """Maple Companion presentation and tools on top of Umbrale's source engine.
 
 No packaged bytecode, private APIs, game input or game process access are used.
@@ -31,7 +31,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='3.25.0-companion'
+    core['VERSION']='3.26.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -152,7 +152,7 @@ def integrate(Base,core):
             self._companion_profile_refresh()
 
         def _on_synced(self,result):
-            self._live_last_result={'_minimap_readable':bool(result.get('map'))}
+            self._live_last_result={'_minimap_readable':bool((result or {}).get('map'))}
             super()._on_synced(result)
             self._companion_profile_refresh()
 

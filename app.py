@@ -1,4 +1,4 @@
-"""UMBRΛLE: a compact always-on-top overlay that floats above
+﻿"""UMBRΛLE: a compact always-on-top overlay that floats above
 MapleStory Classic and guides you through your quests, monsters, items, training maps and
 party quests. It collapses to a small title row and expands into a floating panel.
 
@@ -3159,7 +3159,15 @@ class App:
         # the EXP bar takes ~0.5 s to read: on manual syncs and every EXP_BAR_EVERY-th auto sync
         self._exp_tick = (getattr(self, "_exp_tick", 0) + 1) % EXP_BAR_EVERY
         exp_bar = not auto or self._exp_tick == 0
-        self.run_bg(lambda: capture_and_read(self.db, auto, ours, regions, map_only, exp_bar), self._on_synced,
+        character_revision = getattr(self, "_character_read_revision", 0)
+        def loaded(result):
+            # Another reader or manual calibration may have accepted newer character evidence.
+            # Keep this scan's map/quest evidence, but never overwrite that newer EXP reading.
+            if result and character_revision != getattr(self, "_character_read_revision", 0):
+                result = dict(result)
+                result.pop("exp_bar", None)
+            self._on_synced(result)
+        self.run_bg(lambda: capture_and_read(self.db, auto, ours, regions, map_only, exp_bar), loaded,
                     on_error=lambda _: setattr(self, "syncing", False))
 
     def _snapshot(self):

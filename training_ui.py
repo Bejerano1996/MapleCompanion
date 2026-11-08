@@ -1,4 +1,4 @@
-"""Compact training target and validated level-up forecast UI."""
+﻿"""Compact training target and validated level-up forecast UI."""
 import tkinter as tk
 from tkinter import ttk
 import time,math
@@ -86,6 +86,7 @@ def training_accept_character(self,reading):
     import leveling
     reading=dict(reading);reading['need']=leveling.exp_to_next(reading['level']);reading.setdefault('percent',leveling.percent(reading['exp'],reading['level']))
     self.state['character_exp']=reading;self.state['character_exp_at']=time.time()
+    self._character_read_revision=getattr(self,'_character_read_revision',0)+1
     self.state['exp_bar']=[reading['exp'],reading.get('percent',100*reading['exp']/reading['need'])]
     if self.state['level']!=reading['level']:
         self.level.set(str(reading['level']));self.set_level()

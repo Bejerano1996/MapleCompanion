@@ -1,0 +1,1 @@
+3.26 fixes missing-game general sync callbacks stopping the shared result pump, and ignores older general-sync EXP after newer character evidence/manual calibration. Map/quest evidence continues processing. Verified with isolated native UI and synthetic callback interleavings; not live-game validation. No character baseline gap is invented as session gain.
