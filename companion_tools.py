@@ -61,6 +61,7 @@ def utility_poll_rewards(self):
     hide=[window_rect(w) for w in windows if w.winfo_viewable()]
     tracker=self._reward_tracker;accountant=self._training_accountant;self._reward_busy=True
     gain_context=self.training_gain_context()
+    capture_started=time.monotonic()
     read_status=time.monotonic()-getattr(self,'_training_last_hud',0)>=1
     if read_status:self._training_last_hud=time.monotonic()
     read_wallet=bool(session.get('wallet_auto')) and time.monotonic()-getattr(self,'_wallet_last_poll',0)>=3
@@ -71,6 +72,14 @@ def utility_poll_rewards(self):
         self._reward_busy=False
         current=self.state['utility_session']
         if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
+        if time.monotonic()-capture_started>15:
+            # A delayed capture cannot establish fresh HUD or party evidence.
+            # Leave accounting untouched; a timely retry can reconcile it.
+            from training_yield import YieldLearner
+            self._yield_learner=YieldLearner()
+            self._reward_status='Delayed reading · retrying'
+            self.root.after(120,self.utility_poll_rewards)
+            return
         if events and any(kind=='bonus' for kind,amount in events):self._training_party_seen_at=time.time()
         self._reward_status='Game or reward area unavailable' if events is None else ('Reading reward log · some amounts unclear' if any(amount is None for kind,amount in events) else 'Reading reward log') if events else 'Waiting for visible rewards'
         if getattr(events,'partial',False):self._reward_status+=' · partially covered; visible rows only'
