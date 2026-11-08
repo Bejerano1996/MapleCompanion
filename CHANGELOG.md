@@ -1,3 +1,11 @@
+## 2.7.0
+
+- Session totals now read visible EXP and mesos notifications automatically while running, using local CPU OCR.
+- Existing notifications are a baseline; pause/resume, stale callbacks and repeated frames do not duplicate gains. Missing continuity is rebaselined.
+- Kills are explicitly approximate EXP-event counts including shared party EXP, not an exact personal kill counter.
+- Auto totals refresh live and cannot be overwritten by stale manual fields. Costs remain manual; manual mode remains available.
+- Screen reading can miss faded or hidden messages; keep the lower-right reward log visible.
+
 ## 2.6.1
 
 - Monster cards use an inset thumbnail and two text lines so names and stats fit narrow windows.

@@ -8,3 +8,5 @@ winrt-Windows.Foundation.Collections
 Pillow
 
 pywebview==6.2.1
+
+rapidocr_onnxruntime==1.4.4

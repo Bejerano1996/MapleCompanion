@@ -170,4 +170,4 @@ def utility_compare_maps(history, metric='exp_hour', minimum_seconds=60):
     if metric not in ('exp_hour','kills_hour','net_hour'):metric='exp_hour'
     rows.sort(key=lambda row:(-row[metric],row['map_name'].casefold(),row['map_id']))
     return {'maps':rows,'excluded':excluded,'below_minimum_maps':short_maps,'metric':metric,
-            'minimum_seconds':minimum_seconds,'scope':'Manual totals from completed sessions observed on one map.'}
+            'minimum_seconds':minimum_seconds,'scope':'Recorded totals from completed sessions observed on one map; auto kills are estimates.'}

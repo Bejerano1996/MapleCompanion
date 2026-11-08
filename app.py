@@ -3742,6 +3742,18 @@ App = integrate(App, globals())
 
 
 if __name__ == "__main__":
+    if len(sys.argv)==4 and sys.argv[1]=='--check-rewards-image':
+        from session_reader import read_reward_image
+        from session_rewards import RewardTracker
+        try:
+            events=read_reward_image(Image.open(sys.argv[2]));tracker=RewardTracker();tracker.previous=[]
+            report={'ok':True,'events':events,'totals':tracker.feed(events)}
+        except Exception:
+            import traceback
+            report={'ok':False,'error':traceback.format_exc()}
+        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
+        sys.exit()
+
     if len(sys.argv)==3 and sys.argv[1]=='--mesowatch-search':
         from mesowatch_browser import run_browser
         try:run_browser(sys.argv[2])

@@ -1,5 +1,47 @@
 {
-  "version": "2.6.1-companion",
+  "version": "2.7.0-companion",
+  "session_ui_checks": {
+    "ok": true,
+    "checks": [
+      "Automatic totals applied",
+      "Automatic mode visible",
+      "Live totals visible",
+      "Kill estimation disclosed",
+      "Save retains live totals",
+      "Paused session rejects pending read",
+      "No callback errors"
+    ]
+  },
+  "session_packaged_fixture": {
+    "ok": true,
+    "events": [
+      [
+        "exp",
+        7
+      ],
+      [
+        "bonus",
+        2
+      ],
+      [
+        "mesos",
+        10
+      ],
+      [
+        "mesos",
+        7
+      ],
+      [
+        "mesos",
+        10
+      ]
+    ],
+    "totals": {
+      "exp": 9,
+      "mesos": 27,
+      "kills": 1
+    }
+  },
   "portrait_layout_geometry": {
     "ok": true,
     "checks": 28
@@ -50,16 +92,16 @@
       "No callback errors"
     ]
   },
-  "executable_sha256": "9bb3d59af54dd3c730bfc16dcbfe0006ad9a9149fd427678efb20bd6c6a89302",
+  "executable_sha256": "7075e1ef63b0cbc45f6596840ff575379987077ef810f83ec1ef7a611c92cd50",
   "source_sha256": {
-    "app.py": "80b46296e898a1395d5ae480ac1202db97bc7099f0b83680e9b59b373edd0724",
-    "build_release.py": "68186924f6db17ee9f41d7bca952fefd460a1290f3e888ffb5e5299a00f0d462",
-    "companion_feature_model.py": "a15747e9df1aee35aa70824fb42d7ad7645c8308ec6484de7520d958682bf055",
-    "companion_integration.py": "634e7dc698aa00aa640b8826e5ed57b0362a83de9a3f6e9a252f239231d79a3d",
+    "app.py": "6edae4b7f769de1646152353dcb5c2a180bb625c848bd9c074102c569453e65f",
+    "build_release.py": "d71bcfcb6f426fdb2783ce7424e88c05576dc7520323ccdb9c0afe2e7178c06f",
+    "companion_feature_model.py": "7f3fe6af08f1ef19262922d9fc535b969f5cb041468e6283e2991169bd983700",
+    "companion_integration.py": "99792dfbd0f65844bd271a763f28f593f11e7a2e6ac86ff07f7dbcaefe7ec0e3",
     "companion_market.py": "d6957d58773eba2bdbaab99b6d70ed15fa833a7385a9c76223b2e54716b784ac",
     "companion_planner_model.py": "ac5173f4cf1c3000c4cc9fac40ea55b63aa3d299b4ca510215b2347a4e02041f",
     "companion_portraits.py": "5cee7534e2ad6e0f40c82dad012aed510977c5b9325d50b7ec1ba9c5c1729357",
-    "companion_tools.py": "afae0d4c9eb58d605e5ce4fc49f2b83644ba20dfea4365d1943dd790cb6922f6",
+    "companion_tools.py": "d35cf25144f8f6e148388580f780a9b57833b6d257475731dd896919299a8ca9",
     "companion_widgets.py": "49773879656cb0ea9e1e9f4afdc2ccd00a2c807fa97ab60b0d42345aa9f081c0",
     "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",
     "gps_image.py": "b493f610536a9209524cd939afe653d57852c2c7f929b17ca1436b599dec0928",
@@ -77,9 +119,11 @@
     "quest_rewards.py": "98a4f87591f650da32bc987d705673bc6aed6e8a37ef0733af2cdbf9d83cee1b",
     "quest_rewards_ui.py": "24c5f6678139c82abd1eea089e53ec0be30b3354caa993650299325c36c302c5",
     "screen_ocr.py": "41e0dcad93c1ca3186b206643c07554334dfb96d35dc6ae29ffee59d5696b46b",
+    "session_reader.py": "e6664e11acc55b381acd6710dce6ec508cbda71a9da67e187a30a4c941999a20",
+    "session_rewards.py": "716cd063b4abd4bb2f6172a8e14634d633e085384fc0f2ff1cc6b9680a5d79b4",
     "sync.py": "51f74c4e783ffd96b14b0eabfcc884709625bc9be389ffae6088b1469461fdaa",
     "trainer.py": "0af9830fb152e60d8202f5941a5b2b308c8ae133480ed7bdf8eeea6c58fbd20b",
     "widgets.py": "dcef13be50d13d3f8f357b252ac904aeffce4dfde791b9296860c5cac6a358cd"
   },
-  "scope": "Adds async monster and NPC portraits and a user-initiated MesoWatch browser search. Includes per-monster maps, rewards, acquisition, regression and packaged HTTPS checks. The two-hour base GUI run belongs to version 2.2."
+  "scope": "Adds local automatic reward OCR; visible-log accounting is approximate and does not include faded or missed messages. Adds async monster and NPC portraits and a user-initiated MesoWatch browser search. Includes per-monster maps, rewards, acquisition, regression and packaged HTTPS checks. The two-hour base GUI run belongs to version 2.2."
 }
