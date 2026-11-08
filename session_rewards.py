@@ -1,48 +1,83 @@
 """Reward-log accounting. Reads visible messages; kill counts are EXP-event estimates."""
 import re
+import unicodedata
 
-_AMOUNT=re.compile(r'[\(f]\s*\+\s*([0-9][0-9, ]*)\s*\)')
+_AMOUNT=re.compile(r'[\(f]\s*\+\s*([0-9][0-9, ]*)\s*(?:\)|$)')
 
 def reward_event(text):
-    text=str(text).strip();amount=_AMOUNT.search(text)
+    text=unicodedata.normalize('NFKC',str(text)).strip();amount=_AMOUNT.search(text)
     if not amount:return None
     value=int(amount[1].replace(',','').replace(' ',''))
     if not 0<value<=100000000:return None
     lower=text.casefold().replace('qained','gained')
     if 'mesos' in lower and ('gained' in lower or 'received' in lower):return ('mesos',value)
-    if re.search(r'\bexp\b',lower):
+    if re.search(r'exp(?=$|[\W\d]|for)',lower):
         if 'bonus' in lower or 'party' in lower:return ('bonus',value)
         if 'received' in lower:return ('exp',value)
     return None
 
+def reward_kind(text):
+    lower=unicodedata.normalize('NFKC',str(text)).casefold().replace('qained','gained')
+    if 'mesos' in lower and ('gained' in lower or 'received' in lower):return 'mesos'
+    if re.search(r'exp(?=$|[\W\d]|for)',lower):
+        if 'party' in lower or 'bonus' in lower:return 'bonus'
+        if 'received' in lower:return 'exp'
+    return None
+
 class RewardTracker:
-    def __init__(self):self.previous=None;self.blanks=0
+    def __init__(self):self.previous=None;self.credited=[];self.blanks=0
+    @staticmethod
+    def _align(old,current):
+        # Preserve row identity when OCR temporarily misses an amount or inserts a row.
+        n,m=len(old),len(current);dp=[[0]*(m+1) for _ in range(n+1)]
+        def weight(a,b):
+            if a[0]!=b[0]:return 0
+            if a[1]==b[1]:return 3
+            return 1 if a[1] is None or b[1] is None else 0
+        for i in range(n-1,-1,-1):
+            for j in range(m-1,-1,-1):
+                w=weight(old[i],current[j])
+                dp[i][j]=max(dp[i+1][j],dp[i][j+1],w+dp[i+1][j+1] if w else 0)
+        pairs=[];i=j=0
+        while i<n and j<m:
+            w=weight(old[i],current[j])
+            if w and dp[i][j]==w+dp[i+1][j+1]:pairs.append((i,j));i+=1;j+=1
+            elif dp[i][j]==dp[i+1][j]:i+=1
+            else:j+=1
+        return pairs
     def feed(self,events):
-        totals={'exp':0,'mesos':0,'kills':0}
-        if events is None:self.previous=None;self.blanks=0;return totals
-        current=list(events)
+        totals={'exp':0,'mesos':0,'kills':0,'party_exp':0}
+        if events is None:self.previous=None;self.credited=[];self.blanks=0;return totals
+        current=[tuple(row) for row in events]
         if not current:
             self.blanks+=1
-            if self.blanks>=2:self.previous=[]
+            if self.blanks>=4:self.previous=[];self.credited=[]
             return totals
-        self.blanks=0
-        old=self.previous;self.previous=current
-        if old is None:return totals  # baseline: do not count messages from before Start/resume
-        if old==current:return totals
-        overlap=next((n for n in range(min(len(old),len(current)),0,-1) if old[-n:]==current[:n]),0)
-        if old and not overlap:return totals  # lost continuity: rebaseline, never invent gains
-        for kind,amount in current[overlap:]:
+        self.blanks=0;old=self.previous
+        if old is None:self.previous=current;self.credited=[True]*len(current);return totals
+        pairs=self._align(old,current)
+        if old and not pairs:self.previous=current;self.credited=[True]*len(current);return totals
+        previous_credit=self.credited
+        last=pairs[-1][1] if pairs else -1
+        credited=[j<=last for j in range(len(current))]
+        for i,j in pairs:credited[j]=previous_credit[i]
+        for j,(kind,amount) in enumerate(current):
+            if credited[j] or amount is None:continue
+            credited[j]=True
             if kind=='mesos':totals['mesos']+=amount
-            else:
+            elif kind in ('exp','bonus'):
                 totals['exp']+=amount
                 if kind=='exp':totals['kills']+=1
+                else:totals['party_exp']+=amount
+        self.previous=current;self.credited=credited
         return totals
+
 
 def session_token(session):
     return (session.get('id'),session.get('running_since'),session.get('auto_rewards',True))
 
 def apply_rewards(session,token,delta):
     if session_token(session)!=token or session.get('running_since') is None or not session.get('auto_rewards',True):return False
-    for key in ('exp','mesos','kills'):session[key]=session.get(key,0)+delta.get(key,0)
+    for key in ('exp','mesos','kills','party_exp'):session[key]=session.get(key,0)+delta.get(key,0)
     if delta.get('kills'):session['kills_estimated']=True
     return any(delta.values())

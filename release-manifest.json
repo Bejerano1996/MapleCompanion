@@ -1,5 +1,37 @@
 {
-  "version": "2.7.0-companion",
+  "version": "2.7.1-companion",
+  "party_money_ui_checks": {
+    "ok": true,
+    "checks": [
+      "Automatic totals applied",
+      "Automatic mode visible",
+      "Live totals visible",
+      "Party breakdown visible",
+      "Kill estimation disclosed",
+      "Save retains live totals",
+      "Paused session rejects pending read",
+      "No callback errors"
+    ]
+  },
+  "party_fixture": {
+    "ok": true,
+    "events": [
+      [
+        "bonus",
+        2
+      ],
+      [
+        "bonus",
+        2
+      ]
+    ],
+    "totals": {
+      "exp": 4,
+      "mesos": 0,
+      "kills": 0,
+      "party_exp": 4
+    }
+  },
   "session_ui_checks": {
     "ok": true,
     "checks": [
@@ -39,7 +71,8 @@
     "totals": {
       "exp": 9,
       "mesos": 27,
-      "kills": 1
+      "kills": 1,
+      "party_exp": 2
     }
   },
   "portrait_layout_geometry": {
@@ -92,16 +125,16 @@
       "No callback errors"
     ]
   },
-  "executable_sha256": "7075e1ef63b0cbc45f6596840ff575379987077ef810f83ec1ef7a611c92cd50",
+  "executable_sha256": "c45f51c06395c4f3e52f4185375bfdb71dbcbc7afa0e9d444bb2e3c798f01931",
   "source_sha256": {
     "app.py": "6edae4b7f769de1646152353dcb5c2a180bb625c848bd9c074102c569453e65f",
     "build_release.py": "d71bcfcb6f426fdb2783ce7424e88c05576dc7520323ccdb9c0afe2e7178c06f",
     "companion_feature_model.py": "7f3fe6af08f1ef19262922d9fc535b969f5cb041468e6283e2991169bd983700",
-    "companion_integration.py": "99792dfbd0f65844bd271a763f28f593f11e7a2e6ac86ff07f7dbcaefe7ec0e3",
+    "companion_integration.py": "e1a665a7f579cab6cc03c3c4daed202fbf59dc3dfa045f0c8e6adabc9ce3e598",
     "companion_market.py": "d6957d58773eba2bdbaab99b6d70ed15fa833a7385a9c76223b2e54716b784ac",
     "companion_planner_model.py": "ac5173f4cf1c3000c4cc9fac40ea55b63aa3d299b4ca510215b2347a4e02041f",
     "companion_portraits.py": "5cee7534e2ad6e0f40c82dad012aed510977c5b9325d50b7ec1ba9c5c1729357",
-    "companion_tools.py": "d35cf25144f8f6e148388580f780a9b57833b6d257475731dd896919299a8ca9",
+    "companion_tools.py": "c4801af9fe8b2c255701ce2e130a59bc6116e2ab25cca3e993febc8245383eae",
     "companion_widgets.py": "49773879656cb0ea9e1e9f4afdc2ccd00a2c807fa97ab60b0d42345aa9f081c0",
     "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",
     "gps_image.py": "b493f610536a9209524cd939afe653d57852c2c7f929b17ca1436b599dec0928",
@@ -119,8 +152,8 @@
     "quest_rewards.py": "98a4f87591f650da32bc987d705673bc6aed6e8a37ef0733af2cdbf9d83cee1b",
     "quest_rewards_ui.py": "24c5f6678139c82abd1eea089e53ec0be30b3354caa993650299325c36c302c5",
     "screen_ocr.py": "41e0dcad93c1ca3186b206643c07554334dfb96d35dc6ae29ffee59d5696b46b",
-    "session_reader.py": "e6664e11acc55b381acd6710dce6ec508cbda71a9da67e187a30a4c941999a20",
-    "session_rewards.py": "716cd063b4abd4bb2f6172a8e14634d633e085384fc0f2ff1cc6b9680a5d79b4",
+    "session_reader.py": "9836ffd07c9670bd5c7038ff2eae26770941f4bf378144239f169ccbb9c0adf8",
+    "session_rewards.py": "3d6b5f5fccec720ca21f65e5e547bc9a8ded09172377f4fb71131da7d976a9ca",
     "sync.py": "51f74c4e783ffd96b14b0eabfcc884709625bc9be389ffae6088b1469461fdaa",
     "trainer.py": "0af9830fb152e60d8202f5941a5b2b308c8ae133480ed7bdf8eeea6c58fbd20b",
     "widgets.py": "dcef13be50d13d3f8f357b252ac904aeffce4dfde791b9296860c5cac6a358cd"

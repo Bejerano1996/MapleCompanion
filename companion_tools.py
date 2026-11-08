@@ -50,7 +50,8 @@ def utility_poll_rewards(self):
         self._reward_token=None;return
     if getattr(self,'_reward_token',None)!=token:
         self._reward_tracker=RewardTracker();self._reward_token=token
-    if getattr(self,'_reward_busy',False):return
+    if getattr(self,'_reward_busy',False) or time.monotonic()-getattr(self,'_reward_last_poll',0)<.45:return
+    self._reward_last_poll=time.monotonic()
     windows=[self.root]+[w for w in self.root.winfo_children() if isinstance(w,tk.Toplevel)]
     hide=[window_rect(w) for w in windows if w.winfo_viewable()]
     tracker=self._reward_tracker;self._reward_busy=True
@@ -59,9 +60,10 @@ def utility_poll_rewards(self):
         current=self.state['utility_session']
         if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
         delta=tracker.feed(events)
-        self._reward_status='Game not found' if events is None else 'Reading reward log' if events else 'Waiting for visible rewards'
+        self._reward_status='Game or reward area unavailable' if events is None else ('Reading reward log · some amounts unclear' if any(amount is None for kind,amount in events) else 'Reading reward log') if events else 'Waiting for visible rewards'
         if apply_rewards(current,token,delta):self.save_state()
         if getattr(self,'_utility_refresh',None):self._utility_refresh()
+        self.root.after(450,self.utility_poll_rewards)
     def failed(error):
         self._reward_busy=False;self._reward_status='Reader unavailable · '+str(error)[:90]
     self.run_bg(lambda:capture_rewards(hide),loaded,on_error=failed)
@@ -188,7 +190,7 @@ def utility_render_session(self, parent):
         rates = utility_session_rates(current)
         elapsed.config(text=utility_format_time(rates['seconds']))
         start.config(text='Pause' if current.get('running_since') is not None else 'Start / resume')
-        metrics.config(text=f"{current.get('exp',0):,} EXP · ≈{current.get('kills',0):,} kills · {current.get('mesos',0):,} mesos\n{rates['exp_hour']:,.0f} EXP/h · {rates['net_hour']:,.0f} net mesos/h")
+        metrics.config(text=f"{current.get('exp',0):,} EXP (party +{current.get('party_exp',0):,}) · ≈{current.get('kills',0):,} kills · {current.get('mesos',0):,} mesos\n{rates['exp_hour']:,.0f} EXP/h · {rates['net_hour']:,.0f} net mesos/h")
         automatic=current.get('auto_rewards',True)
         auto.set(automatic)
         for key in ('kills','exp','mesos'):

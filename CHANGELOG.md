@@ -1,3 +1,13 @@
+## 2.7.1
+
+- Poll active reward logs roughly twice per second, limited to one OCR job at a time.
+- Preserve pending notification rows while amounts are unclear; credit later recognized amounts once, without recounting old pickups or base EXP.
+- Tolerate brief OCR dropouts and disclose unclear amounts.
+
+- Accept full-width OCR punctuation and joined words in party EXP notices.
+- Refine small reward-log images before OCR. Unknown or obscured amounts remain uncounted.
+- Display party EXP separately inside the total; bonus messages never add kills.
+
 ## 2.7.0
 
 - Session totals now read visible EXP and mesos notifications automatically while running, using local CPU OCR.
