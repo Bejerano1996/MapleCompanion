@@ -3684,6 +3684,18 @@ def self_test(out_path):
         f.write(result)
 
 
+def self_test_image(image_path, out_path):
+    """Check packaged Windows OCR on an explicit fixture, without capturing the desktop."""
+    try:
+        import screen_ocr
+        lines = screen_ocr.read_lines(Image.open(image_path).convert("RGB"))
+        result = {"ok": True, "line_count": len(lines)}
+    except Exception as e:
+        result = {"ok": False, "error": repr(e)}
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(result, f)
+
+
 from companion_integration import integrate
 App = integrate(App, globals())
 
@@ -3699,6 +3711,9 @@ if __name__ == "__main__":
         pass
     if len(sys.argv) == 3 and sys.argv[1] == "--selftest":
         self_test(sys.argv[2])
+        sys.exit()
+    if len(sys.argv) == 4 and sys.argv[1] == "--selftest-image":
+        self_test_image(sys.argv[2], sys.argv[3])
         sys.exit()
     # one overlay at a time: opening it again brings the one already running forward
     _instance = ctypes.windll.kernel32.CreateMutexW(None, False, r"Local\UmbraleOverlay")

@@ -14,6 +14,13 @@ sys.path.insert(0, os.path.dirname(HERE))
 import app  # noqa: E402
 import sync  # noqa: E402
 
+# Install isolation before constructing App: its constructor starts background work.
+app.App.sync_from_game=lambda *args,**kwargs:None
+class NoHotkey:
+    def __init__(self,*args,**kwargs):pass
+    def start(self):pass
+app.HotkeyThread=NoHotkey
+
 HENESYS, PERION, ELLINIA = "010001000", "010004000", "010002000"
 SOUTHPERRY, LITH, ORBIS = "000000060", "010000000", "020000000"
 SNAIL_1, SPLIT_ROAD = "000000040", "000000050"
@@ -390,8 +397,10 @@ def main():
     check(a.state["exp_bar"][1] == 30.0, "... and then counts")
     a.state["party"] = 3
     a.render_levelup()
-    texts = [w.cget("text") for w in a.lvl_strip.winfo_children()[0].winfo_children()]
+    a.companion_exp_details()
+    texts = [w.cget("text") for w in a._companion_exp_panel.winfo_children()[0].winfo_children()]
     check("3" in texts and any("Lv 27" in t for t in texts), f"counter header: Lv 27 and party chips ({texts})")
+    a._companion_exp_window.destroy()
     a.state.update(party=1, level=26, exp_bar=[None, 53.34])
     a.refresh_exp_pill()
     pill = a.exp_pill.cget("text")

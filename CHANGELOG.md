@@ -1,5 +1,20 @@
 # Changelog
 
+## 2.2.0-companion — compact presentation
+
+- 360-pixel default panel, a single profile row, and search on demand.
+- Folded suggestions; EXP details and party settings open separately.
+- Saved 100%, 115% and 130% text sizes apply to Companion controls, native lists, dialogs, tooltips and GPS; header controls keep their footprint.
+- Short messages with detailed status on hover; a compact Retry state when game indexes cannot load.
+- Manual quest addition is on the main screen; clearing the list is under settings and retains confirmation.
+- The native Umbrale quest engine, Trainer, PQ guides, minimap docking and route steps are retained.
+
+## 2.1.0-companion — source integration
+
+- Full Umbrale source combined with the Companion light interface, tools and public market client.
+- MesoWatch website lookup and explicitly manual price notes.
+- Full source and a standalone Windows executable, built without depending on an older compiled Companion engine.
+
 ## 2.0.0 — UMBRΛLE
 
 The first release under the new name: a redesigned in-game overlay.

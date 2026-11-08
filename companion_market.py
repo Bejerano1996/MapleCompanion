@@ -1,3 +1,4 @@
+from widgets import font_size
 import tkinter as tk
 from widgets import C,FONT,label,ScrollArea
 from companion_widgets import ui_button,ui_card
@@ -100,7 +101,7 @@ def market_open(self):
     controls = tk.Frame(w, bg=C['bg']); controls.pack(fill='x', padx=18)
     query = tk.StringVar()
     self._market_search_query = query
-    entry = tk.Entry(controls, textvariable=query, font=(FONT, 11))
+    entry = tk.Entry(controls, textvariable=query, font=(FONT, font_size(11)))
     entry.pack(side='left', fill='x', expand=True, ipady=5)
     area = ScrollArea(w); area.pack(fill='both', expand=True, padx=12, pady=8)
     inbox = market_queue.Queue()

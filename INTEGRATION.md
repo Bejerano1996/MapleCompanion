@@ -1,4 +1,4 @@
-# Umbrale Companion 2.1.0-companion
+# Umbrale Companion 2.2.0-companion
 
 This project combines the supplied Umbrale 2.0.0 source with the Maple Companion interface and utilities. Original source notices and documentation are retained.
 
@@ -11,6 +11,8 @@ To build the executable, install PyInstaller and run `python build_release.py`. 
 ## Integrated interface
 
 Light lavender surfaces, readable dark navigation icons, white-on-dark tooltips, a character profile, global search, and Tools accompany the original Quests, Mobs, Items, Training and PQ screens. Tools include session tracking, itinerary planning, timers, bookmarks, map comparison and shortcuts.
+
+The default panel is 360 pixels wide. Profile controls occupy one row; global search opens on request and Escape hides it. Suggestions begin folded. EXP appears as a single percentage, while the original EXP and party controls open in a separate Details window. The gear offers saved text sizes of 100%, 115% and 130%, applied to lists, Companion controls, dialogs, tooltips and GPS. The title-row controls keep their size to avoid overflow. Technical status details are available on hover; unavailable game indexes show a compact Retry state.
 
 ## GPS beside the game minimap
 
@@ -26,9 +28,13 @@ Automatic prices come from maplestory.watch's public endpoints, with timestamps 
 
 - 140 original logic checks passed.
 - 66 OCR checks passed against the supplied static screenshots using Windows OCR.
-- 26 Companion model checks passed.
+- 34 Companion and market model checks passed.
 - 26 interface integration checks passed.
-- 16 native GPS docking checks passed: minimap detection, right-edge placement, height matching across three screenshots, route steps, undocking and re-docking, and callback errors.
+- 43 compact presentation and font-size checks passed, including distinct navigation icons, the native Umbrale menu, monitor bounds, empty journals, selected-size feedback, concise status messages and failed-load recovery.
+- 19 Tools-window checks passed: all six screens at all three text sizes, with action buttons fully visible at the 440-pixel minimum width.
+- 40 native GPS docking checks passed: minimap detection, right-edge placement, height matching across three screenshots at all three text sizes, route steps, undocking and re-docking, and callback errors.
+- Packaged Windows OCR read the supplied static fixture successfully without desktop capture.
+- A two-hour source UI lifecycle check completed 432 cycles in 7,200.1 seconds with no callback errors. Measured font objects stayed at 45; temporary windows returned to zero after each cycle. Final startup, status and icon refinements were covered by the focused final checks and packaged OCR validation.
 
 These checks do not establish live traversal through the game. The executable was built successfully; it has not been independently exercised through a complete live game route. Original test_flicker.py was retained but not run.
 

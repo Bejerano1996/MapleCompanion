@@ -1,3 +1,4 @@
+from widgets import font_size
 """Companion utility screens adapted to Umbrale's public App APIs."""
 import tkinter as tk
 import time
@@ -64,7 +65,7 @@ def utility_open(self):
     buttons = {}
     for index, (key, title) in enumerate([('session', 'Session'), ('route', 'Quest route'), ('timers', 'Reminders'), ('saved', 'Saved'), ('compare', 'Compare'), ('quick', 'Shortcuts')]):
         buttons[key] = ui_button(tabs, title, lambda k=key: show(k), compact=True)
-        buttons[key].config(padx=6, font=(FONT, 8))
+        buttons[key].config(padx=6, font=(FONT, font_size(8)))
         buttons[key].grid(row=index // 3, column=index % 3, sticky='ew', padx=2, pady=2)
     for column in range(3):
         tabs.columnconfigure(column, weight=1, uniform='tools')
@@ -79,7 +80,7 @@ def utility_entry(parent, title, value='', width=None):
     label(parent, title, fg='muted', bg='card', size=8).pack(anchor='w', padx=12, pady=(8, 2))
     var = tk.StringVar(value=str(value))
     entry = tk.Entry(parent, textvariable=var, bg=C['header_dark'], fg=C['text'],
-                     insertbackground=C['text'], relief='flat', font=(FONT, 10), width=width)
+                     insertbackground=C['text'], relief='flat', font=(FONT, font_size(10)), width=width)
     entry.pack(fill='x', padx=12, pady=(0, 5), ipady=5)
     entry.bind('<Control-a>', lambda e: (entry.selection_range(0, 'end'), 'break')[-1])
     return var

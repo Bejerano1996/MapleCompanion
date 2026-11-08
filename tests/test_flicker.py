@@ -19,6 +19,12 @@ from PIL import ImageChops, ImageGrab  # noqa: E402
 
 import app  # noqa: E402
 
+app.App.sync_from_game=lambda *args,**kwargs:None
+class NoHotkey:
+    def __init__(self,*args,**kwargs):pass
+    def start(self):pass
+app.HotkeyThread=NoHotkey
+
 QUEST, MAP_A = "10123", "010004000"  # Mushroom quest, standing in Perion
 FRAMES, FRAME_MS, SYNC_MS = 60, 50, 150  # 3 s of frames while a sync lands every 150 ms
 SPECK = 64  # px²: a change smaller than this can't be seen (e.g. a scrollbar end being redrawn)
@@ -43,7 +49,7 @@ def main():
     with open(app.STATE_FILE, "w", encoding="utf-8") as f:
         json.dump({"active": [QUEST], "tracked": [QUEST], "expanded": QUEST, "map": MAP_A,
                    "progress": {QUEST: {"0": 3}}, "auto_sync": False, "auto_on_v2": True,
-                   "idle_alpha": 1.0, "geometry": "380x600+80+60", "gps_pos": [470, 60]}, f)
+                   "idle_alpha": 1.0, "gps_alpha":1.0, "geometry": "380x600+80+60", "gps_pos": [470, 60]}, f)
     root = tk.Tk()
     a = app.App(root)
     # the test feeds its own syncs; the real screen (a running game) must not move the windows
@@ -58,7 +64,6 @@ def main():
     while a.pending:  # background lookups (e.g. for ranking suggested quests) are not syncs
         root.update()
     root.update()
-    ctypes.windll.user32.SetCursorPos(5, 5)  # mouse away from our windows
     # and no hover effect at all: a real mouse passing over the windows during the test (someone
     # using the computer) turns a whole window more solid, which looked like a flicker
     a._watch_hover = lambda: None
