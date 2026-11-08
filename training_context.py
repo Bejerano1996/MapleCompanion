@@ -15,7 +15,7 @@ def plausible_monsters(identities,map_id,map_data):
 def visible_monsters(lines,monsters):
     found=[]
     for line in lines:
-        match=re.search(r'\bLv[\s.,:]*(\d{1,3})\s*(.+)',line['text'],re.I)
+        match=re.match(r'\s*Lv[\s.,:]*(\d{1,3})\s*(.+)',line['text'],re.I)
         if not match or line.get('score',1)<.85:continue
         hits=[m for m in monsters.values() if m.get('level')==int(match[1]) and key(m.get('display') or m['name'])==key(match[2])]
         if len(hits)==1 and hits[0]['id'] not in found:found.append(hits[0]['id'])

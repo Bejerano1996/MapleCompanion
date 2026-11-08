@@ -34,6 +34,11 @@ class ContextTests(unittest.TestCase):
         mobs={1:dict(id=1,name='Ghost Stump',level=19),2:dict(id=2,name='Ghost Stump',level=20)}
         self.assertEqual(visible_monsters([dict(text='Lv.19 Ghost Stump',score=.99),dict(text='Hunt Ghost Stump',score=.99)],mobs),[1])
         self.assertFalse(visible_monsters([dict(text='Lv.19 Ghost Stump',score=.5)],mobs))
+    def test_instruction_or_chat_prefix_is_not_a_visible_monster_label(self):
+        mobs={1:dict(id=1,name='Ghost Stump',level=19)}
+        for text in ('Hunt Lv.19 Ghost Stump','Player: Lv.19 Ghost Stump','Guide - Lv.19 Ghost Stump'):
+            with self.subTest(text=text):self.assertEqual(visible_monsters([dict(text=text,score=.99)],mobs),[])
+        self.assertEqual(visible_monsters([dict(text='  Lv.19 Ghost Stump',score=.99)],mobs),[1])
     def test_no_game_never_captures_desktop(self):
         with patch('game_sync.find_game_window',return_value=None),patch('PIL.ImageGrab.grab') as grab:
             self.assertEqual(capture_context({},{}),{'game':False});grab.assert_not_called()

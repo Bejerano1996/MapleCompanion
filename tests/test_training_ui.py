@@ -23,7 +23,7 @@ def pump():
 def texts(w):return [c.cget('text') for c in ui_walk_widgets(w) if isinstance(c,(tk.Label,tk.Button))]
 with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent) as folder:
     app.STATE_FILE=os.path.join(folder,'state.json')
-    Path(app.STATE_FILE).write_text(json.dumps({'auto_sync':False,'auto_on_v2':True,'active':['10113'],'expanded':'10113','level':27,'map':'010005000','done':{'10113':[0]}}),encoding='utf-8')
+    Path(app.STATE_FILE).write_text(json.dumps({'auto_sync':False,'auto_on_v2':True,'training_auto_context':False,'active':['10113'],'expanded':'10113','level':27,'map':'010005000','done':{'10113':[0]}}),encoding='utf-8')
     root=tk.Tk();errors=[];root.report_callback_exception=lambda x,y,z:errors.append(str(y))
     a=app.App(root);a.db.load_indexes()
 
