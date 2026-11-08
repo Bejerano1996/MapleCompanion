@@ -170,6 +170,12 @@ class RewardsTests(unittest.TestCase):
   self.assertIsNone(reward_event('You receved ExP t+T!)'))
   self.assertEqual(reward_kind('Borus EXP for PAFTY (+2)'),'bonus')
   self.assertEqual(reward_event('Borus EXP for PAFTY (+2)'),('bonus',2))
+ def test_recorded_brightness_prefix_errors_keep_money_rows(self):
+  from session_rewards import reward_kind
+  for text in ('have gaired mesos (+10)','have laired mesos (+10)','You have gaired mesos (+10)'):
+   self.assertEqual(reward_event(text),('mesos',10))
+  self.assertEqual(reward_kind('You rerelved ExP +7!'),'exp')
+  self.assertIsNone(reward_event('You rerelved ExP +7!'))
  def test_manual_mode(self):
   s=dict(id='a',running_since=1,auto_rewards=False);self.assertFalse(apply_rewards(s,session_token(s),dict(exp=7)))
 if __name__=='__main__':unittest.main()

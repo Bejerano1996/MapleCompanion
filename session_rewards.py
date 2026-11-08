@@ -7,6 +7,8 @@ _AMOUNT=re.compile(r'[\(f]\s*\+\s*([0-9][0-9, ]*)\s*(?:\)|$)')
 def _reward_text(text):
     lower=unicodedata.normalize('NFKC',str(text)).casefold().replace('qained','gained').replace('receited','received')
     lower=re.sub(r'\breceved\b','received',lower)
+    lower=re.sub(r'\brerelved\b','received',lower)
+    lower=re.sub(r'\b(?:gaired|laired)(?=\s+mesos\b)','gained',lower)
     lower=re.sub(r'\bborus(?=\s*exp)','bonus',lower)
     return re.sub(r'\bpafty\b','party',lower)
 
