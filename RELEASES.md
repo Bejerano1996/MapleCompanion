@@ -6,9 +6,9 @@
 
 Download the program ZIP, extract it, and run `Umbrale Companion.exe` on Windows. Your character data stays on each computer; it is not stored in GitHub. When updating an existing installation, preserve its `state.json` and `cache` folder.
 
-The archive contains 60 retained versions and 112 original or privacy-filtered source/program ZIPs. Original archives are preserved locally. Seven legacy Maple releases have only program archives; their tags do not claim a matching source snapshot. The separate legacy UI source archive is also preserved. Import dates do not claim original release dates.
+The archive contains 63 retained versions and 116 original or privacy-filtered source/program ZIPs. Original archives are preserved locally. Complete original engine source is unavailable for eight legacy Maple releases; their tags do not claim a matching source snapshot. Retained wrapper sources are included where available. The separate legacy UI source archive is also preserved. Import dates do not claim original release dates.
 
-Each release includes SHA256SUMS.txt and a release manifest. For privacy-filtered archives the manifest records the original and published hashes plus the number of excluded entries. Required software certificate-policy files are retained.
+Each release includes checksums and a release manifest. GitHub normalizes spaces in asset filenames to periods; use SHA256SUMS.downloads.txt to verify the historical files as downloaded. For privacy-filtered archives the manifest records the original and published hashes plus the number of excluded entries. Required software certificate-policy files are retained.
 
 ## Future versions
 

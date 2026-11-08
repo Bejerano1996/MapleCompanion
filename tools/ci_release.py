@@ -2,7 +2,7 @@
 import argparse,json,os,re,subprocess,zipfile
 from pathlib import Path
 from github_release_api import GitHub,sha256
-PRIVATE={'.git','.build','dist','cache','__pycache__','.venv','_local_state'}
+PRIVATE={'.git','.build','dist','cache','__pycache__','.venv','_local_state','backups','backup'}
 NAMES={'state.json','logic_state.json','flicker_state.json','show.request','.env','credentials.json'}
 def version(root):
  text=(root/'companion_integration.py').read_text(encoding='utf-8-sig')
@@ -12,7 +12,7 @@ def archive(origin,target,label):
  with zipfile.ZipFile(target,'w',zipfile.ZIP_DEFLATED) as z:
   for path in sorted(origin.rglob('*')):
    rel=path.relative_to(origin)
-   if not path.is_file() or any(p.lower() in PRIVATE for p in rel.parts) or path.name.lower() in NAMES or path.name.lower().startswith('.env') or path.suffix in ('.pyc','.log','.key'):continue
+   if not path.is_file() or any(p.lower() in PRIVATE for p in rel.parts) or path.name.lower() in NAMES or path.name.lower().startswith('.env') or path.suffix in ('.pyc','.log','.key') or (path.name.lower().startswith('state') and path.suffix.lower()=='.json'):continue
    z.write(path,Path(label)/rel)
  with zipfile.ZipFile(target) as z:
   if z.testzip() is not None:raise RuntimeError('Corrupt generated ZIP')
@@ -30,7 +30,7 @@ def main():
  target_source=root/'release-artifacts';PRIVATE.add('release-artifacts')
  archive(root,source,f'Umbrale Companion {v} Source')
  assets=[{'name':p.name,'sha256':sha256(p),'size':p.stat().st_size} for p in (program,source)]
- sums=folder/'SHA256SUMS.txt';sums.write_text(''.join(x['sha256']+'  '+x['name']+'\n' for x in assets))
+ sums=folder/'SHA256SUMS.txt';sums.write_text(''.join(x['sha256']+'  '+x['name'].replace(' ','.')+'\n' for x in assets))
  report=folder/'release-manifest.json';report.write_text(json.dumps({'version':v,'tag':tag,'commit':os.environ.get('GITHUB_SHA'),'assets':assets,'validation':'focused regression checks and ZIP CRC'},indent=2))
  if a.publish:
   if exists:raise RuntimeError('Version already exists; never overwrite historical releases')

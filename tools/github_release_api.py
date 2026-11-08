@@ -35,7 +35,8 @@ class GitHub:
   path=Path(path)
   for attempt in range(5):
    assets=self.request(f"/releases/{release['id']}/assets?per_page=100")
-   found=next((a for a in assets if a['name']==path.name),None)
+   remote_name=path.name.replace(' ','.')
+   found=next((a for a in assets if a['name']==remote_name),None)
    if found:
     self.verify(found,path.stat().st_size,expected_sha);return found
    base=release['upload_url'].split('{',1)[0]
@@ -43,7 +44,7 @@ class GitHub:
    if parsed.hostname!='uploads.github.com':raise ValueError('Unexpected upload host')
    connection=http.client.HTTPSConnection(parsed.hostname,timeout=180)
    try:
-    target=parsed.path+'?'+urllib.parse.urlencode({'name':path.name})
+    target=parsed.path+'?'+urllib.parse.urlencode({'name':remote_name})
     connection.putrequest('POST',target)
     for key,value in {'Authorization':'Bearer '+self.token,'User-Agent':'Umbrale-Release-Publisher','Accept':'application/vnd.github+json','Content-Type':'application/octet-stream','Content-Length':str(path.stat().st_size)}.items():connection.putheader(key,value)
     connection.endheaders()

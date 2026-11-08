@@ -1,0 +1,10 @@
+{
+  "workflow_run": "https://github.com/Bejerano1996/MapleCompanion/actions/runs/42470424580",
+  "commit": "80888c92edb1ecce0f10d4fcbc395464266273df",
+  "conclusion": "success",
+  "windows_build": true,
+  "regression_checks": true,
+  "packaging": true,
+  "publication_of_existing_version": false,
+  "final_local_release_tool_tests": 6
+}
