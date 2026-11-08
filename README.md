@@ -1,4 +1,4 @@
-# Umbrale Companion 2.3
+# Umbrale Companion 2.4
 
 A compact MapleStory Classic overlay: your current objective, quests and GPS, with extra tools one click away.
 
@@ -11,6 +11,8 @@ A compact MapleStory Classic overlay: your current objective, quests and GPS, wi
 Suggestions start folded. EXP is a single line; **Details** opens the original EXP and party controls. **⊞** opens the optional session, route, reminders and saved-map tools. **¤** opens prices.
 
 Unfinished quest items show **Buy** or **Break / collect** hints when sources are known, with a map and GPS button. **Other sources** lists alternate shops and gathering maps. Shop access requirements are displayed; breakable drops are community reports and are not guaranteed.
+
+Monster objectives show three map suggestions with known Spawn counts and portal distances. Choose **Spawn** or **Nearest**; click a map to open GPS. **All maps** opens the full reachable list, which follows map changes. Completed objectives keep their map lists folded. Quest cards also show a short reward summary; **Rewards** opens all fixed, selectable and random item rewards.
 
 Automatic prices use maplestory.watch. MesoWatch opens its website and supports explicitly manual price notes.
 

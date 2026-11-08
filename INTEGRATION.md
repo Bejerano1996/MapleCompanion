@@ -1,4 +1,4 @@
-# Umbrale Companion 2.3.0-companion
+# Umbrale Companion 2.4.0-companion
 
 This project combines the supplied Umbrale 2.0.0 source with the Maple Companion interface and utilities. Original source notices and documentation are retained.
 
@@ -31,6 +31,12 @@ Version 2.3 adds shops and breakables to unfinished item objectives. A compact s
 Validated examples: Salad from 24 Hr Mobile Store in Ant Tunnel Park (220 mesos each), and Plant Sample from Ellinia Flower on five maps. Source pages: https://meowdb.com/msclassic/npcs/614 and https://meowdb.com/msclassic/breakables/0000003 . Breakable drop associations are community reports.
 
 The HTTPS resource missing from the 2.2 Windows package is included. Packaged first-run data loading was checked with certificate and hostname verification enabled. Desktop deployment updates only program files and checks that the saved-state file is unchanged during copying.
+
+## Monster maps and rewards
+
+Version 2.4 places three map suggestions below monster objectives, including item-drop monsters. Each row shows known spawn points and portal distance. Spawn and Nearest selectors persist the chosen ordering; every map name opens native GPS with the correct monster. The full map window follows changes in the current map. Completed objectives keep their map lists folded. The model uses the entire cached map dataset, rather than just the older eight-map guide shortlist. Unknown spawn counts and routes remain explicitly unknown.
+
+Quest cards have a concise reward summary and a Rewards dialog with all listed EXP, mesos, items, fame and town contribution. Fixed, selectable and random pools are separate; a reported chance is displayed only when present in the source data. Eight model tests and thirteen interface checks passed for map ordering, full coverage, live distance updates, correct GPS targets and reward classifications, alongside the existing regression checks. No new two-hour run is claimed for this version.
 
 ## Validation
 

@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.4.0-companion — per-monster maps and quest rewards
+
+- Inline monster locations below objectives: known spawn counts and portal distance from the current map, sorted by Spawn or Nearest. Click a map to open native GPS with that monster highlighted.
+- Three maps by default; all-map lists update when the current map changes. Completed objectives keep their maps folded.
+- All cached spawn locations are considered, rather than only the previous eight-map guide shortlist.
+- Every tracked quest has a concise reward summary and a full Rewards dialog. Fixed items, selectable items and random pools are separated, with reported chances where available.
+
 ## 2.3.0-companion — quest item sources
 
 - Unfinished quest items show a compact shop or breakable source with a GPS action.

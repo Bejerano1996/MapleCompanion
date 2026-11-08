@@ -1709,13 +1709,12 @@ class App:
             Tooltip(dot, "Live: in the game's Quest Helper, its counts update by themselves")
         bar = self.quest_bars[qid] = widgets.Bar(card, self.quest_share(qid), bg=bg, done=ready)
         bar.pack(fill="x", padx=(p(22), p(10)), pady=(p(2), p(5) if not expanded else p(3)))
+        self.render_quest_rewards(card,bg,qid)
         if not expanded:
             return
 
         body = tk.Frame(card, bg=C[bg])
         body.pack(fill="x", padx=(p(22), 6), pady=(0, 4))
-        label(body, f"🎁 {quest_rank.reward_text(q, limit=4)}", fg="gold", bg=bg, size=8, anchor="w",
-              justify="left", wraplength=self.wrap(70)).pack(fill="x", pady=(0, 3))
         self.render_quest_guide(body, bg, qid)
         turn_in = q.get("completeNpc") or q.get("npc")
         nm = npc_map(self.db, turn_in)
@@ -1743,6 +1742,8 @@ class App:
         elif steps is None:
             label(body, "Finding where to go...", fg="muted", bg=bg, size=8).pack(anchor="w", pady=2)
 
+        if any(need.get('mobId') is not None for need in q.get('need') or []) or any(step.get('lines') for step in steps or []):
+            self.render_objective_map_sort(body,bg)
         # objectives, written like the game: "have / need Name"
         for i, need in enumerate(q.get("need") or []):
             step = steps[i] if steps and i < len(steps) else {}
@@ -1766,9 +1767,8 @@ class App:
                 Tooltip(text_label, f"{'Kill' if 'mobId' in need else 'Loot'} · monster Lv {step['level']}")
             if not is_done and step.get('sources'):
                 self.render_acquisition_sources(body,bg,qid,step)
+            self.render_objective_monster_maps(body,bg,qid,i,need,step,is_done)
             if not is_done and steps and self.all_maps.get(qid):
-                for line in step.get("lines", []):
-                    self.render_map_line(body, bg, qid, line)
                 if step.get("note"):
                     label(body, step["note"], fg="muted", bg=bg, size=8, wraplength=self.wrap(80),
                           justify="left").pack(anchor="w", padx=16)
@@ -1792,7 +1792,7 @@ class App:
         actions.pack(fill="x", pady=(4, 2))
         if steps and not ready:
             showing = self.all_maps.get(qid)
-            link(actions, "▾ Hide maps per objective" if showing else "▸ Maps per objective",
+            link(actions, "▾ Hide notes" if showing else "▸ Notes",
                  lambda: self.toggle_all_maps(qid), bg=bg, fg="muted", size=8).pack(side="left")
         button(actions, "✓ Complete", lambda: self.complete_quest(qid), bg="button", fg="green", size=8,
                tip="Turned in: remove it and suggest the next quest").pack(side="right")

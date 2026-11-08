@@ -15,6 +15,8 @@ from companion_widgets import ui_button,ui_card,ui_nav_icon,ui_walk_widgets,ui_r
 from companion_feature_model import utility_session_new,utility_session_snapshot,utility_search_history
 from companion_tools import install_tools,ui_tools_indicator
 from companion_market import market_open
+from monster_maps_ui import install_monster_maps
+from quest_rewards_ui import install_quest_rewards
 
 MESOWATCH_URL='https://beta.meso.watch/'
 
@@ -28,7 +30,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='2.3.0-companion'
+    core['VERSION']='2.4.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -262,7 +264,7 @@ def integrate(Base,core):
             width,height=470,600
             x,y=widgets.on_monitor_of(self.root,self.root.winfo_x()+30,self.root.winfo_y()+35,width,height)
             w.geometry(f'{width}x{height}{x:+d}{y:+d}');w.resizable(True,True)
-            label(w,title,size=17,bold=True).pack(anchor='w',padx=18,pady=(16,10))
+            label(w,title,size=17,bold=True,wraplength=width-36,justify='left').pack(anchor='w',padx=18,pady=(16,10))
             w.bind('<Escape>',lambda e:w.destroy())
             return w
 
@@ -434,4 +436,6 @@ def integrate(Base,core):
         ui_market=market_open
 
     install_tools(CompanionApp)
+    install_monster_maps(CompanionApp)
+    install_quest_rewards(CompanionApp)
     return CompanionApp
