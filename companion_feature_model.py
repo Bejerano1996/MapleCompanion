@@ -150,14 +150,15 @@ def utility_compare_maps(history, metric='exp_hour', minimum_seconds=60):
             excluded['mixed_maps']+=1;continue
         try:
             seconds=utility_number(session.get('elapsed',0))
-            totals={key:utility_number(session.get(key,0)) for key in ('kills','exp','mesos','cost')}
+            totals={key:utility_number(session.get(key,0),minimum=-10**15 if key=='exp' and session.get('exp_is_net') else 0) for key in ('kills','exp','mesos','cost')}
         except ValueError:
             excluded['invalid']+=1;continue
         if seconds<=0:
             excluded['no_time']+=1;continue
         row=buckets.setdefault(map_id,dict(map_id=map_id,map_name=str(session.get('map_name') or map_id),
-                   sessions=0,seconds=0,kills=0,exp=0,mesos=0,cost=0))
+                   sessions=0,seconds=0,kills=0,exp=0,mesos=0,cost=0,log_gap_sessions=0))
         row['sessions']+=1;row['seconds']+=seconds
+        if session.get('reading_gaps'):row['log_gap_sessions']+=1
         for key,value in totals.items():row[key]+=value
     rows=[];short_maps=0
     for row in buckets.values():

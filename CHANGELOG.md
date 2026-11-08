@@ -1,3 +1,11 @@
+## 3.0.0
+
+- Reconcile session EXP against validated character-bar differences, including party rewards, quest gains, level-ups and net death losses. Visible notices remain a marked fallback and are never added twice to authoritative EXP.
+- Calibrate the character from matching numeric EXP and percentage instead of guessing a level from a percentage-only drop.
+- Add a compact, selected-monster kills-to-next-level forecast with eligible-party settings and a personal EXP/kill override.
+- Keep party notices as an observed breakdown and mesos as observed pickups; preserve unclear-message handling and duplicate protection.
+- Add isolated three-hour regression and long-lived simulated-session validation, with resource and accounting checks.
+
 ## 2.7.1
 
 - Poll active reward logs roughly twice per second, limited to one OCR job at a time.

@@ -1,162 +1,1144 @@
 {
-  "version": "2.7.1-companion",
-  "party_money_ui_checks": {
-    "ok": true,
-    "checks": [
-      "Automatic totals applied",
-      "Automatic mode visible",
-      "Live totals visible",
-      "Party breakdown visible",
-      "Kill estimation disclosed",
-      "Save retains live totals",
-      "Paused session rejects pending read",
-      "No callback errors"
-    ]
+  "version": "3.0.0-companion",
+  "source_sha": "5b1ae1d5ed07dc71046af3d6237edb8fa3a15b40efa57b11627acae9ebecd236",
+  "executable_sha256": "2ac920e04e32f47686d2117e3db2ca4dfd3f854a02752ebcea6881fed72e84cd",
+  "primary_soak": {
+    "seconds": 10800.0,
+    "cycles": 170,
+    "current_source_cycles": 84,
+    "current_source_all_pass": true
   },
-  "party_fixture": {
+  "persistent_soak": {
+    "running": false,
+    "source_sha": "5b1ae1d5ed07dc71046af3d6237edb8fa3a15b40efa57b11627acae9ebecd236",
+    "target_seconds": 5247.940000000002,
     "ok": true,
-    "events": [
-      [
-        "bonus",
-        2
-      ],
-      [
-        "bonus",
-        2
-      ]
+    "latest": {
+      "seconds": 5248.0,
+      "frames": 10537,
+      "exp": 94824,
+      "party_seen": 20640,
+      "mesos_observed": 153156,
+      "mesos_true": 158049,
+      "fonts": 17,
+      "images": 26,
+      "jobs": 6,
+      "callback_errors": 0
+    },
+    "samples": [
+      {
+        "seconds": 30.0,
+        "frames": 60,
+        "exp": 531,
+        "party_seen": 118,
+        "mesos_observed": 864,
+        "mesos_true": 879,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 90.0,
+        "frames": 180,
+        "exp": 1611,
+        "party_seen": 354,
+        "mesos_observed": 2608,
+        "mesos_true": 2679,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 150.0,
+        "frames": 300,
+        "exp": 2691,
+        "party_seen": 586,
+        "mesos_observed": 4314,
+        "mesos_true": 4480,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 210.0,
+        "frames": 421,
+        "exp": 3780,
+        "party_seen": 824,
+        "mesos_observed": 6090,
+        "mesos_true": 6295,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 270.1,
+        "frames": 541,
+        "exp": 4860,
+        "party_seen": 1060,
+        "mesos_observed": 7860,
+        "mesos_true": 8097,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 330.1,
+        "frames": 662,
+        "exp": 5949,
+        "party_seen": 1298,
+        "mesos_observed": 9626,
+        "mesos_true": 9912,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 390.1,
+        "frames": 783,
+        "exp": 7029,
+        "party_seen": 1530,
+        "mesos_observed": 11328,
+        "mesos_true": 11727,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 450.1,
+        "frames": 903,
+        "exp": 8118,
+        "party_seen": 1768,
+        "mesos_observed": 13101,
+        "mesos_true": 13530,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 510.1,
+        "frames": 1024,
+        "exp": 9207,
+        "party_seen": 2006,
+        "mesos_observed": 14880,
+        "mesos_true": 15345,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 570.1,
+        "frames": 1144,
+        "exp": 10287,
+        "party_seen": 2242,
+        "mesos_observed": 16644,
+        "mesos_true": 17149,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 630.1,
+        "frames": 1265,
+        "exp": 11376,
+        "party_seen": 2476,
+        "mesos_observed": 18351,
+        "mesos_true": 18964,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 690.2,
+        "frames": 1386,
+        "exp": 12465,
+        "party_seen": 2714,
+        "mesos_observed": 20121,
+        "mesos_true": 20779,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 750.2,
+        "frames": 1506,
+        "exp": 13545,
+        "party_seen": 2950,
+        "mesos_observed": 21877,
+        "mesos_true": 22584,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 810.2,
+        "frames": 1627,
+        "exp": 14634,
+        "party_seen": 3188,
+        "mesos_observed": 23659,
+        "mesos_true": 24399,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 870.2,
+        "frames": 1747,
+        "exp": 15714,
+        "party_seen": 3420,
+        "mesos_observed": 25371,
+        "mesos_true": 26194,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 930.2,
+        "frames": 1868,
+        "exp": 16803,
+        "party_seen": 3658,
+        "mesos_observed": 27119,
+        "mesos_true": 28009,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 990.2,
+        "frames": 1989,
+        "exp": 17883,
+        "party_seen": 3894,
+        "mesos_observed": 28874,
+        "mesos_true": 29824,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1050.2,
+        "frames": 2109,
+        "exp": 18972,
+        "party_seen": 4132,
+        "mesos_observed": 30653,
+        "mesos_true": 31620,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1110.2,
+        "frames": 2230,
+        "exp": 20061,
+        "party_seen": 4370,
+        "mesos_observed": 32427,
+        "mesos_true": 33435,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1170.3,
+        "frames": 2351,
+        "exp": 21141,
+        "party_seen": 4602,
+        "mesos_observed": 34117,
+        "mesos_true": 35250,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1230.3,
+        "frames": 2471,
+        "exp": 22230,
+        "party_seen": 4840,
+        "mesos_observed": 35887,
+        "mesos_true": 37047,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1290.3,
+        "frames": 2592,
+        "exp": 23319,
+        "party_seen": 5078,
+        "mesos_observed": 37663,
+        "mesos_true": 38862,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1350.3,
+        "frames": 2713,
+        "exp": 24408,
+        "party_seen": 5316,
+        "mesos_observed": 39445,
+        "mesos_true": 40677,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1410.3,
+        "frames": 2833,
+        "exp": 25488,
+        "party_seen": 5548,
+        "mesos_observed": 41141,
+        "mesos_true": 42475,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1470.4,
+        "frames": 2954,
+        "exp": 26577,
+        "party_seen": 5786,
+        "mesos_observed": 42908,
+        "mesos_true": 44290,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1530.4,
+        "frames": 3075,
+        "exp": 27657,
+        "party_seen": 6022,
+        "mesos_observed": 44666,
+        "mesos_true": 46105,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1590.4,
+        "frames": 3195,
+        "exp": 28746,
+        "party_seen": 6260,
+        "mesos_observed": 46445,
+        "mesos_true": 47904,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1650.4,
+        "frames": 3316,
+        "exp": 29835,
+        "party_seen": 6494,
+        "mesos_observed": 48162,
+        "mesos_true": 49719,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1710.4,
+        "frames": 3436,
+        "exp": 30915,
+        "party_seen": 6730,
+        "mesos_observed": 49912,
+        "mesos_true": 51519,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1770.4,
+        "frames": 3557,
+        "exp": 32004,
+        "party_seen": 6968,
+        "mesos_observed": 51682,
+        "mesos_true": 53334,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1830.4,
+        "frames": 3678,
+        "exp": 33093,
+        "party_seen": 7206,
+        "mesos_observed": 53458,
+        "mesos_true": 55149,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1890.4,
+        "frames": 3798,
+        "exp": 34173,
+        "party_seen": 7438,
+        "mesos_observed": 55178,
+        "mesos_true": 56950,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 1950.4,
+        "frames": 3919,
+        "exp": 35262,
+        "party_seen": 7676,
+        "mesos_observed": 56939,
+        "mesos_true": 58765,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2010.4,
+        "frames": 4040,
+        "exp": 36342,
+        "party_seen": 7912,
+        "mesos_observed": 58694,
+        "mesos_true": 60580,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2070.4,
+        "frames": 4160,
+        "exp": 37431,
+        "party_seen": 8150,
+        "mesos_observed": 60467,
+        "mesos_true": 62382,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2130.4,
+        "frames": 4281,
+        "exp": 38520,
+        "party_seen": 8384,
+        "mesos_observed": 62205,
+        "mesos_true": 64197,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2190.5,
+        "frames": 4402,
+        "exp": 39600,
+        "party_seen": 8620,
+        "mesos_observed": 63952,
+        "mesos_true": 66012,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2250.5,
+        "frames": 4522,
+        "exp": 40689,
+        "party_seen": 8858,
+        "mesos_observed": 65716,
+        "mesos_true": 67815,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2310.5,
+        "frames": 4643,
+        "exp": 41778,
+        "party_seen": 9096,
+        "mesos_observed": 67486,
+        "mesos_true": 69630,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2370.5,
+        "frames": 4764,
+        "exp": 42867,
+        "party_seen": 9330,
+        "mesos_observed": 69229,
+        "mesos_true": 71445,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2430.5,
+        "frames": 4884,
+        "exp": 43947,
+        "party_seen": 9566,
+        "mesos_observed": 70985,
+        "mesos_true": 73249,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2490.5,
+        "frames": 5005,
+        "exp": 45036,
+        "party_seen": 9804,
+        "mesos_observed": 72746,
+        "mesos_true": 75064,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2550.5,
+        "frames": 5119,
+        "exp": 46062,
+        "party_seen": 10028,
+        "mesos_observed": 74394,
+        "mesos_true": 76764,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2610.6,
+        "frames": 5240,
+        "exp": 47151,
+        "party_seen": 10262,
+        "mesos_observed": 76131,
+        "mesos_true": 78579,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2670.6,
+        "frames": 5360,
+        "exp": 48231,
+        "party_seen": 10498,
+        "mesos_observed": 77892,
+        "mesos_true": 80380,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2730.6,
+        "frames": 5481,
+        "exp": 49320,
+        "party_seen": 10736,
+        "mesos_observed": 79650,
+        "mesos_true": 82195,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2790.6,
+        "frames": 5602,
+        "exp": 50409,
+        "party_seen": 10974,
+        "mesos_observed": 81414,
+        "mesos_true": 84010,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2850.7,
+        "frames": 5722,
+        "exp": 51489,
+        "party_seen": 11210,
+        "mesos_observed": 83172,
+        "mesos_true": 85812,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2910.7,
+        "frames": 5843,
+        "exp": 52578,
+        "party_seen": 11444,
+        "mesos_observed": 84915,
+        "mesos_true": 87627,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 2970.7,
+        "frames": 5964,
+        "exp": 53667,
+        "party_seen": 11682,
+        "mesos_observed": 86681,
+        "mesos_true": 89442,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3030.7,
+        "frames": 6084,
+        "exp": 54747,
+        "party_seen": 11918,
+        "mesos_observed": 88431,
+        "mesos_true": 91245,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3090.7,
+        "frames": 6205,
+        "exp": 55836,
+        "party_seen": 12156,
+        "mesos_observed": 90198,
+        "mesos_true": 93060,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3150.7,
+        "frames": 6326,
+        "exp": 56925,
+        "party_seen": 12390,
+        "mesos_observed": 91935,
+        "mesos_true": 94875,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3210.7,
+        "frames": 6446,
+        "exp": 58005,
+        "party_seen": 12626,
+        "mesos_observed": 93699,
+        "mesos_true": 96679,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3270.7,
+        "frames": 6567,
+        "exp": 59094,
+        "party_seen": 12864,
+        "mesos_observed": 95457,
+        "mesos_true": 98494,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3330.7,
+        "frames": 6688,
+        "exp": 60174,
+        "party_seen": 13100,
+        "mesos_observed": 97201,
+        "mesos_true": 100309,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3390.7,
+        "frames": 6808,
+        "exp": 61263,
+        "party_seen": 13334,
+        "mesos_observed": 98932,
+        "mesos_true": 102114,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3450.7,
+        "frames": 6929,
+        "exp": 62352,
+        "party_seen": 13572,
+        "mesos_observed": 100714,
+        "mesos_true": 103929,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3510.7,
+        "frames": 7049,
+        "exp": 63432,
+        "party_seen": 13808,
+        "mesos_observed": 102461,
+        "mesos_true": 105724,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3570.8,
+        "frames": 7170,
+        "exp": 64521,
+        "party_seen": 14046,
+        "mesos_observed": 104222,
+        "mesos_true": 107539,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3630.8,
+        "frames": 7291,
+        "exp": 65610,
+        "party_seen": 14280,
+        "mesos_observed": 105947,
+        "mesos_true": 109354,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3690.8,
+        "frames": 7411,
+        "exp": 66690,
+        "party_seen": 14516,
+        "mesos_observed": 107708,
+        "mesos_true": 111150,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3750.8,
+        "frames": 7532,
+        "exp": 67779,
+        "party_seen": 14754,
+        "mesos_observed": 109482,
+        "mesos_true": 112965,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3810.8,
+        "frames": 7653,
+        "exp": 68868,
+        "party_seen": 14992,
+        "mesos_observed": 111240,
+        "mesos_true": 114780,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3870.8,
+        "frames": 7774,
+        "exp": 69957,
+        "party_seen": 15226,
+        "mesos_observed": 112959,
+        "mesos_true": 116595,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3930.9,
+        "frames": 7894,
+        "exp": 71037,
+        "party_seen": 15462,
+        "mesos_observed": 114718,
+        "mesos_true": 118392,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 3990.9,
+        "frames": 8015,
+        "exp": 72126,
+        "party_seen": 15700,
+        "mesos_observed": 116500,
+        "mesos_true": 120207,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4050.9,
+        "frames": 8135,
+        "exp": 73206,
+        "party_seen": 15936,
+        "mesos_observed": 118250,
+        "mesos_true": 122005,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4110.9,
+        "frames": 8256,
+        "exp": 74295,
+        "party_seen": 16170,
+        "mesos_observed": 119963,
+        "mesos_true": 123820,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4170.9,
+        "frames": 8376,
+        "exp": 75375,
+        "party_seen": 16406,
+        "mesos_observed": 121721,
+        "mesos_true": 125619,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4230.9,
+        "frames": 8496,
+        "exp": 76455,
+        "party_seen": 16642,
+        "mesos_observed": 123486,
+        "mesos_true": 127419,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4290.9,
+        "frames": 8617,
+        "exp": 77544,
+        "party_seen": 16880,
+        "mesos_observed": 125260,
+        "mesos_true": 129234,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4350.9,
+        "frames": 8737,
+        "exp": 78624,
+        "party_seen": 17112,
+        "mesos_observed": 126954,
+        "mesos_true": 131035,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4410.9,
+        "frames": 8857,
+        "exp": 79704,
+        "party_seen": 17348,
+        "mesos_observed": 128712,
+        "mesos_true": 132837,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4470.9,
+        "frames": 8978,
+        "exp": 80793,
+        "party_seen": 17586,
+        "mesos_observed": 130488,
+        "mesos_true": 134652,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4530.9,
+        "frames": 9098,
+        "exp": 81873,
+        "party_seen": 17822,
+        "mesos_observed": 132259,
+        "mesos_true": 136455,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4591.0,
+        "frames": 9219,
+        "exp": 82962,
+        "party_seen": 18056,
+        "mesos_observed": 133971,
+        "mesos_true": 138270,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4651.0,
+        "frames": 9339,
+        "exp": 84042,
+        "party_seen": 18292,
+        "mesos_observed": 135728,
+        "mesos_true": 140074,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4711.0,
+        "frames": 9460,
+        "exp": 85122,
+        "party_seen": 18528,
+        "mesos_observed": 137481,
+        "mesos_true": 141889,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4771.0,
+        "frames": 9580,
+        "exp": 86211,
+        "party_seen": 18766,
+        "mesos_observed": 139260,
+        "mesos_true": 143694,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4831.0,
+        "frames": 9700,
+        "exp": 87291,
+        "party_seen": 19000,
+        "mesos_observed": 140997,
+        "mesos_true": 145489,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4891.0,
+        "frames": 9821,
+        "exp": 88380,
+        "party_seen": 19236,
+        "mesos_observed": 142722,
+        "mesos_true": 147304,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 4951.0,
+        "frames": 9941,
+        "exp": 89460,
+        "party_seen": 19472,
+        "mesos_observed": 144474,
+        "mesos_true": 149100,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 5011.0,
+        "frames": 10062,
+        "exp": 90549,
+        "party_seen": 19710,
+        "mesos_observed": 146250,
+        "mesos_true": 150915,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 5071.0,
+        "frames": 10182,
+        "exp": 91629,
+        "party_seen": 19946,
+        "mesos_observed": 148015,
+        "mesos_true": 152712,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 5131.0,
+        "frames": 10303,
+        "exp": 92718,
+        "party_seen": 20180,
+        "mesos_observed": 149727,
+        "mesos_true": 154527,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 5191.0,
+        "frames": 10423,
+        "exp": 93798,
+        "party_seen": 20416,
+        "mesos_observed": 151478,
+        "mesos_true": 156325,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      },
+      {
+        "seconds": 5248.0,
+        "frames": 10537,
+        "exp": 94824,
+        "party_seen": 20640,
+        "mesos_observed": 153156,
+        "mesos_true": 158049,
+        "fonts": 17,
+        "images": 26,
+        "jobs": 6,
+        "callback_errors": 0
+      }
     ],
-    "totals": {
-      "exp": 4,
-      "mesos": 0,
-      "kills": 0,
-      "party_exp": 4
-    }
+    "errors": [],
+    "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "session_ui_checks": {
-    "ok": true,
-    "checks": [
-      "Automatic totals applied",
-      "Automatic mode visible",
-      "Live totals visible",
-      "Kill estimation disclosed",
-      "Save retains live totals",
-      "Paused session rejects pending read",
-      "No callback errors"
-    ]
-  },
-  "session_packaged_fixture": {
-    "ok": true,
-    "events": [
-      [
-        "exp",
-        7
-      ],
-      [
-        "bonus",
-        2
-      ],
-      [
-        "mesos",
-        10
-      ],
-      [
-        "mesos",
-        7
-      ],
-      [
-        "mesos",
-        10
-      ]
+  "packaged_checks": {
+    "cases": [
+      {
+        "fixture": "live_exp_2560.png",
+        "character": {
+          "level": 26,
+          "exp": 29285,
+          "percent": 53.34,
+          "need": 54900,
+          "source": "EXP+percent"
+        }
+      },
+      {
+        "fixture": "live_frame_ant_tunnel2.png",
+        "character": {
+          "level": 25,
+          "exp": 5299,
+          "percent": 11.22,
+          "need": 47216,
+          "source": "EXP+percent"
+        }
+      },
+      {
+        "fixture": "live_frame_1920.png",
+        "character": {
+          "level": 25,
+          "exp": 5340,
+          "percent": 11.31,
+          "need": 47216,
+          "source": "EXP+percent"
+        }
+      },
+      {
+        "fixture": "session-rewards-fixture.png",
+        "totals": {
+          "exp": 9,
+          "mesos": 27,
+          "kills": 1,
+          "party_exp": 2
+        }
+      },
+      {
+        "fixture": "party-rewards-fixture.png",
+        "totals": {
+          "exp": 4,
+          "mesos": 0,
+          "kills": 0,
+          "party_exp": 4
+        }
+      }
     ],
-    "totals": {
-      "exp": 9,
-      "mesos": 27,
-      "kills": 1,
-      "party_exp": 2
-    }
-  },
-  "portrait_layout_geometry": {
     "ok": true,
-    "checks": 28
+    "source_sha": "5b1ae1d5ed07dc71046af3d6237edb8fa3a15b40efa57b11627acae9ebecd236"
   },
-  "portraits_search_checks": {
-    "ok": true,
-    "checks": [
-      "PQ works with unavailable indexes",
-      "Normal Evil Eye visible",
-      "Job variants hidden",
-      "Search opens canonical MesoWatch",
-      "Monster thumbnail loaded",
-      "Quest NPC thumbnail loaded",
-      "Price icon is rendered",
-      "No callback exceptions"
-    ]
-  },
-  "mesowatch_packaged_search": "Observed Filter items=Salad; Showing 1 of 1866 items; heading Salad in packaged WebView2 window",
-  "network_check": {
-    "ok": true,
-    "tls_verification": true,
-    "quests": 401,
-    "maps": 453,
-    "monsters": 206,
-    "game_window": [
-      75,
-      39,
-      2011,
-      1158
-    ]
-  },
-  "maps_rewards_ui": {
-    "ok": true,
-    "count": 13,
-    "checks": [
-      "Inline spawn and distance at 1.0",
-      "Spawn and nearest selectors available at 1.0",
-      "Inline spawn and distance at 1.3",
-      "Spawn and nearest selectors available at 1.3",
-      "Sort preference persists",
-      "Clicking a map routes to the map and the correct monster",
-      "All maps dialog contains the full known list",
-      "Open map list updates distance as your map changes",
-      "Selected sort mode is marked",
-      "EXP and mesos are named",
-      "Random gems and their chances are visible",
-      "Collapsed quest still has reward details",
-      "No callback errors"
-    ]
-  },
-  "executable_sha256": "c45f51c06395c4f3e52f4185375bfdb71dbcbc7afa0e9d444bb2e3c798f01931",
-  "source_sha256": {
-    "app.py": "6edae4b7f769de1646152353dcb5c2a180bb625c848bd9c074102c569453e65f",
-    "build_release.py": "d71bcfcb6f426fdb2783ce7424e88c05576dc7520323ccdb9c0afe2e7178c06f",
-    "companion_feature_model.py": "7f3fe6af08f1ef19262922d9fc535b969f5cb041468e6283e2991169bd983700",
-    "companion_integration.py": "e1a665a7f579cab6cc03c3c4daed202fbf59dc3dfa045f0c8e6adabc9ce3e598",
-    "companion_market.py": "d6957d58773eba2bdbaab99b6d70ed15fa833a7385a9c76223b2e54716b784ac",
-    "companion_planner_model.py": "ac5173f4cf1c3000c4cc9fac40ea55b63aa3d299b4ca510215b2347a4e02041f",
-    "companion_portraits.py": "5cee7534e2ad6e0f40c82dad012aed510977c5b9325d50b7ec1ba9c5c1729357",
-    "companion_tools.py": "c4801af9fe8b2c255701ce2e130a59bc6116e2ab25cca3e993febc8245383eae",
-    "companion_widgets.py": "49773879656cb0ea9e1e9f4afdc2ccd00a2c807fa97ab60b0d42345aa9f081c0",
-    "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",
-    "gps_image.py": "b493f610536a9209524cd939afe653d57852c2c7f929b17ca1436b599dec0928",
-    "guides.py": "cebc0d2b931c6553f1d9a45f99327a6ea7a446de33d0a86a68ced9f95f7afc86",
-    "item_sources.py": "e9bbc78bd0938a31455cd19203b56acde66484614472b234544e251a0431594f",
-    "leveling.py": "3a3f07648eeecd3dc565cf1fe15a922aa6e3ded726996936ba47de4f7955984e",
-    "make_icon.py": "c1ccb27f30cd6e22a137ce00cfc09e85a37b58b2093e795e3152dd70e43aeb7f",
-    "meowdb.py": "e61968ae245c13ce3177b6e61291c3a7085eba7cce8652c3f964ab76968c8935",
-    "mesowatch_browser.py": "e7106e24b16840b066625bbfa6ef8c2ab4f9a24b01103c7436fdc3c02dd280b9",
-    "minimap.py": "0d1f78d9a709b29e6837eb0955c15d42b90fc41b0d2681ec3aa1c4c33f3baedc",
-    "monster_locations.py": "14c73d95fe33b26ed586e3b0666687855df3082ea4df63f8cab7223593d4f25b",
-    "monster_maps_ui.py": "61b7738ad4706484bb75d747271d56f0b802cf443fa15dbeb046732b89528f4d",
-    "party_quests.py": "9fac6ceb563df214bc3ee6496607d2251a05d61dbce1cec4b0e4148971c31ecc",
-    "quest_rank.py": "64a26ce43760de47169198a9d82e8703658533f77cfbad9819d79fb882d7e998",
-    "quest_rewards.py": "98a4f87591f650da32bc987d705673bc6aed6e8a37ef0733af2cdbf9d83cee1b",
-    "quest_rewards_ui.py": "24c5f6678139c82abd1eea089e53ec0be30b3354caa993650299325c36c302c5",
-    "screen_ocr.py": "41e0dcad93c1ca3186b206643c07554334dfb96d35dc6ae29ffee59d5696b46b",
-    "session_reader.py": "9836ffd07c9670bd5c7038ff2eae26770941f4bf378144239f169ccbb9c0adf8",
-    "session_rewards.py": "3d6b5f5fccec720ca21f65e5e547bc9a8ded09172377f4fb71131da7d976a9ca",
-    "sync.py": "51f74c4e783ffd96b14b0eabfcc884709625bc9be389ffae6088b1469461fdaa",
-    "trainer.py": "0af9830fb152e60d8202f5941a5b2b308c8ae133480ed7bdf8eeea6c58fbd20b",
-    "widgets.py": "dcef13be50d13d3f8f357b252ac904aeffce4dfde791b9296860c5cac6a358cd"
-  },
-  "scope": "Adds local automatic reward OCR; visible-log accounting is approximate and does not include faded or missed messages. Adds async monster and NPC portraits and a user-initiated MesoWatch browser search. Includes per-monster maps, rewards, acquisition, regression and packaged HTTPS checks. The two-hour base GUI run belongs to version 2.2."
+  "scope": "Three-hour regression across source revisions plus a current-source long-lived synthetic Tk session. Supplied screenshots are local fixtures. This is not three hours of live gameplay. Mesos and party notice breakdowns are observed subsets; validated bar EXP includes actual party gains and net losses."
 }

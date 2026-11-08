@@ -2,12 +2,13 @@ from widgets import font_size
 """Companion utility screens adapted to Umbrale's public App APIs."""
 import tkinter as tk
 import time
-from widgets import C,FONT,label,ScrollArea
+from widgets import C,FONT,label,ScrollArea,Tooltip
 from companion_widgets import ui_button,ui_card
 from companion_feature_model import *
 from companion_planner_model import *
 from session_rewards import RewardTracker,session_token,apply_rewards
-from session_reader import capture_rewards
+from session_reader import capture_rewards,capture_training
+from training_accounting import TrainingAccountant
 from game_sync import window_rect
 
 def ui_tools_indicator(self):
@@ -31,6 +32,7 @@ def utility_tick(self):
         self.status.config(text=self.state['utility_notice'], fg=C['gold'])
         self.save_state()
     ui_tools_indicator(self)
+    self.render_levelup()
     if getattr(self, '_utility_refresh', None):
         try:
             self._utility_refresh()
@@ -49,24 +51,31 @@ def utility_poll_rewards(self):
     if session.get('running_since') is None or not session.get('auto_rewards',True):
         self._reward_token=None;return
     if getattr(self,'_reward_token',None)!=token:
-        self._reward_tracker=RewardTracker();self._reward_token=token
+        self._reward_tracker=RewardTracker();self._training_accountant=TrainingAccountant();self._reward_token=token;self._training_last_hud=0
     if getattr(self,'_reward_busy',False) or time.monotonic()-getattr(self,'_reward_last_poll',0)<.45:return
     self._reward_last_poll=time.monotonic()
     windows=[self.root]+[w for w in self.root.winfo_children() if isinstance(w,tk.Toplevel)]
     hide=[window_rect(w) for w in windows if w.winfo_viewable()]
-    tracker=self._reward_tracker;self._reward_busy=True
-    def loaded(events):
+    tracker=self._reward_tracker;accountant=self._training_accountant;self._reward_busy=True
+    read_status=time.monotonic()-getattr(self,'_training_last_hud',0)>=5
+    if read_status:self._training_last_hud=time.monotonic()
+    def loaded(result):
+        events=result.get('events') if isinstance(result,dict) else result
+        reading=result.get('character') if isinstance(result,dict) else None
         self._reward_busy=False
         current=self.state['utility_session']
         if session_token(current)!=token or getattr(self,'_reward_token',None)!=token:return
-        delta=tracker.feed(events)
         self._reward_status='Game or reward area unavailable' if events is None else ('Reading reward log · some amounts unclear' if any(amount is None for kind,amount in events) else 'Reading reward log') if events else 'Waiting for visible rewards'
-        if apply_rewards(current,token,delta):self.save_state()
+        changed=accountant.feed(current,token,events,reading,time.monotonic())
+        if reading and accountant.character is reading:
+            self.training_accept_character(reading)
+            changed=True
+        if changed:self.save_state()
         if getattr(self,'_utility_refresh',None):self._utility_refresh()
         self.root.after(450,self.utility_poll_rewards)
     def failed(error):
         self._reward_busy=False;self._reward_status='Reader unavailable · '+str(error)[:90]
-    self.run_bg(lambda:capture_rewards(hide),loaded,on_error=failed)
+    self.run_bg(lambda:capture_training(hide,read_status),loaded,on_error=failed)
 
 def utility_open(self):
     previous = getattr(self, '_tools_window', None)
@@ -129,10 +138,11 @@ def utility_render_session(self, parent):
     label(card, 'YOUR TRAINING SESSION', fg='gold', bg='card', size=9, bold=True).pack(anchor='w', padx=12, pady=(12, 4))
     elapsed = label(card, '', bg='card', size=24, bold=True)
     elapsed.pack(anchor='w', padx=12)
-    metrics = label(card, '', fg='muted', bg='card', size=10, justify='left', anchor='w')
+    metrics = label(card, '', fg='muted', bg='card', size=10, justify='left', anchor='w',wraplength=380)
     metrics.pack(fill='x', padx=12, pady=5)
     map_label=label(card,'',fg='muted',bg='card',size=9,wraplength=390,justify='left')
     map_label.pack(fill='x',padx=12,pady=(0,4))
+    self.training_session_counter(card)
     controls = tk.Frame(card, bg=C['card'])
     controls.pack(fill='x', padx=12, pady=8)
     def toggle():
@@ -140,6 +150,7 @@ def utility_render_session(self, parent):
         self.state['utility_session'] = utility_session_toggle(self.state['utility_session'])
         self.save_state()
         refresh()
+        self.utility_poll_rewards()
     start = ui_button(controls, 'Start', toggle, primary=True, compact=True)
     start.pack(side='left')
     def finish():
@@ -161,19 +172,20 @@ def utility_render_session(self, parent):
     ui_button(controls, 'Finish & archive', finish, compact=True).pack(side='right')
     message = label(parent, 'Auto: visible EXP and mesos messages. Kills ≈ EXP events (including party). Costs are entered manually.', fg='muted', size=9, wraplength=400, justify='left')
     message.pack(fill='x', padx=20, pady=4)
+    message._training_tip=Tooltip(message,'EXP-bar totals include party, quests and losses. Party and mesos amounts come from visible notices and may be partial. Mesos require two matching reads before credit. Kills are EXP-event estimates, including party/shared rewards. Covered or unclear log messages are not guessed.')
     auto=tk.BooleanVar(value=s.get('auto_rewards',True))
     def auto_changed():
         self.state['utility_session']['auto_rewards']=auto.get();self._reward_token=None;self.save_state();refresh()
     tk.Checkbutton(parent,text='Auto read game',variable=auto,command=auto_changed,bg=C['bg'],fg=C['text'],selectcolor=C['card']).pack(anchor='w',padx=20)
     form = ui_card(parent)
     fields = {key: utility_entry(form, title, s.get(key, 0)) for key, title in
-              [('kills', 'KILLS ≈'), ('exp', 'EXP GAINED'), ('mesos', 'MESOS GAINED'), ('cost', 'POTIONS / OTHER COSTS')]}
+              [('kills', 'KILLS ≈'), ('exp', 'EXP GAINED'), ('mesos', 'MESOS OBSERVED'), ('cost', 'POTIONS / OTHER COSTS')]}
     note = utility_entry(form, 'SESSION NOTE', s.get('note', ''))
     feedback = label(form, '', fg='red', bg='card', size=9, wraplength=390)
     feedback.pack(fill='x', padx=12)
     def apply():
         try:
-            values = {key: int(utility_number(var.get())) for key, var in fields.items()}
+            values = {key: int(utility_number(var.get())) for key, var in fields.items() if key=='cost' or not self.state['utility_session'].get('auto_rewards',True)}
         except ValueError as exc:
             feedback.config(text=str(exc), fg=C['red'])
             return False
@@ -190,7 +202,7 @@ def utility_render_session(self, parent):
         rates = utility_session_rates(current)
         elapsed.config(text=utility_format_time(rates['seconds']))
         start.config(text='Pause' if current.get('running_since') is not None else 'Start / resume')
-        metrics.config(text=f"{current.get('exp',0):,} EXP (party +{current.get('party_exp',0):,}) · ≈{current.get('kills',0):,} kills · {current.get('mesos',0):,} mesos\n{rates['exp_hour']:,.0f} EXP/h · {rates['net_hour']:,.0f} net mesos/h")
+        metrics.config(text=f"{current.get('exp',0):,} EXP · party +{current.get('party_exp',0):,} seen\n≈{current.get('kills',0):,} kills · {current.get('mesos',0):,} mesos\n{rates['exp_hour']:,.0f} EXP/h · {rates['net_hour']:,.0f} net mesos/h")
         automatic=current.get('auto_rewards',True)
         auto.set(automatic)
         for key in ('kills','exp','mesos'):
@@ -207,6 +219,13 @@ def utility_render_session(self, parent):
             map_text='Session map: '+str(current.get('map_name') or current['map_id'])
         else:map_text='The session map is recorded when you start.'
         map_label.config(text=map_text)
+        target_label=getattr(self,'_training_session_forecast_label',None)
+        if target_label is not None and target_label.winfo_exists():target_label.config(text=self.training_forecast_text())
+        source=current.get('exp_source','Reward log · observed') if automatic else 'Manual totals'
+        quality=getattr(self,'_reward_status','')
+        quality=' · log unavailable' if 'unavailable' in quality.lower() else ' · unclear log' if 'unclear' in quality.lower() else ''
+        paused='Paused · ' if current.get('running_since') is None else ''
+        message.config(text=paused+source+' · Mesos: observed'+quality if automatic else 'Manual totals · costs and notes saved separately')
     self._utility_refresh = refresh
     refresh()
     history_area = tk.Frame(parent, bg=C['bg'])
@@ -250,6 +269,8 @@ def utility_render_compare(self,parent):
             label(card,f"{row['sessions']} sessions · {utility_format_time(row['seconds'])} recorded",bg='card',fg='muted',size=9).pack(anchor='w',padx=12,pady=2)
             label(card,f"{row['exp_hour']:,.0f} EXP/h · {row['kills_hour']:,.0f} kills/h",bg='card',size=11).pack(anchor='w',padx=12,pady=(4,2))
             label(card,f"{row['net_hour']:,.0f} net mesos/h",bg='card',fg='green' if row['net_hour']>=0 else 'red',size=10).pack(anchor='w',padx=12,pady=(0,8))
+            if row.get('log_gap_sessions'):
+                label(card,f"Partial log in {row['log_gap_sessions']} sessions · mesos may be incomplete",bg='card',fg='muted',size=8,wraplength=375).pack(anchor='w',padx=12,pady=(0,5))
             if row['map_id'] in self.db.maps:
                 ui_button(card,'Open GPS →',lambda r=row:self.start_route('comparison:'+r['map_id'],r['map_id']),compact=True).pack(anchor='w',padx=12,pady=(0,10))
         omitted=sum(report['excluded'].values())

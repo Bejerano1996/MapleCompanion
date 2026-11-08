@@ -17,6 +17,7 @@ from companion_tools import install_tools,ui_tools_indicator
 from companion_market import market_open
 from monster_maps_ui import install_monster_maps
 from quest_rewards_ui import install_quest_rewards
+from training_ui import install_training_ui
 
 MESOWATCH_URL='https://meso.watch/'
 
@@ -30,7 +31,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='2.7.1-companion'
+    core['VERSION']='3.0.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -436,4 +437,5 @@ def integrate(Base,core):
     install_tools(CompanionApp)
     install_monster_maps(CompanionApp)
     install_quest_rewards(CompanionApp)
+    install_training_ui(CompanionApp)
     return CompanionApp

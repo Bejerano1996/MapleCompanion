@@ -386,26 +386,27 @@ def main():
     check(a.state["level"] == 25, "a bar with only a % doesn't change the level")
     a.state["exp_bar"] = [None, 99.1]
     a.on_exp_bar(["0.20%"], lambda *k: True)
-    check(a.state["level"] == 26, "the bar dropping from 99% to 0% is a level-up")
+    check(a.state["level"] == 25, "a percentage-only drop cannot prove a level-up")
     a._reads.clear()
     a.state["exp_bar"] = [None, 40.0]
     a.on_exp_bar(["40.12%"], a._confirmed)
-    check(a.state["exp_bar"][1] == 40.12, "while hunting, a rising % counts at once (it never repeats)")
+    check(a.state["exp_bar"][1] == 40.0, "percentage-only reads cannot overwrite validated numeric EXP")
     a.on_exp_bar(["30.00%"], a._confirmed)
-    check(a.state["exp_bar"][1] == 40.12, "a drop must be read twice first (a misread, or a death)")
+    check(a.state["exp_bar"][1] == 40.0, "an unvalidated percentage drop is rejected")
     a.on_exp_bar(["30.00%"], a._confirmed)
-    check(a.state["exp_bar"][1] == 30.0, "... and then counts")
+    check(a.state["exp_bar"][1] == 40.0, "repetition alone cannot validate a percentage-only drop")
     a.state["party"] = 3
     a.render_levelup()
     a.companion_exp_details()
-    texts = [w.cget("text") for w in a._companion_exp_panel.winfo_children()[0].winfo_children()]
-    check("3" in texts and any("Lv 27" in t for t in texts), f"counter header: Lv 27 and party chips ({texts})")
+    from companion_widgets import ui_walk_widgets
+    texts=[w.cget('text') for w in ui_walk_widgets(a._companion_exp_window) if isinstance(w,(tk.Label,tk.Button))]
+    check('Party on map' in texts and 'Apply' in texts, 'Party and calibration controls remain available')
     a._companion_exp_window.destroy()
-    a.state.update(party=1, level=26, exp_bar=[None, 53.34])
+    a.state.update(party=1,level=26)
+    a.training_accept_character({'level':26,'exp':29285})
     a.refresh_exp_pill()
-    pill = a.exp_pill.cget("text")
-    check(pill.startswith("53") and pill.split("·")[-1].strip().replace(",", "").split()[0].isdigit(),
-          f"title row: EXP % and kills left ({pill!r}; {a.exp_pill.tip.text})")
+    pill=a.exp_pill.cget('text')
+    check(pill.startswith('53') and 'EXP left' in a.exp_pill.tip.text,'Title percentage and forecast tooltip use validated EXP')
 
     print("trainer")
     import trainer

@@ -24,6 +24,21 @@ class RewardsTests(unittest.TestCase):
   s=dict(id='a',running_since=1,exp=2,mesos=3,kills=0,cost=10);token=session_token(s)
   self.assertTrue(apply_rewards(s,token,dict(exp=7,mesos=10,kills=1)));self.assertEqual(s['cost'],10)
   s['running_since']=None;self.assertFalse(apply_rewards(s,token,dict(exp=7)));s.update(id='b',running_since=1);self.assertFalse(apply_rewards(s,token,dict(exp=7)))
+ def test_money_needs_two_matching_reads(self):
+  t=RewardTracker(confirm_money=2);t.feed([])
+  self.assertEqual(t.feed([('mesos',10)])['mesos'],0)
+  self.assertEqual(t.feed([('mesos',10)])['mesos'],10)
+  self.assertEqual(t.feed([('mesos',10)])['mesos'],0)
+ def test_fading_amount_does_not_add_new_money(self):
+  t=RewardTracker(confirm_money=2);t.feed([]);t.feed([('mesos',10)]);t.feed([('mesos',10)])
+  self.assertEqual(t.feed([('mesos',70)])['mesos'],0)
+  self.assertEqual(t.feed([('mesos',10)])['mesos'],0)
+ def test_wrong_first_amount_can_be_refined_before_credit(self):
+  t=RewardTracker(confirm_money=2);t.feed([]);t.feed([('mesos',70)])
+  self.assertEqual(t.feed([('mesos',10)])['mesos'],0)
+  self.assertEqual(t.feed([('mesos',10)])['mesos'],10)
+ def test_initial_empty_does_not_drop_pickup(self):
+  t=RewardTracker();t.feed([]);self.assertEqual(t.feed([('mesos',10)])['mesos'],10)
  def test_late_amount_read(self):
   t=RewardTracker();t.feed([]);t.feed([]);t.feed([]);t.feed([])
   t.feed([('mesos',None)])

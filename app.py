@@ -3742,6 +3742,18 @@ App = integrate(App, globals())
 
 
 if __name__ == "__main__":
+    if len(sys.argv)==4 and sys.argv[1]=='--check-character-image':
+        from session_reader import read_character_image
+        try:
+            image=Image.open(sys.argv[2]).convert('RGB');w,h=image.size
+            reading=read_character_image(image.crop((int(w*.1),int(h*.91),int(w*.92),h)))
+            report={'ok':reading is not None,'character':reading}
+        except Exception:
+            import traceback
+            report={'ok':False,'error':traceback.format_exc()}
+        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
+        sys.exit()
+
     if len(sys.argv)==4 and sys.argv[1]=='--check-rewards-image':
         from session_reader import read_reward_image
         from session_rewards import RewardTracker

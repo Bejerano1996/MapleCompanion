@@ -2,7 +2,7 @@
 from session_rewards import reward_event,reward_kind
 _engine=None
 
-def read_reward_image(image,include_pending=False):
+def ocr_rows(image,max_size=(1280,720)):
     global _engine
     import numpy as np
     if _engine is None:
@@ -10,10 +10,14 @@ def read_reward_image(image,include_pending=False):
         onnxruntime.disable_telemetry_events()
         from rapidocr_onnxruntime import RapidOCR
         _engine=RapidOCR(intra_op_num_threads=1,inter_op_num_threads=1)
-    image=image.convert('RGB');image.thumbnail((1280,720))
+    image=image.convert('RGB');image.thumbnail(max_size)
     if image.width<640:
         image=image.resize((image.width*3,image.height*3))
     rows,_=_engine(np.asarray(image)[:,:,::-1],use_cls=False)
+    return rows or []
+
+def read_reward_image(image,include_pending=False):
+    rows=ocr_rows(image)
     # Merge boxes on the same line: the detector can split "You" from the amount.
     groups=[]
     for box,text,score in sorted(rows or [],key=lambda row:min(p[1] for p in row[0])):
@@ -48,3 +52,24 @@ def capture_rewards(hide=()):
         if r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3]:
             draw.rectangle((max(0,left-crop[0]),max(0,top-crop[1]),min(image.width,r-crop[0]),min(image.height,b-crop[1])),fill='black')
     return read_reward_image(image,include_pending=True)
+
+
+def read_character_image(image):
+    from training_model import character_reading
+    rows=ocr_rows(image,max_size=(1800,300))
+    return character_reading([text for box,text,score in rows if score>=.75])
+
+def capture_training(hide=(),read_status=True):
+    # Reward log and HUD are independent sources; a covered log must not hide a clear HUD.
+    events=capture_rewards(hide)
+    reading=None
+    if read_status:
+        from game_sync import find_game_window
+        from PIL import ImageGrab
+        box=find_game_window()
+        if box:
+            x,y,right,bottom=box;w=right-x;h=bottom-y
+            crop=(x+int(w*.1),y+int(h*.91),x+int(w*.92),bottom)
+            covered=any(r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3] for left,top,r,b in hide)
+            if not covered:reading=read_character_image(ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB'))
+    return {'events':events,'character':reading}

@@ -25,7 +25,7 @@ def reward_kind(text):
     return None
 
 class RewardTracker:
-    def __init__(self):self.previous=None;self.credited=[];self.blanks=0
+    def __init__(self,confirm_money=1):self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.confirm_money=max(1,int(confirm_money))
     @staticmethod
     def _align(old,current):
         # Preserve row identity when OCR temporarily misses an amount or inserts a row.
@@ -33,7 +33,7 @@ class RewardTracker:
         def weight(a,b):
             if a[0]!=b[0]:return 0
             if a[1]==b[1]:return 3
-            return 1 if a[1] is None or b[1] is None else 0
+            return 1  # same-kind OCR refinement must not turn an old row into new money
         for i in range(n-1,-1,-1):
             for j in range(m-1,-1,-1):
                 w=weight(old[i],current[j])
@@ -47,29 +47,33 @@ class RewardTracker:
         return pairs
     def feed(self,events):
         totals={'exp':0,'mesos':0,'kills':0,'party_exp':0}
-        if events is None:self.previous=None;self.credited=[];self.blanks=0;return totals
+        if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;return totals
         current=[tuple(row) for row in events]
         if not current:
+            if self.previous is None:self.previous=[];self.credited=[];self.seen=[]
             self.blanks+=1
-            if self.blanks>=4:self.previous=[];self.credited=[]
+            if self.blanks>=4:self.previous=[];self.credited=[];self.seen=[]
             return totals
         self.blanks=0;old=self.previous
-        if old is None:self.previous=current;self.credited=[True]*len(current);return totals
+        if old is None:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);return totals
         pairs=self._align(old,current)
-        if old and not pairs:self.previous=current;self.credited=[True]*len(current);return totals
-        previous_credit=self.credited
+        if old and not pairs:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);return totals
+        previous_credit=self.credited;previous_seen=self.seen
         last=pairs[-1][1] if pairs else -1
         credited=[j<=last for j in range(len(current))]
-        for i,j in pairs:credited[j]=previous_credit[i]
+        seen=[1 if amount is not None else 0 for kind,amount in current]
+        for i,j in pairs:
+            credited[j]=previous_credit[i]
+            seen[j]=previous_seen[i]+1 if old[i]==current[j] and current[j][1] is not None else seen[j]
         for j,(kind,amount) in enumerate(current):
-            if credited[j] or amount is None:continue
+            if credited[j] or amount is None or (kind=='mesos' and seen[j]<self.confirm_money):continue
             credited[j]=True
             if kind=='mesos':totals['mesos']+=amount
             elif kind in ('exp','bonus'):
                 totals['exp']+=amount
                 if kind=='exp':totals['kills']+=1
                 else:totals['party_exp']+=amount
-        self.previous=current;self.credited=credited
+        self.previous=current;self.credited=credited;self.seen=seen
         return totals
 
 

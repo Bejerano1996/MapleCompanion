@@ -11,6 +11,14 @@ class CaptureTests(unittest.TestCase):
  def test_crop_stays_in_game(self):
   with patch('game_sync.find_game_window',return_value=(100,100,1100,900)),patch('PIL.ImageGrab.grab',return_value=Image.new('RGB',(400,360))) as grab,patch('session_reader.read_reward_image',return_value=[]) as reader:
    self.assertEqual(session_reader.capture_rewards(),[]);self.assertEqual(grab.call_args.kwargs['bbox'],(700,500,1100,860));reader.assert_called_once()
+ def test_hud_can_be_read_when_log_is_covered(self):
+  character={'level':27,'exp':31833,'percent':50,'need':63666}
+  with patch('session_reader.capture_rewards',return_value=None),patch('game_sync.find_game_window',return_value=(100,100,1100,900)),patch('PIL.ImageGrab.grab',return_value=Image.new('RGB',(820,72))) as grab,patch('session_reader.read_character_image',return_value=character):
+   result=session_reader.capture_training([(850,650,1050,750)],True)
+   self.assertIsNone(result['events']);self.assertEqual(result['character'],character);self.assertEqual(grab.call_args.kwargs['bbox'],(200,828,1020,900))
+ def test_log_only_poll_does_not_capture_hud(self):
+  with patch('session_reader.capture_rewards',return_value=[]),patch('PIL.ImageGrab.grab') as grab:
+   self.assertEqual(session_reader.capture_training(read_status=False),{'events':[],'character':None});grab.assert_not_called()
  def test_no_game_no_capture(self):
   with patch('game_sync.find_game_window',return_value=None),patch('PIL.ImageGrab.grab') as grab:
    self.assertIsNone(session_reader.capture_rewards());grab.assert_not_called()
