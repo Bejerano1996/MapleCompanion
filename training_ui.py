@@ -65,6 +65,16 @@ def training_observe_yield(self,delta,previous,reading):
     if not hasattr(self,'_yield_learner'):self._yield_learner=YieldLearner()
     return self._yield_learner.observe(self.training_gain_context(),delta,absolute_exp(reading)-absolute_exp(previous),time.monotonic())
 
+def training_buffer_yield(self,delta,previous=None,reading=None):
+    from training_yield import YieldLearner
+    if not hasattr(self,'_yield_learner'):self._yield_learner=YieldLearner()
+    signature=self.training_gain_context();now=time.monotonic()
+    self._yield_learner.add_window(signature,delta,now)
+    if reading is None:return False
+    combined=self._yield_learner.take_window(signature,now)
+    if previous is None or previous['level']!=reading['level']:return False
+    return self.training_observe_yield(combined,previous,reading)
+
 def training_accept_character(self,reading):
     absolute_exp(reading)
     import leveling

@@ -153,3 +153,9 @@ The first release under the new name: a redesigned in-game overlay.
 - Preserve notices ahead of unchanged HUD reads; reconcile them when HUD advances.
 - Distinguish refinement of an old pending bonus from a new complete reward, avoiding swallowing the next gain.
 - Net-loss and level-up boundaries covered, plus100seeded timing schedules. No live accuracy claim.
+
+## 3.6.0 — Calibration across log-only polls
+- Offline UI regression reproduced calibration starvation when all rewards arrive between HUD polls.
+- Buffer newly credited reward totals until the next accepted HUD reading, with one-time consumption and context/5second expiry.
+- Skip cross-level calibration samples; multiple rewards or mismatched totals remain rejected.
+- Native callback regression now reaches personal gain9 from three asynchronous7+2reward events. Simulation only; no live accuracy claim.

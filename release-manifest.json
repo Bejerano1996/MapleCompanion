@@ -1,6 +1,6 @@
 {
-  "version": "3.5.0-companion",
-  "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
+  "version": "3.6.0-companion",
+  "source_sha": "2a92e642e21960b3e301035ccf085d006f4a64fdbe67cb40fffaebfc3e532f85",
   "checks": {
     "cases": [
       {
@@ -52,49 +52,49 @@
         "fixture": "party-rewards-fixture.png"
       }
     ],
-    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
+    "source_sha": "2a92e642e21960b3e301035ccf085d006f4a64fdbe67cb40fffaebfc3e532f85",
     "ok": true
   },
   "context_checks": {
-    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
     "cases": [
       {
+        "file": "context-party-four.png",
         "result": {
           "ok": true,
           "party_visible": 4,
           "roman_suffix": null,
           "labels": []
-        },
-        "file": "context-party-four.png"
+        }
       },
       {
+        "file": "context-party-five.png",
         "result": {
           "ok": true,
           "party_visible": 5,
           "roman_suffix": null,
           "labels": []
-        },
-        "file": "context-party-five.png"
+        }
       },
       {
+        "file": "live_frame_1920.png",
         "result": {
           "ok": true,
           "party_visible": null,
           "roman_suffix": "II",
           "labels": []
-        },
-        "file": "live_frame_1920.png"
+        }
       },
       {
+        "file": "live_exp_2560.png",
         "result": {
           "ok": true,
           "party_visible": 2,
           "roman_suffix": "III",
           "labels": []
-        },
-        "file": "live_exp_2560.png"
+        }
       },
       {
+        "file": "context-horny-scene.png",
         "result": {
           "ok": true,
           "party_visible": 2,
@@ -103,31 +103,63 @@
             "Lv,22HornyMushroom",
             "Lv.22 Horny M"
           ]
-        },
-        "file": "context-horny-scene.png"
+        }
       }
     ],
+    "source_sha": "2a92e642e21960b3e301035ccf085d006f4a64fdbe67cb40fffaebfc3e532f85",
     "ok": true
   },
   "reconciliation_check": {
     "ok": true,
-    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
+    "source_sha": "2a92e642e21960b3e301035ccf085d006f4a64fdbe67cb40fffaebfc3e532f85",
     "exp": 9,
     "party_seen": 2,
     "scope": "All four accounting modules extracted from candidate executable; synthetic delayed-party scenario"
   },
+  "calibration_check": {
+    "ok": true,
+    "source_sha": "2a92e642e21960b3e301035ccf085d006f4a64fdbe67cb40fffaebfc3e532f85",
+    "gain": 9,
+    "window_consumed_once": true,
+    "native_ui": {
+      "ok": true,
+      "checks": [
+        "Automatic totals applied",
+        "Automatic mode visible",
+        "Live totals visible",
+        "Party breakdown visible",
+        "Kill estimation disclosed",
+        "Save retains live totals",
+        "Paused session rejects pending read",
+        "Wallet replaces incomplete notices",
+        "Wallet spending not subtracted twice",
+        "Wallet ignores log money",
+        "Automatic wallet differences replace loot log",
+        "Resume excludes offline wallet changes",
+        "Pickup mode works without inventory",
+        "Pickup mode resets only money baseline",
+        "Reward callback calibrates actual personal yield",
+        "Calibration does not double party EXP",
+        "Calibration retains notices between HUD polls",
+        "Multi-event windows do not calibrate a single kill",
+        "Level-crossing event is not a new-level calibration sample",
+        "No callback errors"
+      ]
+    },
+    "scope": "Frozen yield module and native UI callback regression; simulated data"
+  },
   "synthetic_soak": {
     "running": false,
-    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
+    "source_sha": "2a92e642e21960b3e301035ccf085d006f4a64fdbe67cb40fffaebfc3e532f85",
     "target_seconds": 120.0,
     "ok": true,
     "latest": {
       "seconds": 120.0,
-      "frames": 634,
-      "exp": 5688,
-      "party_seen": 1240,
-      "mesos_observed": 9185,
-      "mesos_true": 9492,
+      "frames": 628,
+      "exp": 5643,
+      "party_seen": 1230,
+      "mesos_observed": 9120,
+      "mesos_true": 9405,
       "fonts": 17,
       "images": 26,
       "jobs": 6,
@@ -136,11 +168,11 @@
     "samples": [
       {
         "seconds": 30.0,
-        "frames": 49,
-        "exp": 432,
-        "party_seen": 96,
-        "mesos_observed": 699,
-        "mesos_true": 714,
+        "frames": 48,
+        "exp": 423,
+        "party_seen": 94,
+        "mesos_observed": 685,
+        "mesos_true": 699,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -148,11 +180,11 @@
       },
       {
         "seconds": 90.0,
-        "frames": 439,
-        "exp": 3942,
-        "party_seen": 860,
-        "mesos_observed": 6367,
-        "mesos_true": 6579,
+        "frames": 435,
+        "exp": 3897,
+        "party_seen": 850,
+        "mesos_observed": 6282,
+        "mesos_true": 6505,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -160,11 +192,11 @@
       },
       {
         "seconds": 120.0,
-        "frames": 634,
-        "exp": 5688,
-        "party_seen": 1240,
-        "mesos_observed": 9185,
-        "mesos_true": 9492,
+        "frames": 628,
+        "exp": 5643,
+        "party_seen": 1230,
+        "mesos_observed": 9120,
+        "mesos_true": 9405,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -174,11 +206,11 @@
     "errors": [],
     "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "validation": "Nine timing regression tests including100seeded12-reward schedules, native callback/UI tests, current-source120second synthetic Tk stability run, four frozen accounting modules and local OCR fixtures. No live3.5 accuracy claim. Visible species remain inferred targets.",
+  "validation": "Offline before/after native callback regression, ten yield/window model tests, current-source120second synthetic Tk stability, frozen calibration/accounting modules and local OCR fixtures. No live3.6 accuracy claim.",
   "changes": [
-    "Avoid counting delayed party bonus twice",
-    "Retain log gains ahead of HUD updates",
-    "Protect subsequent rewards from old missing-bonus credits",
-    "Preserve net losses and level-up math"
+    "Retain reward notices between HUD polls for calibration",
+    "Consume each calibration window once",
+    "Expire/reset stale or changed-context windows",
+    "Reject multi-event and level-crossing calibration samples"
   ]
 }

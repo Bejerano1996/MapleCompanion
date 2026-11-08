@@ -4,6 +4,29 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from training_yield import YieldLearner
 
 class YieldTests(unittest.TestCase):
+    def test_notice_window_collects_between_hud_polls(self):
+        learner=YieldLearner();key=('mob','map',4,32)
+        learner.add_window(key,dict(exp=7,kills=1),0)
+        learner.add_window(key,dict(exp=2,party_exp=2),.2)
+        window=learner.take_window(key,.5)
+        self.assertEqual(window,dict(exp=9,kills=1,party_exp=2))
+        self.assertTrue(learner.observe(key,window,9,.5))
+        self.assertEqual(learner.take_window(key,.6),{})
+    def test_notice_window_expires_and_resets_on_context_change(self):
+        learner=YieldLearner();a=('mob','a',4,32);b=('mob','b',4,32)
+        learner.add_window(a,dict(exp=9,kills=1),0)
+        self.assertEqual(learner.take_window(a,6),{})
+        learner.add_window(a,dict(exp=9,kills=1),7)
+        self.assertEqual(learner.take_window(b,8),{})
+    def test_fresh_reward_after_expired_window_is_retained(self):
+        learner=YieldLearner();key=('mob','map',4,32)
+        learner.add_window(key,dict(exp=9,kills=1),0)
+        learner.add_window(key,dict(exp=10,kills=1),6)
+        self.assertEqual(learner.take_window(key,6),dict(exp=10,kills=1,party_exp=0))
+    def test_multiple_reward_window_does_not_calibrate(self):
+        learner=YieldLearner();key=('mob','map',4,32)
+        learner.add_window(key,dict(exp=9,kills=1),0);learner.add_window(key,dict(exp=9,kills=1),.2)
+        self.assertFalse(learner.observe(key,learner.take_window(key,.5),18,.5))
     def test_party_bonus_is_included_once(self):
         learner=YieldLearner();signature=('mob','map',4,32)
         for t in range(3):learner.observe(signature,dict(exp=9,party_exp=2,kills=1),9,t)

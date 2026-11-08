@@ -86,8 +86,9 @@ def utility_poll_rewards(self):
             current['wallet_read_at']=time.time();self.state['utility_session']=current;changed=True
         if reading and accountant.character is reading:
             self.training_accept_character(reading)
-            if self.training_observe_yield(accountant.last_delta,previous_character,reading):self.render_levelup()
+            if self.training_buffer_yield(accountant.last_delta,previous_character,reading):self.render_levelup()
             changed=True
+        else:self.training_buffer_yield(accountant.last_delta)
         if changed:self.save_state()
         if getattr(self,'_utility_refresh',None):self._utility_refresh()
         self.root.after(120,self.utility_poll_rewards)

@@ -76,12 +76,35 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     a._reward_token=None;history=[]
     def character_reward(n,events):
         pending.clear();a._reward_busy=False;a._reward_last_poll=0;a.utility_poll_rewards()
-        pending.pop()({'events':list(events),'character':{'level':27,'exp':n}})
+        pending.pop()({'events':list(events),'character':{'level':27,'exp':n} if n is not None else None})
     character_reward(1000,[]);character_reward(1000,[])
     for index in range(1,4):
         history.extend([('exp',7),('bonus',2)])
         character_reward(1000+index*9,history)
     check('Reward callback calibrates actual personal yield',a.training_forecast_now()['gain']==9 and a._yield_learner.progress(a.training_gain_context(),time.monotonic())==3)
     check('Calibration does not double party EXP',a.state['utility_session']['exp']==27 and a.state['utility_session']['party_exp']==6)
+    a.state['utility_session'].update(running_since=300,exp=0,kills=0,party_exp=0)
+    a._reward_token=None;history=[]
+    character_reward(1000,[]);character_reward(1000,[])
+    for index in range(1,4):
+        history.extend([('exp',7),('bonus',2)])
+        character_reward(None,history)
+        character_reward(1000+index*9,history)
+    check('Calibration retains notices between HUD polls',a._yield_learner.estimate(a.training_gain_context(),time.monotonic())==9)
+    a.state['utility_session'].update(running_since=400,exp=0,kills=0,party_exp=0);a._reward_token=None;history=[]
+    character_reward(1000,[]);character_reward(1000,[])
+    for index in range(1,4):
+        history.extend([('exp',7),('bonus',2),('exp',7),('bonus',2)])
+        character_reward(None,history);character_reward(1000+index*18,history)
+    check('Multi-event windows do not calibrate a single kill',a._yield_learner.estimate(a.training_gain_context(),time.monotonic()) is None)
+    a.state['utility_session'].update(running_since=500,exp=0,kills=0,party_exp=0);a._reward_token=None;history=[]
+    character_reward(63660,[]);character_reward(63660,[])
+    def boundary_read(exp,level):
+        pending.clear();a._reward_busy=False;a._reward_last_poll=0;a.utility_poll_rewards()
+        pending.pop()({'events':list(history),'character':{'level':level,'exp':exp}})
+    for index in range(3):
+        history.extend([('exp',7),('bonus',2)])
+        character_reward(None,history);boundary_read(3+index*9,28)
+    check('Level-crossing event is not a new-level calibration sample',a._yield_learner.estimate(a.training_gain_context(),time.monotonic()) is None)
     check('No callback errors',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()

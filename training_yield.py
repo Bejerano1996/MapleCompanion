@@ -1,9 +1,21 @@
 """Learn personal EXP per reward event only when validated HUD changes agree."""
 class YieldLearner:
-    def __init__(self):self.signature=None;self.samples=[];self.last_at=None
+    def __init__(self):self.signature=None;self.samples=[];self.last_at=None;self.window={};self.window_at=None
     def _sync(self,signature,now):
         if self.signature!=signature or self.last_at is not None and now-self.last_at>45:
             self.signature=signature;self.samples=[];self.last_at=None
+            self.window={};self.window_at=None
+    def add_window(self,signature,delta,now):
+        self._sync(signature,now)
+        if not signature or not signature[0]:return
+        if self.window_at is not None and now-self.window_at>5:self.window={};self.window_at=None
+        if self.window_at is None and any(delta.get(k,0) for k in ('exp','kills','party_exp')):self.window_at=now
+        for key in ('exp','kills','party_exp'):self.window[key]=self.window.get(key,0)+delta.get(key,0)
+    def take_window(self,signature,now):
+        self._sync(signature,now)
+        result=self.window if self.window_at is not None and now-self.window_at<=5 else {}
+        self.window={};self.window_at=None
+        return result
     def observe(self,signature,delta,hud_delta,now):
         self._sync(signature,now)
         if not signature or not signature[0] or delta.get('kills')!=1:return False
