@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.3.0-companion — quest item sources
+
+- Unfinished quest items show a compact shop or breakable source with a GPS action.
+- Show merchant price and citizenship requirements; prefer unrestricted nearby sources.
+- Read breakable links and spawn maps from the item's public database page, including plants and boxes. Mark community drop reports as such and avoid claiming guaranteed drops.
+- Other sources opens the remaining shops and maps; completed objectives hide acquisition hints.
+- Include shop and gathering maps in the quest itinerary. Upgrade cached quest guides to schema 4.
+- Includes the 2.2.1 first-run HTTPS packaging fix; no saved-state level changes are performed by deployment.
+
 ## 2.2.1-companion — first-run HTTPS fix
 
 - Include the SSL runtime's required certificate-policy resource in Windows builds. Fresh installations can load game data without relying on a pre-existing cache.

@@ -27,6 +27,7 @@ import party_quests
 import quest_rank
 import trainer
 import widgets
+import item_sources
 from game_sync import MINIMAP_CORNER, HotkeyThread, capture_and_read, find_game_window, window_rect
 from minimap import portal_direction, portal_side, render_minimap
 from widgets import BRAND_FONT, C, FONT, ICON, TEXT_SCALES, ScrollArea, Tooltip, button, entry, frozen, label, link
@@ -38,7 +39,7 @@ BUNDLE_DIR = getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__))
 STATE_FILE = os.path.join(APP_DIR, "state.json")
 SHOW_REQUEST = os.path.join(APP_DIR, "show.request")  # left by a second launch: "show yourself"
 GUIDES_FILE = os.path.join(CACHE_DIR, "guides.json")
-GUIDES_VERSION = 3     # bump when the saved guide format changes (3: more maps kept)
+GUIDES_VERSION = 4     # includes shops and breakable acquisition sources per objective
 MAX_MAPS = 3          # map suggestions shown per objective
 KEEP_MAPS = 8         # maps saved per objective, so enough stay after unreachable ones are left out
 MAX_DROPPERS = 2      # monsters shown per item
@@ -1763,6 +1764,8 @@ class App:
             self.objective_labels[(qid, i)] = text_label
             if step.get("level"):
                 Tooltip(text_label, f"{'Kill' if 'mobId' in need else 'Loot'} · monster Lv {step['level']}")
+            if not is_done and step.get('sources'):
+                self.render_acquisition_sources(body,bg,qid,step)
             if not is_done and steps and self.all_maps.get(qid):
                 for line in step.get("lines", []):
                     self.render_map_line(body, bg, qid, line)
@@ -1806,6 +1809,34 @@ class App:
         if sort == "near":
             return sorted(options, key=lambda m: (dist.get(m[0], 999), -count(m[0])))
         return sorted(options, key=lambda m: (-count(m[0]), dist.get(m[0], 999)))
+
+    def render_acquisition_sources(self,parent,bg,qid,step,all_sources=False):
+        sources=item_sources.ranked_sources(step.get('sources') or [],self.distances())
+        for source in sources if all_sources else sources[:1]:
+            target=item_sources.nearest_target(source,self.distances())
+            if not target:continue
+            row=tk.Frame(parent,bg=C[bg]);row.pack(fill='x',padx=14,pady=(2,4))
+            route=lambda source=source,target=target:self.start_route(qid,target[0],None,source.get('npc'))
+            button(row,'GPS',route,bg='button',fg='green',size=8,padx=4,
+                   tip='Route to '+target[1]).pack(side='right',padx=(4,0))
+            verb='Buy' if source['kind']=='shop' else 'Break / collect'
+            title=f"{verb}: {source['name']}"
+            if source.get('price') is not None:title+=f" · {source['price']:,.0f} mesos each"
+            title+='\n'+target[1]
+            if source.get('citizen'):title+=' · '+str(source['citizen'])+' required'
+            info=link(row,title,route,bg=bg,size=8,anchor='w',justify='left',wraplength=max(140,self.wrap(110)))
+            info.pack(side='left',fill='x',expand=True)
+            Tooltip(info,('Break the named object and collect its drops. Drop reports are community sourced; drops are not guaranteed.\n' if source['kind']=='breakable' else 'Buy from the named NPC. Any citizenship requirement is shown.\n')+source.get('source',''))
+        if sources and not all_sources and (len(sources)>1 or len(sources[0].get('maps',[]))>1):
+            button(parent,'Other sources…',lambda:self.open_acquisition_sources(qid,step),bg=bg,size=8,padx=6).pack(anchor='w',padx=14,pady=(0,3))
+
+    def open_acquisition_sources(self,qid,step):
+        window=self.ui_dialog('Sources · '+step['name'])
+        area=ScrollArea(window);area.pack(fill='both',expand=True)
+        for source in item_sources.ranked_sources(step.get('sources') or [],self.distances()):
+            for target in sorted(source.get('maps') or [],key=lambda row:self.distances().get(row[0],10**9)):
+                self.render_acquisition_sources(area.inner,'bg',qid,{'sources':[{**source,'maps':[target]}]},True)
+        area.commit()
 
     def render_map_line(self, parent, bg, qid, line, sort="mobs", limit=MAX_MAPS):
         row = tk.Frame(parent, bg=C[bg])
@@ -3509,14 +3540,18 @@ class App:
                               "note": "" if maps else "Location unknown"})
             else:
                 lines = []
-                for mid in self.rank_droppers(q, need)[:MAX_DROPPERS]:
+                try:droppers=self.rank_droppers(q,need)[:MAX_DROPPERS]
+                except Exception:droppers=[]
+                for mid in droppers:
                     mob = self.db.monsters.get(mid, {})
                     maps = self._maps(self.db.mob_locations(mid))
                     if maps:
                         lines.append({"prefix": f"Drops from {mob.get('display', 'Monster ' + str(mid))} "
                                                 f"(Lv {mob.get('level', '?')}):", "mob": mid, "maps": maps})
-                steps.append({"name": need["name"], "count": count, "lines": lines,
-                              "note": "" if lines else "Not a monster drop: check the quest text"})
+                try:sources=self.db.item_acquisition_sources(need['itemId'],need['name'])
+                except Exception:sources=item_sources.shop_sources(self.db.sold_by.get(str(need['itemId'])) or [],self.db.maps)
+                steps.append({"name": need["name"], "count": count, "lines": lines,'sources':sources,
+                              "note": "" if lines or sources else "Source not listed yet"})
         return steps
 
     def rank_droppers(self, q, need):

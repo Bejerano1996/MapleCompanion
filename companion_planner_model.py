@@ -48,9 +48,12 @@ def planner_objectives(state, quests, guides):
                 mobs.add(str(need['mobId']))
             if index < len(steps):
                 mobs.update(str(line['mob']) for line in steps[index].get('lines', []) if line.get('mob') is not None)
+            sources=steps[index].get('sources',[]) if index<len(steps) else []
+            source_maps=sorted({row[0] for source in sources if not source.get('citizen') for row in source.get('maps',[])})
             objectives.append({'id': f'{qid}:{index}', 'qid': qid, 'index': index,
                                'quest': quest.get('name', qid), 'name': need.get('name', 'Objective'),
                                'remaining': max(0, target-current), 'mobs': sorted(mobs),
+                               'source_maps':source_maps,
                                'kind': 'hunt' if need.get('mobId') is not None else 'collect'})
     return objectives
 
@@ -62,7 +65,7 @@ def planner_itinerary(start, map_data, objectives, max_stops=20):
     coverage = {}
     for mid, record in map_data.items():
         mobs = {str(m['id']) for m in record.get('monsters', []) if m.get('id') is not None}
-        matches = {key for key, objective in pending.items() if mobs.intersection(objective['mobs'])}
+        matches = {key for key, objective in pending.items() if mobs.intersection(objective['mobs']) or str(mid) in objective.get('source_maps',[])}
         if matches:
             coverage[str(mid)] = matches
     stops = []
@@ -86,7 +89,7 @@ def planner_itinerary(start, map_data, objectives, max_stops=20):
     unplanned = []
     for objective in pending.values():
         entry = dict(objective)
-        entry['reason'] = ('Source not loaded' if not objective['mobs'] else
+        entry['reason'] = ('Source not loaded' if not objective['mobs'] and not objective.get('source_maps') else
                            'No cached location' if not any(objective['id'] in ids for ids in coverage.values()) else
                            'Stop limit reached' if len(stops) >= max_stops else 'No known portal route')
         unplanned.append(entry)

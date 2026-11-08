@@ -28,7 +28,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='2.2.1-companion'
+    core['VERSION']='2.3.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -355,9 +355,13 @@ def integrate(Base,core):
             try:objective=self.next_objective()
             except KeyError:objective=None
             label(w,objective[0] if objective else 'Add a quest or open the quest suggestions.',size=13,bold=True,wraplength=420).pack(fill='x',padx=18,pady=12)
-            qid=self.focused() or next((q for q in self.state['active'] if q in self.db.quests),None)
+            qid=self.focused() or (self.state.get('expanded') if self.state.get('expanded') in self.state['active'] else None) or next((q for q in self.state['active'] if q in self.db.quests),None)
             if qid:
                 area=ScrollArea(w);area.pack(fill='both',expand=True)
+                for index,step in enumerate(self.guides.get(qid) or []):
+                    if index not in self.done_steps(qid) and step.get('sources'):
+                        self.render_acquisition_sources(area.inner,'bg',qid,step)
+                        break
                 self.render_quest_guide(area.inner,'bg',qid,key='companion-overview:'+qid);area.commit()
             ui_button(w,'Open quest journal',lambda:(w.destroy(),self.ui_open_journal(qid)),primary=True).pack(fill='x',padx=18,pady=10)
 

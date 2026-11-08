@@ -1,4 +1,4 @@
-# Umbrale Companion 2.2.0-companion
+# Umbrale Companion 2.3.0-companion
 
 This project combines the supplied Umbrale 2.0.0 source with the Maple Companion interface and utilities. Original source notices and documentation are retained.
 
@@ -24,6 +24,14 @@ The original Umbrale route engine, portal rendering and minimap detection are re
 
 Automatic prices come from maplestory.watch's public endpoints, with timestamps and offline/cache status. MesoWatch is a separate website: its button opens https://beta.meso.watch/ and supports copying an item name and saving an explicitly manual price note. This release does not claim an automatic MesoWatch API integration.
 
+## Quest acquisition sources
+
+Version 2.3 adds shops and breakables to unfinished item objectives. A compact source row shows the action, merchant or object, map, optional price/access condition, and GPS. Other sources lists alternatives. The GPS routes to the merchant or gathering map; breakable coordinates and guaranteed drops are not claimed. The itinerary can include these maps without inventing monster drops. Cached guide schema 4 refreshes older monster-only guides.
+
+Validated examples: Salad from 24 Hr Mobile Store in Ant Tunnel Park (220 mesos each), and Plant Sample from Ellinia Flower on five maps. Source pages: https://meowdb.com/msclassic/npcs/614 and https://meowdb.com/msclassic/breakables/0000003 . Breakable drop associations are community reports.
+
+The HTTPS resource missing from the 2.2 Windows package is included. Packaged first-run data loading was checked with certificate and hostname verification enabled. Desktop deployment updates only program files and checks that the saved-state file is unchanged during copying.
+
 ## Validation
 
 - 140 original logic checks passed.
@@ -35,6 +43,8 @@ Automatic prices come from maplestory.watch's public endpoints, with timestamps 
 - 40 native GPS docking checks passed: minimap detection, right-edge placement, height matching across three screenshots at all three text sizes, route steps, undocking and re-docking, and callback errors.
 - Packaged Windows OCR read the supplied static fixture successfully without desktop capture.
 - A two-hour source UI lifecycle check completed 432 cycles in 7,200.1 seconds with no callback errors. Measured font objects stayed at 45; temporary windows returned to zero after each cycle. Final startup, status and icon refinements were covered by the focused final checks and packaged OCR validation.
+
+For 2.3, seven acquisition-model tests and eleven acquisition-interface checks passed, including generic boxes, source scoping, nearest maps, citizenship requirements, correct merchant GPS targets, plant maps, completed-objective hiding, and drop-lookup failures. The original 140 logic checks, 26 integration checks and 34 pre-existing model tests also passed. The two-hour lifecycle run above belongs to the 2.2 interface work; no new two-hour run is claimed for 2.3.
 
 These checks do not establish live traversal through the game. The executable was built successfully; it has not been independently exercised through a complete live game route. Original test_flicker.py was retained but not run.
 
