@@ -44,6 +44,43 @@ class RewardsTests(unittest.TestCase):
    events=[('mesos',v if rng.random()<.45 else None) for v in values]
    total+=t.feed(RewardRead(events,False,(),positions))['mesos']
   self.assertEqual(total,0)
+ def test_partial_tail_uncover_never_recredits_baseline(self):
+  from session_reader import RewardRead
+  t=RewardTracker(confirm_money=2)
+  full=RewardRead([('mesos',10),('mesos',20),('mesos',30)],False,(),[(0,12),(20,12),(40,12)])
+  covered=RewardRead(full[:2],True,(),full.positions[:2])
+  t.feed(full);t.feed(covered)
+  self.assertEqual(t.feed(full)['mesos']+t.feed(full)['mesos'],0)
+ def test_partial_visible_new_pickup_still_counts(self):
+  from session_reader import RewardRead
+  t=RewardTracker(confirm_money=2);old=RewardRead([('mesos',10),('mesos',20)],False,(),[(0,12),(20,12)])
+  new=RewardRead(old+[('mesos',30)],True,(),old.positions+[(40,12)])
+  t.feed(old);self.assertEqual(t.feed(new)['mesos'],0);self.assertEqual(t.feed(new)['mesos'],30)
+  self.assertEqual(t.feed(new)['mesos'],0)
+ def test_real_scroll_during_partial_coverage_still_counts(self):
+  from session_reader import RewardRead
+  positions=[(0,12),(20,12),(40,12)]
+  t=RewardTracker(confirm_money=2)
+  t.feed(RewardRead([('exp',7),('bonus',2),('mesos',10)],False,(),positions))
+  new=RewardRead([('bonus',2),('mesos',10),('mesos',18)],True,(),positions)
+  self.assertEqual(t.feed(new)['mesos'],0);self.assertEqual(t.feed(new)['mesos'],18)
+  self.assertEqual(t.feed(new)['mesos'],0)
+ def test_partial_hidden_cache_is_bounded_and_keeps_visible_rows(self):
+  from session_reader import RewardRead
+  t=RewardTracker();events=[('mesos',i+1) for i in range(200)];positions=[(20*i,12) for i in range(200)]
+  t.feed(RewardRead(events,False,(),positions));t.feed(RewardRead(events[:2],True,(),positions[:2]))
+  self.assertLessEqual(len(t.previous),128);self.assertEqual(t.positions[:2],positions[:2])
+  t.feed(None);self.assertIsNone(t.previous);self.assertEqual(t.positions,[])
+  self.assertEqual(t.feed(RewardRead(events,False,(),positions))['mesos'],0)
+ def test_new_reward_uncovered_after_proven_scroll_still_counts(self):
+  from session_reader import RewardRead
+  old=[('exp',5),('bonus',1),('mesos',10),('exp',7),('bonus',2),('mesos',20)]
+  positions=[(20*i,12) for i in range(6)];t=RewardTracker(confirm_money=2)
+  t.feed(RewardRead(old,False,(),positions));t.feed(RewardRead(old[:5],True,(),positions[:5]))
+  moved=old[1:]+[('exp',9)]
+  self.assertEqual(t.feed(RewardRead(moved[:5],True,(),positions[:5]))['exp'],0)
+  self.assertEqual(t.feed(RewardRead(moved,False,(),positions))['exp'],9)
+  self.assertEqual(t.feed(RewardRead(moved,False,(),positions))['exp'],0)
  def test_clear_money_does_not_require_second_frame(self):
   from session_reader import RewardRead
   t=RewardTracker(confirm_money=2);t.feed([])

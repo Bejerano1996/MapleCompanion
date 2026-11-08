@@ -28,9 +28,9 @@ def reward_kind(text):
     return None
 
 class RewardTracker:
-    def __init__(self,confirm_money=1):self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.confirm_money=max(1,int(confirm_money));self.replacement=None;self.replacement_reads=0;self.positions=[]
+    def __init__(self,confirm_money=1):self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.confirm_money=max(1,int(confirm_money));self.replacement=None;self.replacement_reads=0;self.positions=[];self.was_partial=False
     @staticmethod
-    def _align(old,current,old_positions=(),positions=()):
+    def _align(old,current,old_positions=(),positions=(),prefer_stationary=False):
         # Preserve row identity when OCR temporarily misses an amount or inserts a row.
         n,m=len(old),len(current);dp=[[0]*(m+1) for _ in range(n+1)]
         spatial=len(old_positions)==n and len(positions)==m and bool(n and m)
@@ -41,6 +41,10 @@ class RewardTracker:
             if shifts:
                 tolerance=max(5,min(p[1] for p in positions)*.4)
                 shift=max(shifts,key=lambda s:(sum(abs(v-s)<=tolerance for v in shifts),-abs(s)))
+                if prefer_stationary:
+                    overlaps=[(a,b) for i,a in enumerate(old) for j,b in enumerate(current)
+                        if abs(old_positions[i][0]-positions[j][0])<=tolerance]
+                    if overlaps and all(a[0]==b[0] and (a[1] is None or b[1] is None or a[1]==b[1]) for a,b in overlaps):shift=0
                 stable_partial=(n==m and any(a[1] is None for a in old+current)
                     and all(a[0]==b[0] for a,b in zip(old,current))
                     and all(abs(a[0]-b[0])<=tolerance for a,b in zip(old_positions,positions)))
@@ -68,22 +72,44 @@ class RewardTracker:
             elif dp[i][j]==dp[i+1][j]:i+=1
             else:j+=1
         return pairs
+    def _retain_hidden(self,old,current,credited,seen,positions,pairs,partial):
+        """Carry missing row credits only while coverage is partial; cap memory."""
+        if not partial or not old or len(self.positions)!=len(old) or len(positions)!=len(current) or not pairs:
+            return current,credited,seen,positions
+        offsets=sorted(positions[j][0]-self.positions[i][0] for i,j in pairs)
+        shift=offsets[len(offsets)//2]
+        tolerance=max(5,min(p[1] for p in positions)*.4)
+        anchors={old[i] for i,j in pairs if old[i]==current[j] and old[i][1] is not None}
+        if abs(shift)>tolerance and len(anchors)<2:return current,credited,seen,positions
+        entries=[(positions[j],row,credited[j],seen[j]) for j,row in enumerate(current)]
+        hidden=[]
+        matched={i for i,j in pairs}
+        for i,row in enumerate(old):
+            y=self.positions[i][0]+shift;h=self.positions[i][1]
+            if i in matched or y<0 or any(abs(y-p[0])<=max(5,min(h,p[1])*.4) for p in positions):continue
+            hidden.append(((y,h),row,self.credited[i],self.seen[i]))
+        hidden.sort(key=lambda item:item[0][0])
+        budget=max(0,128-len(entries))
+        if budget:entries.extend(hidden[-budget:])
+        entries.sort(key=lambda item:item[0][0])
+        return [e[1] for e in entries],[e[2] for e in entries],[e[3] for e in entries],[e[0] for e in entries]
     def feed(self,events):
         self.refined_party_exp=0;self.trailing_party_exp=0
         totals={'exp':0,'mesos':0,'kills':0,'party_exp':0}
-        if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.replacement=None;self.replacement_reads=0;self.positions=[];return totals
+        if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.replacement=None;self.replacement_reads=0;self.positions=[];self.was_partial=False;return totals
+        partial=bool(getattr(events,'partial',False))
         current=[tuple(row) for row in events]
         positions=getattr(events,'positions',())
         if not current:
             # A masked empty image cannot prove the old notices disappeared.
-            if getattr(events,'partial',False):return totals
+            if partial:self.was_partial=True;return totals
             self.replacement=None;self.replacement_reads=0
             if self.previous is None:self.previous=[];self.credited=[];self.seen=[]
             self.blanks+=1
-            if self.blanks>=4:self.previous=[];self.credited=[];self.seen=[];self.positions=[]
+            if self.blanks>=4:self.previous=[];self.credited=[];self.seen=[];self.positions=[];self.was_partial=False
             return totals
         self.blanks=0;old=self.previous
-        if old is None:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);self.positions=positions;return totals
+        if old is None:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);self.positions=positions;self.was_partial=partial;return totals
         # A fully replaced notice stack of the same kinds used to align forever
         # as OCR corrections, suppressing genuine later pickups. Require stable
         # replacement readings; a one-frame fading digit must still add nothing.
@@ -95,8 +121,8 @@ class RewardTracker:
             if self.replacement_reads<max(2,self.confirm_money):return totals
             replacement_reads=self.replacement_reads;old=[]
         self.replacement=None;self.replacement_reads=0
-        pairs=self._align(old,current,self.positions,positions)
-        if old and not pairs:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);self.positions=positions;return totals
+        pairs=self._align(old,current,self.positions,positions,partial or self.was_partial)
+        if old and not pairs:self.previous=current;self.credited=[True]*len(current);self.seen=[1]*len(current);self.positions=positions;self.was_partial=partial;return totals
         previous_credit=self.credited;previous_seen=self.seen
         last=pairs[-1][1] if pairs else -1
         credited=[j<=last for j in range(len(current))]
@@ -119,7 +145,8 @@ class RewardTracker:
                     totals['party_exp']+=amount
                     if j in old_by_new and old[old_by_new[j]][1] is None:self.refined_party_exp+=amount
                     if j>last and j>0 and j-1 in old_by_new and current[j-1][0]=='exp' and current[j-1][1] is not None:self.trailing_party_exp+=amount
-        self.previous=current;self.credited=credited;self.seen=seen;self.positions=positions
+        current,credited,seen,positions=self._retain_hidden(old,current,credited,seen,positions,pairs,partial)
+        self.previous=current;self.credited=credited;self.seen=seen;self.positions=positions;self.was_partial=partial
         return totals
 
 
