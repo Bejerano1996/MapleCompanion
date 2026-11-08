@@ -113,10 +113,11 @@ def training_forecast_text(self):
 
 def training_render_levelup(self):
     f=self.training_forecast_now();r=self.state.get('character_exp')
-    spec=('training-v3',tuple(sorted((r or {}).items())),tuple(sorted(f.items())),widgets.text_scale)
+    width=self.panel_width()
+    spec=('training-v4',tuple(sorted((r or {}).items())),tuple(sorted(f.items())),widgets.text_scale,width)
     if spec==self._lvl_spec:return
     self._lvl_spec=spec
-    style=(widgets.text_scale,self.panel_width());nodes=getattr(self.lvl_strip,'_training_nodes',None)
+    style=(widgets.text_scale,);nodes=getattr(self.lvl_strip,'_training_nodes',None)
     if not nodes or nodes[2]!=style or not nodes[0].winfo_exists():
         for child in self.lvl_strip.winfo_children():child.destroy()
         head=tk.Frame(self.lvl_strip,bg=C['card']);head.pack(fill='x',padx=6,pady=3)
@@ -125,7 +126,7 @@ def training_render_levelup(self):
         counter=label(self.lvl_strip,bg='card',size=8,anchor='w',justify='left',wraplength=max(200,self.panel_width()-35));counter.pack(fill='x',padx=6,pady=(0,4))
         nodes=(percent,counter,style);self.lvl_strip._training_nodes=nodes
     nodes[0].config(text=f"EXP {r.get('percent',0):.2f}%" if r else 'EXP —')
-    nodes[1].config(text=self.training_forecast_text().split('\n')[0],fg=C['gold'] if f['available'] else C['muted'])
+    nodes[1].config(text=self.training_forecast_text().split('\n')[0],fg=C['gold'] if f['available'] else C['muted'],wraplength=max(200,width-35))
     if getattr(self,'_training_setup_refresh',None):self._training_setup_refresh()
 
 def training_refresh_exp_pill(self):

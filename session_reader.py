@@ -62,9 +62,11 @@ def read_reward_image(image,include_pending=False):
     for group in sorted(groups,key=lambda g:g['y']):
         parts=sorted(group['parts']);text=' '.join(p[1] for p in parts)
         score=sum(len(p[1])*p[2] for p in parts)/max(1,sum(len(p[1]) for p in parts))
+        # A long clear prefix must not hide an uncertain numeric OCR box.
+        amount_score=min((p[2] for p in parts if any(c.isdigit() for c in p[1])),default=score)
         event=reward_event(text)
-        if event and score>=.75:
-            if event[0]=='mesos' and score>=.95:trusted_money.append(len(result))
+        if event and score>=.75 and amount_score>=.75:
+            if event[0]=='mesos' and score>=.95 and amount_score>=.95:trusted_money.append(len(result))
             result.append(event)
             positions.append((group['y'],group['h']))
         elif include_pending and score>=.7:
