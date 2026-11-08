@@ -99,6 +99,8 @@ def session_token(session):
 
 def apply_rewards(session,token,delta):
     if session_token(session)!=token or session.get('running_since') is None or not session.get('auto_rewards',True):return False
-    for key in ('exp','mesos','kills','party_exp'):session[key]=session.get(key,0)+delta.get(key,0)
+    for key in ('exp','mesos','kills','party_exp'):
+        if key=='mesos' and session.get('money_mode')=='wallet':continue
+        session[key]=session.get(key,0)+delta.get(key,0)
     if delta.get('kills'):session['kills_estimated']=True
     return any(delta.values())

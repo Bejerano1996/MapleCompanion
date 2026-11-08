@@ -47,5 +47,26 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     check('Save retains live totals',a.state['utility_session']['exp']==9 and a.state['utility_session']['cost']==12)
     a._reward_last_poll=0;a.utility_poll_rewards();late=pending.pop(0);a.state['utility_session']['running_since']=None;late([('exp',7),('bonus',2),('mesos',10),('exp',100)])
     check('Paused session rejects pending read',a.state['utility_session']['exp']==9)
+    next(v for v in ui_walk_widgets(root) if isinstance(v,tk.Button) and v.cget('text')=='Mesos · wallet checkpoints').invoke();pump()
+    dialog=next(w for w in root.winfo_children() if isinstance(w,tk.Toplevel) and 'wallet checkpoints' in w.title())
+    entries=[v for v in ui_walk_widgets(dialog) if isinstance(v,tk.Entry)]
+    entries[0].insert(0,'10,000');entries[1].insert(0,'12,345')
+    next(v for v in ui_walk_widgets(dialog) if isinstance(v,tk.Button) and v.cget('text')=='Apply wallet checkpoint').invoke();pump()
+    check('Wallet replaces incomplete notices',a.state['utility_session']['mesos']==2345 and a.state['utility_session']['exp']==9)
+    from companion_feature_model import utility_session_rates
+    check('Wallet spending not subtracted twice',utility_session_rates(a.state['utility_session'])['net_mesos']==2345)
+    a.state['utility_session']['running_since']=100
+    from session_rewards import apply_rewards
+    apply_rewards(a.state['utility_session'],session_token(a.state['utility_session']),dict(mesos=999))
+    check('Wallet ignores log money',a.state['utility_session']['mesos']==2345)
+    next(v for v in ui_walk_widgets(root) if isinstance(v,tk.Button) and v.cget('text')=='Mesos · wallet checkpoints').invoke();pump()
+    next(v for v in ui_walk_widgets(root) if isinstance(v,tk.Button) and v.cget('text')=='Start automatic wallet reading').invoke();pump()
+    def wallet_read(value):
+        pending.clear();a._reward_busy=False;a._reward_last_poll=0;a.utility_poll_rewards()
+        pending.pop()({'events':[],'character':None,'wallet':value})
+    wallet_read(179029);wallet_read(179069)
+    check('Automatic wallet differences replace loot log',a.state['utility_session']['mesos']==40)
+    a.state['utility_session']['running_since']=101;wallet_read(190000);wallet_read(190010)
+    check('Resume excludes offline wallet changes',a.state['utility_session']['mesos']==50)
     check('No callback errors',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()

@@ -121,3 +121,9 @@ The first release under the new name: a redesigned in-game overlay.
 - Money notices with OCR confidence at least0.95 can credit once; weaker notices still require agreement across two reads.
 - Handle observed received-to-receited OCR spelling. Live3.0.4 reader now shows rewards and kill events, but fast fading money notices missed the two-frame requirement.
 - Full live accuracy remains under validation; no exact wallet or kill telemetry is available.
+
+## 3.1.0 — Wallet net balance
+- Optional automatic wallet OCR anchored to ITEM INVENTORY and MESOS, accepting one unambiguous high-confidence adjacent balance.
+- Net balance replaces partial pickup totals; pauses rebaseline; historical comparisons handle wallet losses without double costs.
+- Manual checkpoints and last-read age; clear requirement for visible inventory in upper-right of game.
+- Live independent OCR read179029,179069,179103,179126,179152;123mesos difference. Packaged wallet fixture and installed UI still require final verification.

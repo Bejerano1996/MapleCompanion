@@ -13,3 +13,7 @@
 Formula reference, verified 2026-10-29: https://meowdb.com/msclassic/formulas/leveling
 
 Validation reports distinguish supplied screenshot fixtures, synthetic streams, and any actual live checks. The timed soak records source revisions; it does not claim three hours of live gameplay.
+
+## Wallet balance mode (3.1)
+Session → Mesos · wallet checkpoints → Start automatic wallet reading.
+Keep ITEM INVENTORY open in the upper-right 30% of the game, within its top65%, with the balance and MESOS label unobscured. The first verified reading starts a new money baseline. Readings are attempted about every3seconds when the reader is free. Closing or covering the inventory preserves the last checkpoint; the reading age shows freshness. This measures net wallet change including spending, trades and storage transfers, not gross loot. Loot notices are ignored for money in wallet mode. Costs are not subtracted twice. Resume rebaselines and excludes offline balance changes. Manual starting/current balances are an alternative. Wallet reading never opens the inventory or sends game input.

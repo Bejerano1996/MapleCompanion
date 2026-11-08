@@ -59,6 +59,8 @@ def utility_poll_rewards(self):
     tracker=self._reward_tracker;accountant=self._training_accountant;self._reward_busy=True
     read_status=time.monotonic()-getattr(self,'_training_last_hud',0)>=1
     if read_status:self._training_last_hud=time.monotonic()
+    read_wallet=bool(session.get('wallet_auto')) and time.monotonic()-getattr(self,'_wallet_last_poll',0)>=3
+    if read_wallet:self._wallet_last_poll=time.monotonic()
     def loaded(result):
         events=result.get('events') if isinstance(result,dict) else result
         reading=result.get('character') if isinstance(result,dict) else None
@@ -68,6 +70,15 @@ def utility_poll_rewards(self):
         self._reward_status='Game or reward area unavailable' if events is None else ('Reading reward log · some amounts unclear' if any(amount is None for kind,amount in events) else 'Reading reward log') if events else 'Waiting for visible rewards'
         if getattr(events,'partial',False):self._reward_status+=' · partially covered; visible rows only'
         changed=accountant.feed(current,token,events,reading,time.monotonic())
+        wallet=result.get('wallet') if isinstance(result,dict) else None
+        if wallet is not None and current.get('wallet_auto'):
+            from wallet_model import checkpoint
+            if getattr(self,'_wallet_scope',None)!=token:
+                current.update(wallet_start=wallet,wallet_offset=current.get('wallet_net',0))
+                if current.get('wallet_elapsed_anchor') is None:current['wallet_elapsed_anchor']=utility_session_elapsed(current)
+                self._wallet_scope=token
+            current=checkpoint(current,wallet,current.get('wallet_start') if current.get('wallet_start') is not None else wallet)
+            current['wallet_read_at']=time.time();self.state['utility_session']=current;changed=True
         if reading and accountant.character is reading:
             self.training_accept_character(reading)
             changed=True
@@ -76,7 +87,7 @@ def utility_poll_rewards(self):
         self.root.after(450,self.utility_poll_rewards)
     def failed(error):
         self._reward_busy=False;self._reward_status='Reader unavailable · '+str(error)[:90]
-    self.run_bg(lambda:capture_training(hide,read_status),loaded,on_error=failed)
+    self.run_bg(lambda:capture_training(hide,read_status,read_wallet=True) if read_wallet else capture_training(hide,read_status),loaded,on_error=failed)
 
 def utility_open(self):
     previous = getattr(self, '_tools_window', None)
@@ -178,6 +189,26 @@ def utility_render_session(self, parent):
     def auto_changed():
         self.state['utility_session']['auto_rewards']=auto.get();self._reward_token=None;self.save_state();refresh()
     tk.Checkbutton(parent,text='Auto read game',variable=auto,command=auto_changed,bg=C['bg'],fg=C['text'],selectcolor=C['card']).pack(anchor='w',padx=20)
+    def wallet_dialog():
+        from wallet_model import checkpoint
+        dialog=self.ui_dialog('Mesos · wallet checkpoints')
+        current=self.state['utility_session']
+        label(dialog,'Wallet net = current balance − starting balance',fg='gold',wraplength=410).pack(padx=16,pady=12)
+        label(dialog,'Enter balances shown in your inventory. Includes spending, trades and storage transfers. Checkpoints update only when you apply them.',fg='muted',wraplength=410,justify='left').pack(padx=16,pady=4)
+        initial=utility_entry(dialog,'STARTING WALLET BALANCE',current.get('wallet_start',''))
+        latest=utility_entry(dialog,'CURRENT WALLET BALANCE',current.get('wallet_current',''))
+        error=label(dialog,'',fg='red',wraplength=400);error.pack(padx=16,pady=6)
+        def save_wallet():
+            try:updated=checkpoint(dict(self.state['utility_session'],wallet_offset=0,wallet_auto=False,wallet_elapsed_anchor=0),latest.get(),initial.get())
+            except ValueError as exc:error.config(text=str(exc));return
+            self.state['utility_session']=updated;self.save_state();refresh();dialog.destroy()
+        ui_button(dialog,'Apply wallet checkpoint',save_wallet,primary=True).pack(fill='x',padx=16,pady=12)
+        def start_wallet():
+            self.state['utility_session'].update(wallet_auto=True,money_mode='wallet',wallet_start=None,wallet_current=None,wallet_net=0,wallet_offset=0,wallet_elapsed_anchor=None,mesos=0)
+            self._wallet_scope=None
+            self.save_state();refresh();dialog.destroy();self.utility_poll_rewards()
+        ui_button(dialog,'Start automatic wallet reading',start_wallet,tip='Keep Item Inventory open in the upper-right of the game; net balance starts at the first verified reading').pack(fill='x',padx=16,pady=8)
+    ui_button(parent,'Mesos · wallet checkpoints',wallet_dialog,compact=True,tip='Measure net balance directly; avoids missed loot notices').pack(anchor='w',padx=20,pady=4)
     form = ui_card(parent)
     fields = {key: utility_entry(form, title, s.get(key, 0)) for key, title in
               [('kills', 'KILLS ≈'), ('exp', 'EXP GAINED'), ('mesos', 'MESOS OBSERVED'), ('cost', 'POTIONS / OTHER COSTS')]}
@@ -186,7 +217,7 @@ def utility_render_session(self, parent):
     feedback.pack(fill='x', padx=12)
     def apply():
         try:
-            values = {key: int(utility_number(var.get())) for key, var in fields.items() if key=='cost' or not self.state['utility_session'].get('auto_rewards',True)}
+            values = {key: int(utility_number(var.get())) for key, var in fields.items() if key=='cost' or (not self.state['utility_session'].get('auto_rewards',True) and not (key=='mesos' and self.state['utility_session'].get('money_mode')=='wallet'))}
         except ValueError as exc:
             feedback.config(text=str(exc), fg=C['red'])
             return False
@@ -203,13 +234,15 @@ def utility_render_session(self, parent):
         rates = utility_session_rates(current)
         elapsed.config(text=utility_format_time(rates['seconds']))
         start.config(text='Pause' if current.get('running_since') is not None else 'Start / resume')
-        metrics.config(text=f"{current.get('exp',0):,} EXP · party +{current.get('party_exp',0):,} seen\n≈{current.get('kills',0):,} kills · {current.get('mesos',0):,} mesos\n{rates['exp_hour']:,.0f} EXP/h · {rates['net_hour']:,.0f} net mesos/h")
+        money_label='wallet net' if current.get('money_mode')=='wallet' else 'mesos observed ≈'
+        metrics.config(text=f"{current.get('exp',0):,} EXP · party +{current.get('party_exp',0):,} seen\n≈{current.get('kills',0):,} kills · {current.get('mesos',0):,} {money_label}\n{rates['exp_hour']:,.0f} EXP/h · {rates['net_hour']:,.0f} net mesos/h")
         automatic=current.get('auto_rewards',True)
         auto.set(automatic)
         for key in ('kills','exp','mesos'):
-            if automatic:fields[key].set(str(current.get(key,0)))
+            readonly=automatic or (key=='mesos' and current.get('money_mode')=='wallet')
+            if readonly:fields[key].set(str(current.get(key,0)))
             for widget in form.winfo_children():
-                if isinstance(widget,tk.Entry) and str(widget.cget('textvariable'))==str(fields[key]):widget.config(state='readonly' if automatic else 'normal',readonlybackground=C['header_dark'])
+                if isinstance(widget,tk.Entry) and str(widget.cget('textvariable'))==str(fields[key]):widget.config(state='readonly' if readonly else 'normal',readonlybackground=C['header_dark'])
         if automatic:message.config(text=(getattr(self,'_reward_status','Start to read the reward log') if current.get('running_since') is not None else 'Paused · press Start / resume')+' · Kills ≈ EXP events, including party. Keep the reward log visible.')
         else:message.config(text='Manual mode · enter totals and save.')
         if current.get('map_unattributed'):
@@ -230,6 +263,10 @@ def utility_render_session(self, parent):
         freshness=f'EXP read {int(age)}s ago' if age is not None else 'Waiting for EXP baseline'
         paused='Paused · ' if current.get('running_since') is None else ''
         message.config(text=paused+source+' · '+freshness+'\n'+quality+' · Mesos / kills: observed estimates' if automatic else 'Manual totals · costs and notes saved separately')
+        if current.get('money_mode')=='wallet':
+            wallet_at=current.get('wallet_read_at')
+            wallet_status=(f'Wallet read {int(time.time()-wallet_at)}s ago' if wallet_at else 'Waiting for wallet baseline') if current.get('wallet_auto') else 'Manual wallet checkpoint'
+            message.config(text=paused+source+' · '+freshness+'\n'+wallet_status+' · net incl. spending / transfers')
     self._utility_refresh = refresh
     refresh()
     history_area = tk.Frame(parent, bg=C['bg'])

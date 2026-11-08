@@ -3761,6 +3761,16 @@ App = integrate(App, globals())
 
 
 if __name__ == "__main__":
+    if len(sys.argv)==4 and sys.argv[1]=='--check-wallet-image':
+        try:
+            from session_reader import ocr_rows,wallet_from_rows
+            value=wallet_from_rows(ocr_rows(Image.open(sys.argv[2])))
+            report={'ok':value is not None,'wallet':value}
+        except Exception:
+            import traceback
+            report={'ok':False,'error':traceback.format_exc()}
+        with open(sys.argv[3],'w',encoding='utf-8') as f:json.dump(report,f)
+        sys.exit()
     if len(sys.argv)==4 and sys.argv[1]=='--check-character-image':
         from session_reader import read_character_image
         try:
