@@ -274,7 +274,13 @@ def read_exp_bar(img):
         area = area.crop((int(mp["x"] + step * 0.95), int(mp["y"] - mp["h"] * 0.4),
                           int(mp["x"] + step * 2.05), int(mp["y"] + mp["h"] * 1.4)))
     elif not any("%" in l["text"] for l in lines):
-        return []  # no status bar here (hidden, or not the game)
+        # A clipped or shifted game window can place EXP outside the usual crop.
+        # Require the integer and percentage to identify one supported level.
+        from session_reader import read_character_image
+        reading = read_character_image(img.crop((0, top, w, h)))
+        if reading:
+            return [f"Lv {reading['level']}", f"EXP {reading['exp']} [{reading['percent']:.2f}%]"]
+        return []
     versions = [_bright_text(area, cut, scale) for cut, scale in EXP_TEXT_VERSIONS]
     return [l["text"] for l in screen_ocr.read_lines(*versions)]
 
