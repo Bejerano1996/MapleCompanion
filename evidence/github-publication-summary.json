@@ -1,0 +1,15 @@
+{
+  "repository": "https://github.com/Bejerano1996/MapleCompanion",
+  "versions": 63,
+  "program_and_source_archives": 116,
+  "all_archive_crc_passed": true,
+  "all_remote_archive_sha256_verified": true,
+  "latest_tag": "umbrale-v3.36",
+  "windows_workflow_validation": "success",
+  "workflow_run": "https://github.com/Bejerano1996/MapleCompanion/actions/runs/42471231454",
+  "release_tool_tests_passed": 6,
+  "legacy_5_1_character_backup_redaction_verified": true,
+  "anonymous_download_probe": "HTTP504 from current network; not claimed verified",
+  "future_publication": "validated local package hook plus GitHub Actions on new source version",
+  "game_or_companion_restarted": false
+}
