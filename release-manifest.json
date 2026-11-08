@@ -1,61 +1,62 @@
 {
-  "version": "3.4.0-companion",
-  "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
+  "version": "3.5.0-companion",
+  "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
   "checks": {
-    "ok": true,
-    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
     "cases": [
       {
-        "fixture": "live_exp_2560.png",
         "character": {
           "level": 26,
           "exp": 29285,
           "percent": 53.34,
           "need": 54900,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_exp_2560.png"
       },
       {
-        "fixture": "live_frame_ant_tunnel2.png",
         "character": {
           "level": 25,
           "exp": 5299,
           "percent": 11.22,
           "need": 47216,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_frame_ant_tunnel2.png"
       },
       {
-        "fixture": "live_frame_1920.png",
         "character": {
           "level": 25,
           "exp": 5340,
           "percent": 11.31,
           "need": 47216,
           "source": "EXP+percent"
-        }
+        },
+        "fixture": "live_frame_1920.png"
       },
       {
-        "fixture": "session-rewards-fixture.png",
         "totals": {
           "exp": 9,
           "mesos": 27,
           "kills": 1,
           "party_exp": 2
-        }
+        },
+        "fixture": "session-rewards-fixture.png"
       },
       {
-        "fixture": "party-rewards-fixture.png",
         "totals": {
           "exp": 4,
           "mesos": 0,
           "kills": 0,
           "party_exp": 4
-        }
+        },
+        "fixture": "party-rewards-fixture.png"
       }
-    ]
+    ],
+    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
+    "ok": true
   },
   "context_checks": {
+    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
     "cases": [
       {
         "result": {
@@ -106,28 +107,27 @@
         "file": "context-horny-scene.png"
       }
     ],
-    "ok": true,
-    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd"
+    "ok": true
   },
-  "yield_check": {
+  "reconciliation_check": {
     "ok": true,
-    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
-    "model": "frozen training_yield",
-    "gain": 9,
-    "context_reset": true
+    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
+    "exp": 9,
+    "party_seen": 2,
+    "scope": "All four accounting modules extracted from candidate executable; synthetic delayed-party scenario"
   },
   "synthetic_soak": {
     "running": false,
-    "source_sha": "7ea8b0689202c7e45214d2b89a86e07c537b2f020cc063cb7cccf3b2dde698dd",
+    "source_sha": "3fbd69c085daef8c1e4d506543d72105f0630e2d228fa7ab12c57dedd126eba2",
     "target_seconds": 120.0,
     "ok": true,
     "latest": {
       "seconds": 120.0,
-      "frames": 633,
+      "frames": 634,
       "exp": 5688,
       "party_seen": 1240,
       "mesos_observed": 9185,
-      "mesos_true": 9475,
+      "mesos_true": 9492,
       "fonts": 17,
       "images": 26,
       "jobs": 6,
@@ -148,11 +148,11 @@
       },
       {
         "seconds": 90.0,
-        "frames": 438,
-        "exp": 3933,
-        "party_seen": 858,
-        "mesos_observed": 6348,
-        "mesos_true": 6559,
+        "frames": 439,
+        "exp": 3942,
+        "party_seen": 860,
+        "mesos_observed": 6367,
+        "mesos_true": 6579,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -160,11 +160,11 @@
       },
       {
         "seconds": 120.0,
-        "frames": 633,
+        "frames": 634,
         "exp": 5688,
         "party_seen": 1240,
         "mesos_observed": 9185,
-        "mesos_true": 9475,
+        "mesos_true": 9492,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -174,11 +174,11 @@
     "errors": [],
     "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "validation": "Focused calibration model and native callback/UI tests, current-source120second synthetic Tk stability run, frozen yield model and local OCR fixtures. No live3.4 accuracy claim. Visible species are inferred targets, not definitive kill attribution.",
+  "validation": "Nine timing regression tests including100seeded12-reward schedules, native callback/UI tests, current-source120second synthetic Tk stability run, four frozen accounting modules and local OCR fixtures. No live3.5 accuracy claim. Visible species remain inferred targets.",
   "changes": [
-    "HUD-correlated personal EXP per event",
-    "Three-sample calibration and context expiry",
-    "Mixed visible species estimates",
-    "Reuse EXP widgets"
+    "Avoid counting delayed party bonus twice",
+    "Retain log gains ahead of HUD updates",
+    "Protect subsequent rewards from old missing-bonus credits",
+    "Preserve net losses and level-up math"
   ]
 }

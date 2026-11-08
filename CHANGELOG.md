@@ -147,3 +147,9 @@ The first release under the new name: a redesigned in-game overlay.
 - Unknown party size can use a validated personal yield; multiple visible species get separate formula estimates.
 - Reuse counter widgets on normal EXP updates; preserve explicit manual settings.
 - Focused model/native UI tests and synthetic stability checks; live accuracy remains to be compared.
+
+## 3.5.0 — Reconcile delayed party notices
+- Fixed an offline-reproduced bug that counted a delayed party bonus twice when the HUD became stale (9shownas11).
+- Preserve notices ahead of unchanged HUD reads; reconcile them when HUD advances.
+- Distinguish refinement of an old pending bonus from a new complete reward, avoiding swallowing the next gain.
+- Net-loss and level-up boundaries covered, plus100seeded timing schedules. No live accuracy claim.

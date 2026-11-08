@@ -56,6 +56,7 @@ class RewardTracker:
             else:j+=1
         return pairs
     def feed(self,events):
+        self.refined_party_exp=0
         totals={'exp':0,'mesos':0,'kills':0,'party_exp':0}
         if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.replacement=None;self.replacement_reads=0;self.positions=[];return totals
         current=[tuple(row) for row in events]
@@ -90,6 +91,7 @@ class RewardTracker:
         for i,j in pairs:
             credited[j]=previous_credit[i]
             seen[j]=previous_seen[i]+1 if old[i]==current[j] and current[j][1] is not None else seen[j]
+        old_by_new={j:i for i,j in pairs}
         for j,(kind,amount) in enumerate(current):
             # Fresh, high-confidence money notices can disappear before another
             # OCR pass. Low-confidence amounts still require repeated agreement.
@@ -100,7 +102,9 @@ class RewardTracker:
             elif kind in ('exp','bonus'):
                 totals['exp']+=amount
                 if kind=='exp':totals['kills']+=1
-                else:totals['party_exp']+=amount
+                else:
+                    totals['party_exp']+=amount
+                    if j in old_by_new and old[old_by_new[j]][1] is None:self.refined_party_exp+=amount
         self.previous=current;self.credited=credited;self.seen=seen;self.positions=positions
         return totals
 
