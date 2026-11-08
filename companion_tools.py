@@ -2,6 +2,9 @@ from widgets import font_size
 """Companion utility screens adapted to Umbrale's public App APIs."""
 import tkinter as tk
 import time
+import webbrowser
+from tkinter import ttk
+from class_build_guides import BUILDS, GUIDE_ROOT, CLASS_ROOT
 from widgets import C,FONT,label,ScrollArea,Tooltip
 from companion_widgets import ui_button,ui_card
 from companion_feature_model import *
@@ -137,7 +140,7 @@ def utility_open(self):
         area.commit()
     self._utility_show = show
     buttons = {}
-    for index, (key, title) in enumerate([('session', 'Session'), ('route', 'Quest route'), ('timers', 'Reminders'), ('saved', 'Saved'), ('compare', 'Compare'), ('quick', 'Shortcuts')]):
+    for index, (key, title) in enumerate([('session', 'Session'), ('route', 'Quest route'), ('timers', 'Reminders'), ('saved', 'Saved'), ('compare', 'Compare'), ('quick', 'Shortcuts'), ('classes', 'Class guides')]):
         buttons[key] = ui_button(tabs, title, lambda k=key: show(k), compact=True)
         buttons[key].config(padx=6, font=(FONT, font_size(8)))
         buttons[key].grid(row=index // 3, column=index % 3, sticky='ew', padx=2, pady=2)
@@ -496,6 +499,37 @@ def utility_render_route(self, parent):
 def utility_render_quick(self,parent):
     actions=[('Market prices',self.ui_market),('Add a quest',self.open_add_dialog),('Set your location',self.choose_map),('Sync from game',self.sync_from_game),('Farming watchlist',self.ui_watchlist),('Training suggestions',lambda:self.set_tab('train')),('Party quest guides',lambda:self.set_tab('pq')),('Trainer',self.toggle_trainer),('Profile & appearance',self.ui_settings)]
     for title,action in actions:ui_button(parent,title,action).pack(fill='x',padx=18,pady=5)
+
+def utility_render_classes(self, parent):
+    label(parent, 'Class guides · Levels 1–30', size=12, bold=True).pack(anchor='w', padx=16, pady=8)
+    selected = tk.StringVar(value=next(iter(BUILDS)))
+    picker = ttk.Combobox(parent, textvariable=selected, values=tuple(BUILDS), state='readonly')
+    picker.pack(fill='x', padx=16, pady=(0, 8))
+    body = tk.Frame(parent, bg=C['bg'])
+    body.pack(fill='x', padx=16)
+
+    def render(_event=None):
+        for child in body.winfo_children():
+            child.destroy()
+        build = BUILDS[selected.get()]
+        label(body, 'AP · stats per level', bold=True).pack(anchor='w', pady=(6, 4))
+        for note in build['ap']:
+            label(body, note, wraplength=360, justify='left').pack(anchor='w', pady=(0, 6))
+        label(body, 'SP · cumulative skill targets', bold=True).pack(anchor='w', pady=(6, 4))
+        for level, targets in build['sp']:
+            label(body, f'Lv {level} · {targets}', wraplength=360, justify='left').pack(anchor='w', pady=(0, 4))
+        label(body, 'Targets omit skills that stay unchanged. See the source for every level and alternative builds.',
+              fg='muted', wraplength=360, justify='left').pack(anchor='w', pady=6)
+        label(body, 'Second job · ' + build['next'], wraplength=360, justify='left').pack(anchor='w', pady=4)
+        family = build['family']
+        ui_button(body, 'Full AP / SP guide · NiaMeowDB',
+                  lambda: webbrowser.open(GUIDE_ROOT + family + '-class-guide'), compact=True).pack(fill='x', pady=4)
+        ui_button(body, 'Second-job guides · NiaMeowDB',
+                  lambda: webbrowser.open(CLASS_ROOT + family), compact=True).pack(fill='x', pady=(0, 10))
+
+    picker.bind('<<ComboboxSelected>>', render)
+    render()
+
 
 def install_tools(cls):
     for name,value in list(globals().items()):
