@@ -18,7 +18,7 @@ from companion_market import market_open
 from monster_maps_ui import install_monster_maps
 from quest_rewards_ui import install_quest_rewards
 
-MESOWATCH_URL='https://beta.meso.watch/'
+MESOWATCH_URL='https://meso.watch/'
 
 def apply_palette():
     C.update(base='#ffffff',bg='#f4f3f8',card='#ffffff',card_hi='#fff7ef',
@@ -30,7 +30,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='2.4.0-companion'
+    core['VERSION']='2.5.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -94,7 +94,12 @@ def integrate(Base,core):
                 self.tab_btns[key]=b
             self.tools_btn=ui_button(bar,'⊞',self.ui_tools,compact=True,tip='Tools · Ctrl+K')
             self.tools_btn.pack(side='left',padx=3)
-            ui_button(bar,'¤',self.ui_market,compact=True,tip='Market prices').pack(side='left',padx=3)
+            self.price_btn=ui_button(bar,'',self.ui_market,compact=True,tip='MesoWatch · item prices')
+            self.price_btn.pack(side='left',padx=3)
+            self._utility_icons={}
+            for key,btn in [('money',self.price_btn),('tools',self.tools_btn)]:
+                self._utility_icons[key]=ui_nav_icon(self.root,key)
+                btn.config(image=self._utility_icons[key],text='',width=22,height=22)
             self.profile=tk.Frame(self.body,bg=C['bg']);self.profile.pack(fill='x',before=bar,padx=5,pady=(3,0))
             row=self.profile
             ui_button(row,'Next →',self.companion_overview,primary=True,compact=True,tip='Next objective').pack(side='left')
@@ -151,7 +156,7 @@ def integrate(Base,core):
             self._companion_profile_refresh()
 
         def render(self,keep_scroll=True):
-            if not self.db.quests or getattr(self,'_companion_loading',False) or getattr(self,'_companion_data_error',None):
+            if self.state.get('tab')!='pq' and (not self.db.quests or getattr(self,'_companion_loading',False) or getattr(self,'_companion_data_error',None)):
                 self.scroll.clear(keep_scroll)
                 unavailable=bool(getattr(self,'_companion_data_error',None))
                 label(self.scroll.inner,'Game data unavailable' if unavailable else 'Loading game data…',
@@ -400,30 +405,22 @@ def integrate(Base,core):
             ui_button(w,'Save item',add,primary=True).pack(fill='x',padx=18,pady=8);draw()
 
         def ui_mesowatch(self,item_name=''):
-            w=self.ui_dialog('MesoWatch · price lookup')
-            label(w,'MesoWatch is a separate price source. Open its website to look up prices; any price saved below is your manual note.',fg='muted',wraplength=420,justify='left').pack(fill='x',padx=18,pady=8)
-            name=tk.StringVar(value=item_name);price=tk.StringVar()
-            for title,var in [('Item name',name),('Your recorded price · mesos / unit',price)]:
-                label(w,title,fg='muted').pack(anchor='w',padx=18,pady=(8,2))
-                tk.Entry(w,textvariable=var,font=(FONT, font_size(11))).pack(fill='x',padx=18,ipady=6)
-            feedback=label(w,'',wraplength=420,justify='left');feedback.pack(fill='x',padx=18,pady=10)
-            def saved_note():
-                record=self.state.get('companion_price_notes',{}).get(name.get().strip())
-                feedback.config(text=f"Saved manual quote: {record['price']:,} mesos · {time.strftime('%d %b %H:%M',time.localtime(record['at']))}" if record else 'No recorded quote for this item.')
-            def save():
-                from companion_feature_model import utility_number
-                try:value=int(utility_number(price.get()))
-                except ValueError:feedback.config(text='Enter a valid mesos price.',fg=C['red']);return
-                if not name.get().strip():feedback.config(text='Enter the item name.');return
-                self.state.setdefault('companion_price_notes',{})[name.get().strip()[:120]]={'price':value,'at':time.time(),'source':'MesoWatch — manual user note'}
-                self.save_state();saved_note()
-            def copy_name():
-                w.clipboard_clear();w.clipboard_append(name.get().strip());feedback.config(text='Item name copied. Paste it into MesoWatch search.')
-            ui_button(w,'Open MesoWatch website ↗',lambda:webbrowser.open(MESOWATCH_URL),primary=True).pack(fill='x',padx=18,pady=6)
-            ui_button(w,'Copy item name',copy_name).pack(fill='x',padx=18,pady=4)
-            ui_button(w,'Save manual price note',save).pack(fill='x',padx=18,pady=6)
-            ui_button(w,'Show saved note',saved_note).pack(fill='x',padx=18,pady=4)
-            saved_note()
+            w=self.ui_dialog('MesoWatch · prices')
+            self._market_search_query=tk.StringVar(value=item_name)
+            box=tk.Entry(w,textvariable=self._market_search_query,font=(FONT,font_size(11)),bg=C['card'],fg=C['text'])
+            box.pack(fill='x',padx=18,pady=10,ipady=7)
+            feedback=label(w,'',fg='muted',wraplength=400,justify='left')
+            feedback.pack(fill='x',padx=18,pady=6)
+            def search():
+                name=self._market_search_query.get().strip()
+                if not name:feedback.config(text='Enter an item name.');box.focus_set();return
+                w.clipboard_clear();w.clipboard_append(name);w.update_idletasks()
+                webbrowser.open(MESOWATCH_URL)
+                feedback.config(text='Item copied. Paste into MesoWatch search (Ctrl+V).')
+            box.bind('<Return>',lambda e:search())
+            ui_button(w,'Search MesoWatch ↗',search,primary=True).pack(fill='x',padx=18,pady=8)
+            ui_button(w,'MapleStory Watch · in-app prices',lambda:market_open(self),compact=True).pack(fill='x',padx=18,pady=6)
+            box.focus_set()
 
         def render_item_drops(self,card,bg,iid,item=None):
             super().render_item_drops(card,bg,iid,item)
@@ -433,7 +430,7 @@ def integrate(Base,core):
                 ui_button(row,'Market prices',prices,compact=True).pack(side='left',padx=3)
                 ui_button(row,'MesoWatch ↗',lambda:self.ui_mesowatch(item['name']),compact=True).pack(side='left',padx=3)
 
-        ui_market=market_open
+        def ui_market(self):self.ui_mesowatch()
 
     install_tools(CompanionApp)
     install_monster_maps(CompanionApp)

@@ -162,7 +162,7 @@ class MeowDB:
         self.maps = {m["id"]: m for m in maps}
 
         mobs = self._largest_list(self._rsc(self._get("/monsters", INDEX_MAX_AGE)), r'\[\{"id":', "level")
-        self.monsters = {m["id"]: m for m in mobs}
+        self.monsters = {m["id"]: m for m in mobs if not is_job_test_monster(m)}
 
         self.map_data = {m["id"]: m for m in json.loads(self._get(MAP_DATA_URL, INDEX_MAX_AGE))}
 
@@ -410,3 +410,9 @@ class MeowDB:
         rows = [m for m in self.maps.values()
                 if m.get("totalMobCount") and level - below <= m.get("avgMobLevel", 0) <= level + above]
         return sorted(rows, key=lambda m: -(m.get("expPerHour") or 0))[:limit]  # limit=None: all
+
+
+def is_job_test_monster(monster):
+    """Exclude advancement-test variants, preserving normal and PQ monsters."""
+    text=" ".join(str(monster.get(k) or "") for k in ("name","display","englishDisplay","tag")).casefold()
+    return bool(re.search(r"job\s*(?:test|advancement)|(?:advancement|job).*test",text))
