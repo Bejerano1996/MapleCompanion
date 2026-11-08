@@ -108,6 +108,16 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
         history.extend([('exp',7),('bonus',2)])
         character_reward(None,history);boundary_read(3+index*9,28)
     check('Level-crossing event is not a new-level calibration sample',a._yield_learner.estimate(a.training_gain_context(),time.monotonic()) is None)
+    a.state['utility_session'].update(running_since=600,exp=0,kills=0,party_exp=0);a._reward_token=None;history=[]
+    character_reward(1000,[]);character_reward(1000,[])
+    for index in range(1,4):
+        history.append(('exp',7));character_reward(1000+(index-1)*9+7,history)
+        history.append(('bonus',2));character_reward(1000+index*9,history)
+    check('Split bonus HUD windows do not learn base-only yield',a._yield_learner.estimate(a.training_gain_context(),time.monotonic()) is None)
+    check('Split bonus HUD windows preserve full session EXP',a.state['utility_session']['exp']==27 and a.state['utility_session']['party_exp']==6)
+    for index in range(4,7):
+        history.extend([('exp',7),('bonus',2)]);character_reward(1000+index*9,history)
+    check('Complete reward windows recalibrate after split bonus',a._yield_learner.estimate(a.training_gain_context(),time.monotonic())==9)
     check('No callback errors',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()
 

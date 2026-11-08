@@ -18,7 +18,14 @@ class YieldLearner:
         return result
     def observe(self,signature,delta,hud_delta,now):
         self._sync(signature,now)
-        if not signature or not signature[0] or delta.get('kills')!=1:return False
+        if not signature or not signature[0]:return False
+        bonus=delta.get('party_exp',0)
+        if delta.get('kills',0)==0 and isinstance(bonus,int) and not isinstance(bonus,bool) and bonus>0 and delta.get('exp')==bonus and hud_delta==bonus:
+            # A separately confirmed bonus proves that base-only samples can
+            # omit part of personal yield. Wait for new complete samples.
+            self.samples=[];self.last_at=None
+            return False
+        if delta.get('kills')!=1:return False
         gain=delta.get('exp',0)
         if not isinstance(gain,int) or isinstance(gain,bool) or not 0<gain<=100000000 or hud_delta!=gain:return False
         if self.samples and gain!=self.samples[-1]:self.samples=[]

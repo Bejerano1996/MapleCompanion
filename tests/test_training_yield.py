@@ -52,6 +52,17 @@ class YieldTests(unittest.TestCase):
     def test_unknown_target_never_calibrates(self):
         learner=YieldLearner()
         self.assertFalse(learner.observe(('',None,None,32),dict(exp=9,kills=1),9,0))
+    def test_split_party_bonus_hud_window_cannot_train_base_only_yield(self):
+        learner=YieldLearner();key=('mob','map',None,32)
+        for t in (0,2,4):
+            learner.observe(key,dict(exp=7,kills=1,party_exp=0),7,t)
+            learner.observe(key,dict(exp=2,kills=0,party_exp=2),2,t+.2)
+        self.assertIsNone(learner.estimate(key,5))
+    def test_late_bonus_refinement_with_unchanged_hud_preserves_good_yield(self):
+        learner=YieldLearner();key=('mob','map',None,32)
+        for t in range(3):learner.observe(key,dict(exp=9,kills=1,party_exp=2),9,t)
+        learner.observe(key,dict(exp=2,kills=0,party_exp=2),0,3)
+        self.assertEqual(learner.estimate(key,3),9)
     def test_returning_to_old_map_does_not_revive_calibration(self):
         learner=YieldLearner();a=('mob','a',4,32);b=('mob','b',4,32)
         for t in range(3):learner.observe(a,dict(exp=9,kills=1),9,t)
