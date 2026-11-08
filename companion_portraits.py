@@ -66,7 +66,7 @@ class Portraits:
                 for v in views:
                     if v.winfo_exists():v.destroy()
                 continue
-            image.thumbnail((key[2],key[2]),Image.Resampling.NEAREST)
+            image.thumbnail((key[2]-4,key[2]-4),Image.Resampling.NEAREST)
             canvas=Image.new('RGBA',(key[2],key[2]));canvas.alpha_composite(image,((key[2]-image.width)//2,(key[2]-image.height)//2))
             photo=ImageTk.PhotoImage(canvas,master=self.root);self.images[key]=photo
             if len(self.images)>160:self.images.pop(next(iter(self.images)))

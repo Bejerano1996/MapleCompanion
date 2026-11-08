@@ -40,7 +40,7 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     w=next(w for w in root.winfo_children() if isinstance(w,tk.Toplevel) and 'MesoWatch' in w.title())
     next(b for b in ui_walk_widgets(w) if isinstance(b,tk.Button) and b.cget('text')=='Search MesoWatch ↗').invoke();pump()
     check('Search opens canonical MesoWatch',opened==['Salad'])
-    check('Monster thumbnail loaded',('mob','23',30) in a._portraits.images)
+    check('Monster thumbnail loaded',('mob','23',32) in a._portraits.images)
     a.state['tab']='quests';a.render();
     until=time.monotonic()+.7
     while time.monotonic()<until:root.update();time.sleep(.02)

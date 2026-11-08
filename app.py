@@ -2675,7 +2675,7 @@ class App:
         else:  # nothing typed yet: monsters around your level
             mobs = sorted((m for m in self.db.monsters.values() if abs(m.get("level", 0) - level) <= 4),
                           key=lambda m: m.get("level", 0))
-            hint = f"Type a name or a level range. Showing monsters near Lv {level}:"
+            hint = f"Near Lv {level} · Search by name or level"
         label(inner, hint, fg="muted", size=8, padx=6, pady=2, anchor="w", justify="left",
               wraplength=self.wrap(30)).pack(fill="x")
         opened = self.state.get("mob_open")
@@ -2686,14 +2686,16 @@ class App:
             card.pack(fill="x", padx=5, pady=2)
             bg = "card_hi" if mid == opened else "card"
             row = tk.Frame(card, bg=C[bg], cursor="hand2")
-            row.pack(fill="x")
-            portrait(self,row,"mob",mid,m.get("display") or m["name"],C[bg])
-            name = label(row, m.get("display") or m["name"], fg="gold", bg=bg, bold=True, anchor="w")
-            name.pack(side="left", padx=6, pady=2)
-            stats = label(row, f"Lv {m.get('level', '?')} · {m.get('hp', 0):,} HP · {m.get('exp', 0)} EXP",
-                          fg="muted", bg=bg, size=8)
-            stats.pack(side="right", padx=6)
-            for w in (row, name, stats):
+            row.pack(fill="x",padx=10,pady=5)
+            picture=portrait(self,row,"mob",mid,m.get("display") or m["name"],C[bg],32)
+            details=tk.Frame(row,bg=C[bg]);details.pack(side="left",fill="x",expand=True,padx=(4,0))
+            name = label(details, m.get("display") or m["name"], fg="gold", bg=bg, bold=True, anchor="w",
+                         justify="left",wraplength=self.wrap(105))
+            name.pack(fill="x",anchor="w")
+            stats = label(details, f"Lv {m.get('level', '?')} · {m.get('hp', 0):,} HP · {m.get('exp', 0)} EXP",
+                          fg="muted", bg=bg, size=8,anchor="w",justify="left",wraplength=self.wrap(105))
+            stats.pack(fill="x",anchor="w")
+            for w in (row,details,name,stats,*([picture] if picture is not None else [])):
                 w.bind("<Button-1>", lambda e, mid=mid: self.toggle_monster(mid))
             if mid != opened:
                 continue

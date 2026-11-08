@@ -1,5 +1,9 @@
 {
-  "version": "2.6.0-companion",
+  "version": "2.6.1-companion",
+  "portrait_layout_geometry": {
+    "ok": true,
+    "checks": 28
+  },
   "portraits_search_checks": {
     "ok": true,
     "checks": [
@@ -46,15 +50,15 @@
       "No callback errors"
     ]
   },
-  "executable_sha256": "3de7d5c9c62a24645347b9c2feaa127ea832498890aaf3fcf41a52b6b80b549f",
+  "executable_sha256": "9bb3d59af54dd3c730bfc16dcbfe0006ad9a9149fd427678efb20bd6c6a89302",
   "source_sha256": {
-    "app.py": "c7dcd13a7dfded124d8fa36ec54d035b9c003da7e3a434cd2e33041d092e38b3",
+    "app.py": "80b46296e898a1395d5ae480ac1202db97bc7099f0b83680e9b59b373edd0724",
     "build_release.py": "68186924f6db17ee9f41d7bca952fefd460a1290f3e888ffb5e5299a00f0d462",
     "companion_feature_model.py": "a15747e9df1aee35aa70824fb42d7ad7645c8308ec6484de7520d958682bf055",
-    "companion_integration.py": "1b80ac9416ea51f18f542142fb41d26fcc1c0eebd550b27b701116ebe3ddbd3c",
+    "companion_integration.py": "634e7dc698aa00aa640b8826e5ed57b0362a83de9a3f6e9a252f239231d79a3d",
     "companion_market.py": "d6957d58773eba2bdbaab99b6d70ed15fa833a7385a9c76223b2e54716b784ac",
     "companion_planner_model.py": "ac5173f4cf1c3000c4cc9fac40ea55b63aa3d299b4ca510215b2347a4e02041f",
-    "companion_portraits.py": "733a086814d19ee5019c611cd1bf729f1eaea616958ab352cc48d4e98ecc989b",
+    "companion_portraits.py": "5cee7534e2ad6e0f40c82dad012aed510977c5b9325d50b7ec1ba9c5c1729357",
     "companion_tools.py": "afae0d4c9eb58d605e5ce4fc49f2b83644ba20dfea4365d1943dd790cb6922f6",
     "companion_widgets.py": "49773879656cb0ea9e1e9f4afdc2ccd00a2c807fa97ab60b0d42345aa9f081c0",
     "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",

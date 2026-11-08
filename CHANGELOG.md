@@ -1,3 +1,9 @@
+## 2.6.1
+
+- Monster cards use an inset thumbnail and two text lines so names and stats fit narrow windows.
+- Shorter search hint; thumbnail padding prevents rounded corners from masking sprites.
+- Layout checked at widths 340, 360 and 480 with all three font scales.
+
 ## 2.6.0
 
 - Monster and quest NPC thumbnails load asynchronously with a disk cache.
