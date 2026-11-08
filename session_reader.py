@@ -42,7 +42,9 @@ def capture_rewards(hide=()):
     box=find_game_window()
     if box is None:return None
     x,y,right,bottom=box;w=right-x;h=bottom-y
-    crop=(x+int(w*.60),y+int(h*.50),right,y+int(h*.95))
+    # Keep the floating reward notices large enough for OCR at 1080p/1440p.
+    # The previous wide scene crop left their small glyphs at native resolution.
+    crop=(x+int(w*.70),y+int(h*.60),right,y+int(h*.91))
     # A covered log is unavailable, not an empty log: do not recount old pickups on uncover.
     log=(x+int(w*.70),y+int(h*.65),right,y+int(h*.95))
     if any(r>log[0] and left<log[2] and b>log[1] and top<log[3] for left,top,r,b in hide):return None

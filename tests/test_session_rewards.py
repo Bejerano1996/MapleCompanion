@@ -4,6 +4,11 @@ from pathlib import Path
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 from session_rewards import RewardTracker,reward_event,session_token,apply_rewards
 class RewardsTests(unittest.TestCase):
+ def test_new_single_notice_replaces_previous_amount(self):
+  t=RewardTracker(confirm_money=2);t.feed([('mesos',10)])
+  self.assertEqual(t.feed([('mesos',18)])['mesos'],0)
+  self.assertEqual(t.feed([('mesos',18)])['mesos'],18)
+  self.assertEqual(t.feed([('mesos',18)])['mesos'],0)
  def test_parser(self):
   for text,event in [('You received EXP (+7)',('exp',7)),('Bonus EXP for PARTY (+2)',('bonus',2)),('You have gained mesos (+10)',('mesos',10)),('have qained mesos f+7)',('mesos',7))]:self.assertEqual(reward_event(text),event)
   for text in ('Salad 220 mesos','Quest EXP 500','You lost mesos (-7)','You received EXP (+100000001)'):self.assertIsNone(reward_event(text))

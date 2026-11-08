@@ -1,7 +1,9 @@
 {
-  "version": "3.0.1-companion",
-  "source_sha": "ad8ff21ef7b5906624b65f817d93c1c23c190c08a3a6cc3f833f088da4667298",
+  "version": "3.0.2-companion",
+  "source_sha": "cdd36b63a688c60bb92828ab5417774d17e039fe76930f921e01e19ddc821534",
   "checks": {
+    "source_sha": "cdd36b63a688c60bb92828ab5417774d17e039fe76930f921e01e19ddc821534",
+    "ok": true,
     "cases": [
       {
         "fixture": "live_exp_2560.png",
@@ -51,13 +53,13 @@
           "party_exp": 4
         }
       }
-    ],
-    "ok": true,
-    "source_sha": "ad8ff21ef7b5906624b65f817d93c1c23c190c08a3a6cc3f833f088da4667298"
+    ]
   },
   "validation": "Deterministic typing and callback bursts, native PQ/monster and training UI checks, packaged local OCR fixtures. No live game validation.",
   "changes": [
-    "150ms monster search debounce",
-    "8ms/12 callbacks per UI poll, 10ms continuation while queued"
+    "Focused reward crop",
+    "One-second HUD interval",
+    "Stable replacement notice confirmation",
+    "Reader freshness status"
   ]
 }

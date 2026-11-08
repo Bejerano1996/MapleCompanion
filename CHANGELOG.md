@@ -98,3 +98,10 @@ The first release under the new name: a redesigned in-game overlay.
 - Background callback batches yield after 8 ms or 12 results; pending results continue after 10 ms, preserving order.
 - A single expensive callback can still exceed the budget; OCR recognition settings are unchanged.
 - Verified synthetic burst scheduling and native monster/PQ/training UI regression.
+
+## 3.0.2 — Training capture follow-up
+- Narrower floating-reward capture region to improve small text recognition.
+- Read validated EXP HUD each second when the reader is available, rather than every five seconds.
+- Confirm fully replaced same-kind reward stacks instead of suppressing all changed amounts as OCR corrections.
+- Show EXP reading age and actual reader status in Session.
+- Live inspection confirmed level 29 to 30 HUD readings; accurate full pickup/kill comparison awaits the user's return from job advancement. Notice-derived mesos/kills remain estimates, not exact wallet or kill telemetry.

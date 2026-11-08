@@ -57,7 +57,7 @@ def utility_poll_rewards(self):
     windows=[self.root]+[w for w in self.root.winfo_children() if isinstance(w,tk.Toplevel)]
     hide=[window_rect(w) for w in windows if w.winfo_viewable()]
     tracker=self._reward_tracker;accountant=self._training_accountant;self._reward_busy=True
-    read_status=time.monotonic()-getattr(self,'_training_last_hud',0)>=5
+    read_status=time.monotonic()-getattr(self,'_training_last_hud',0)>=1
     if read_status:self._training_last_hud=time.monotonic()
     def loaded(result):
         events=result.get('events') if isinstance(result,dict) else result
@@ -222,10 +222,13 @@ def utility_render_session(self, parent):
         target_label=getattr(self,'_training_session_forecast_label',None)
         if target_label is not None and target_label.winfo_exists():target_label.config(text=self.training_forecast_text())
         source=current.get('exp_source','Reward log · observed') if automatic else 'Manual totals'
-        quality=getattr(self,'_reward_status','')
-        quality=' · log unavailable' if 'unavailable' in quality.lower() else ' · unclear log' if 'unclear' in quality.lower() else ''
+        quality=getattr(self,'_reward_status','Waiting for game reading')
+        accountant=getattr(self,'_training_accountant',None)
+        last=accountant.ledger.last_at if accountant else None
+        age=time.monotonic()-last if last is not None else None
+        freshness=f'EXP read {int(age)}s ago' if age is not None else 'Waiting for EXP baseline'
         paused='Paused · ' if current.get('running_since') is None else ''
-        message.config(text=paused+source+' · Mesos: observed'+quality if automatic else 'Manual totals · costs and notes saved separately')
+        message.config(text=paused+source+' · '+freshness+'\n'+quality+' · Mesos / kills: observed estimates' if automatic else 'Manual totals · costs and notes saved separately')
     self._utility_refresh = refresh
     refresh()
     history_area = tk.Frame(parent, bg=C['bg'])
