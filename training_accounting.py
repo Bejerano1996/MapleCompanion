@@ -20,7 +20,9 @@ class NoticeReconciliation:
             if hud_change<0:
                 # A fresh net-loss reading already includes gains/losses in this
                 # interval. Never extrapolate them back over the recorded loss.
-                self.__init__();return 0
+                # Keep short-lived credit for bonuses already covered before
+                # this loss, so their delayed OCR refinement cannot add them twice.
+                self.pending=0;self.base_pending=0;return 0
             covered=min(self.pending,hud_change);self.pending-=covered
             missing=hud_change-covered
             # A small gap beside a known base reward can be an unread party

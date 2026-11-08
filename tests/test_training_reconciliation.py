@@ -61,6 +61,18 @@ class TimingTests(unittest.TestCase):
         self.assertEqual(s['exp'],16)
         a.feed(s,t,events+[('bonus',2)],None,21)
         self.assertEqual(s['exp'],18)
+    def test_death_does_not_recredit_previously_covered_late_bonus(self):
+        s,a,t=self.setup_account()
+        a.feed(s,t,[],{'level':27,'exp':1000},0)
+        a.feed(s,t,[('exp',7),('bonus',None)],{'level':27,'exp':1009},1)
+        a.feed(s,t,[('exp',7),('bonus',None)],{'level':27,'exp':900},2)
+        a.feed(s,t,[('exp',7),('bonus',2)],None,3)
+        a.feed(s,t,[('exp',7),('bonus',2)],None,20)
+        self.assertEqual(s['exp'],-100)
+        # The next genuinely new reward must still count in partial-log mode.
+        events=[('exp',7),('bonus',2),('exp',7),('bonus',2)]
+        a.feed(s,t,events,None,21)
+        self.assertEqual(s['exp'],-91)
     def test_seeded_notice_and_hud_delays_cross_level_boundary(self):
         import leveling
         for seed in range(100):

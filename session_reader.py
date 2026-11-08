@@ -21,6 +21,32 @@ def ocr_rows(image,max_size=(1280,720)):
     rows,_=_engine(np.asarray(image)[:,:,::-1],use_cls=False)
     return rows or []
 
+def retry_money_row(image,position):
+    """Bounded recognition-only fallback; two views must agree, never trusted money."""
+    if _engine is None:return None
+    import numpy as np
+    from PIL import ImageOps
+    y,h=position
+    size=image.copy();size.thumbnail((1280,720))
+    scale=size.height/image.height
+    if size.width<640:scale*=3
+    top=max(0,int((y-h*.8)/scale));bottom=min(image.height,int((y+h*.8)/scale)+1)
+    if bottom<=top:return None
+    crop=image.crop((0,top,image.width,bottom)).convert('RGB')
+    values=[]
+    try:
+        for view in (crop,ImageOps.autocontrast(crop)):
+            rows,_=_engine(np.asarray(view)[:,:,::-1],use_det=False,use_cls=False)
+            if not rows or len(rows)!=1:return None
+            text,score=rows[0];event=reward_event(text)
+            if score<.9 or not event or event[0]!='mesos':return None
+            values.append(event[1])
+    except Exception:
+        # Optional recovery must not discard the normal detector's valid rows.
+        return None
+    return values[0] if values[0]==values[1] else None
+
+
 def read_reward_image(image,include_pending=False):
     rows=ocr_rows(image)
     # Merge boxes on the same line: the detector can split "You" from the amount.
@@ -43,6 +69,12 @@ def read_reward_image(image,include_pending=False):
             kind=reward_kind(text)
             if kind:
                 result.append((kind,None));positions.append((group['y'],group['h']))
+    if include_pending:
+        for index,event in enumerate(result):
+            if event==('mesos',None):
+                amount=retry_money_row(image,positions[index])
+                if amount is not None:result[index]=('mesos',amount)
+                break  # At most one row/two recognitions per poll.
     return RewardRead(result,partial=False,trusted_money=trusted_money,positions=positions)
 
 def capture_rewards(hide=()):
