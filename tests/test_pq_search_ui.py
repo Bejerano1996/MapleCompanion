@@ -3,6 +3,9 @@ import sys,os,json,tempfile,time
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import tkinter as tk
 import app
+import companion_portraits
+real_fetch=companion_portraits.fetch_portrait
+companion_portraits.fetch_portrait=lambda db,kind,identity,name:real_fetch(db,kind,identity,name) if (kind,str(identity)) in (("mob","23"),("npc","226")) else None
 from companion_widgets import ui_walk_widgets
 app.App.run_bg=lambda *a,**k:None
 app.App.sync_from_game=lambda *a,**k:None
@@ -31,13 +34,17 @@ with tempfile.TemporaryDirectory(prefix='map-reward-',dir=Path(__file__).parent)
     shown=texts(a.scroll.inner)
     check('Normal Evil Eye visible','Evil Eye' in shown)
     check('Job variants hidden',not any('Job Test' in t for t in shown))
-    import companion_integration
-    opened=[];companion_integration.webbrowser.open=lambda url:opened.append(url)
+    import mesowatch_browser
+    opened=[];mesowatch_browser.launch_search=lambda name:opened.append(name)
     a.ui_mesowatch('Salad');pump()
     w=next(w for w in root.winfo_children() if isinstance(w,tk.Toplevel) and 'MesoWatch' in w.title())
     next(b for b in ui_walk_widgets(w) if isinstance(b,tk.Button) and b.cget('text')=='Search MesoWatch ↗').invoke();pump()
-    check('Search opens canonical MesoWatch',opened==['https://meso.watch/'])
-    check('Search copies requested item',w.clipboard_get()=='Salad')
+    check('Search opens canonical MesoWatch',opened==['Salad'])
+    check('Monster thumbnail loaded',('mob','23',30) in a._portraits.images)
+    a.state['tab']='quests';a.render();
+    until=time.monotonic()+.7
+    while time.monotonic()<until:root.update();time.sleep(.02)
+    check('Quest NPC thumbnail loaded',('npc','226',28) in a._portraits.images)
     check('Price icon is rendered',bool(a.price_btn.cget('image')))
     check('No callback exceptions',not errors)
     print(json.dumps({'ok':True,'checks':checks}));root.destroy()

@@ -28,6 +28,7 @@ import quest_rank
 import trainer
 import widgets
 import item_sources
+from companion_portraits import portrait
 from game_sync import MINIMAP_CORNER, HotkeyThread, capture_and_read, find_game_window, window_rect
 from minimap import portal_direction, portal_side, render_minimap
 from widgets import BRAND_FONT, C, FONT, ICON, TEXT_SCALES, ScrollArea, Tooltip, button, entry, frozen, label, link
@@ -1683,6 +1684,8 @@ class App:
         head.pack(fill="x", pady=(p(2), 0))
         arrow = label(head, "▾" if expanded else "▸", fg="muted", bg=bg, padx=4)
         arrow.pack(side="left")
+        npc=self.db.npc(q.get("npc") or "")
+        if npc:portrait(self,head,"npc",npc["id"],npc.get("name") or q["npc"],C[bg],28)
         title = label(head, q["name"], fg="gold", bg=bg, bold=True, anchor="w", justify="left",
                       wraplength=self.panel_width() - p(130), cursor="hand2")
         title.pack(side="left", fill="x", expand=True)
@@ -2684,6 +2687,7 @@ class App:
             bg = "card_hi" if mid == opened else "card"
             row = tk.Frame(card, bg=C[bg], cursor="hand2")
             row.pack(fill="x")
+            portrait(self,row,"mob",mid,m.get("display") or m["name"],C[bg])
             name = label(row, m.get("display") or m["name"], fg="gold", bg=bg, bold=True, anchor="w")
             name.pack(side="left", padx=6, pady=2)
             stats = label(row, f"Lv {m.get('level', '?')} · {m.get('hp', 0):,} HP · {m.get('exp', 0)} EXP",
@@ -3736,6 +3740,14 @@ App = integrate(App, globals())
 
 
 if __name__ == "__main__":
+    if len(sys.argv)==3 and sys.argv[1]=='--mesowatch-search':
+        from mesowatch_browser import run_browser
+        try:run_browser(sys.argv[2])
+        except Exception:
+            import traceback
+            with open(os.path.join(APP_DIR,'mesowatch-error.log'),'w',encoding='utf-8') as f:traceback.print_exc(file=f)
+        sys.exit()
+
     try:  # crisp text on high-DPI Windows screens; also makes screen capture use real pixels
         # 2 = per-monitor aware: window positions and screenshots are then both in real pixels on
         # every monitor. With 1 (system-aware) a monitor scaled differently from the main one gets

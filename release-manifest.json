@@ -1,5 +1,19 @@
 {
-  "version": "2.5.0-companion",
+  "version": "2.6.0-companion",
+  "portraits_search_checks": {
+    "ok": true,
+    "checks": [
+      "PQ works with unavailable indexes",
+      "Normal Evil Eye visible",
+      "Job variants hidden",
+      "Search opens canonical MesoWatch",
+      "Monster thumbnail loaded",
+      "Quest NPC thumbnail loaded",
+      "Price icon is rendered",
+      "No callback exceptions"
+    ]
+  },
+  "mesowatch_packaged_search": "Observed Filter items=Salad; Showing 1 of 1866 items; heading Salad in packaged WebView2 window",
   "network_check": {
     "ok": true,
     "tls_verification": true,
@@ -32,14 +46,15 @@
       "No callback errors"
     ]
   },
-  "executable_sha256": "a526c3a670e5c7db143cbfef1a744eca73d2f276d292d26114f841aa9b709f52",
+  "executable_sha256": "3de7d5c9c62a24645347b9c2feaa127ea832498890aaf3fcf41a52b6b80b549f",
   "source_sha256": {
-    "app.py": "4b710a7c0dc4974c20b4b8a892a78b265160ff255e9845b7e5f2865fe02beb99",
-    "build_release.py": "ff37e82e4e19ec4c6c23e549824393475e02f6182154324bc33ae9e61d07a8aa",
+    "app.py": "c7dcd13a7dfded124d8fa36ec54d035b9c003da7e3a434cd2e33041d092e38b3",
+    "build_release.py": "68186924f6db17ee9f41d7bca952fefd460a1290f3e888ffb5e5299a00f0d462",
     "companion_feature_model.py": "a15747e9df1aee35aa70824fb42d7ad7645c8308ec6484de7520d958682bf055",
-    "companion_integration.py": "28a4c950d215cb0c40e288f36794a8fc4854c12f45ad169966bb46f7e410ada2",
+    "companion_integration.py": "1b80ac9416ea51f18f542142fb41d26fcc1c0eebd550b27b701116ebe3ddbd3c",
     "companion_market.py": "d6957d58773eba2bdbaab99b6d70ed15fa833a7385a9c76223b2e54716b784ac",
     "companion_planner_model.py": "ac5173f4cf1c3000c4cc9fac40ea55b63aa3d299b4ca510215b2347a4e02041f",
+    "companion_portraits.py": "733a086814d19ee5019c611cd1bf729f1eaea616958ab352cc48d4e98ecc989b",
     "companion_tools.py": "afae0d4c9eb58d605e5ce4fc49f2b83644ba20dfea4365d1943dd790cb6922f6",
     "companion_widgets.py": "49773879656cb0ea9e1e9f4afdc2ccd00a2c807fa97ab60b0d42345aa9f081c0",
     "game_sync.py": "b751429a3d14813e786d3e14133d8c338dff62423fbf630f581926cd5b796d12",
@@ -49,6 +64,7 @@
     "leveling.py": "3a3f07648eeecd3dc565cf1fe15a922aa6e3ded726996936ba47de4f7955984e",
     "make_icon.py": "c1ccb27f30cd6e22a137ce00cfc09e85a37b58b2093e795e3152dd70e43aeb7f",
     "meowdb.py": "e61968ae245c13ce3177b6e61291c3a7085eba7cce8652c3f964ab76968c8935",
+    "mesowatch_browser.py": "e7106e24b16840b066625bbfa6ef8c2ab4f9a24b01103c7436fdc3c02dd280b9",
     "minimap.py": "0d1f78d9a709b29e6837eb0955c15d42b90fc41b0d2681ec3aa1c4c33f3baedc",
     "monster_locations.py": "14c73d95fe33b26ed586e3b0666687855df3082ea4df63f8cab7223593d4f25b",
     "monster_maps_ui.py": "61b7738ad4706484bb75d747271d56f0b802cf443fa15dbeb046732b89528f4d",
@@ -61,5 +77,5 @@
     "trainer.py": "0af9830fb152e60d8202f5941a5b2b308c8ae133480ed7bdf8eeea6c58fbd20b",
     "widgets.py": "dcef13be50d13d3f8f357b252ac904aeffce4dfde791b9296860c5cac6a358cd"
   },
-  "scope": "Includes per-monster maps, rewards, acquisition, regression and packaged HTTPS checks. The two-hour base GUI run belongs to version 2.2."
+  "scope": "Adds async monster and NPC portraits and a user-initiated MesoWatch browser search. Includes per-monster maps, rewards, acquisition, regression and packaged HTTPS checks. The two-hour base GUI run belongs to version 2.2."
 }

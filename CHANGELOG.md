@@ -1,3 +1,11 @@
+## 2.6.0
+
+- Monster and quest NPC thumbnails load asynchronously with a disk cache.
+- MesoWatch opens in a WebView2 window with the requested search already filled; exact matches open automatically.
+- Job Test monster variants are excluded; regular Evil Eye keeps its eight known maps.
+- PQ guides remain accessible while game indexes are unavailable.
+- Consistent tools icon and coin price icon.
+
 # Changelog
 
 ## 2.4.0-companion — per-monster maps and quest rewards

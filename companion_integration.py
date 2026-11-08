@@ -30,7 +30,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='2.5.0-companion'
+    core['VERSION']='2.6.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -414,9 +414,10 @@ def integrate(Base,core):
             def search():
                 name=self._market_search_query.get().strip()
                 if not name:feedback.config(text='Enter an item name.');box.focus_set();return
-                w.clipboard_clear();w.clipboard_append(name);w.update_idletasks()
-                webbrowser.open(MESOWATCH_URL)
-                feedback.config(text='Item copied. Paste into MesoWatch search (Ctrl+V).')
+                from mesowatch_browser import launch_search
+                try:launch_search(name)
+                except OSError as error:feedback.config(text='Could not open MesoWatch: '+str(error));return
+                feedback.config(text='Opening MesoWatch · '+name)
             box.bind('<Return>',lambda e:search())
             ui_button(w,'Search MesoWatch ↗',search,primary=True).pack(fill='x',padx=18,pady=8)
             ui_button(w,'MapleStory Watch · in-app prices',lambda:market_open(self),compact=True).pack(fill='x',padx=18,pady=6)
