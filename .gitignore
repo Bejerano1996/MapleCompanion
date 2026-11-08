@@ -14,3 +14,5 @@ dist/
 *.exe
 _internal/
 _local_state/
+release-artifacts/
+*.tmp

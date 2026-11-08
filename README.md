@@ -1,4 +1,6 @@
-# Umbrale Companion 2.4
+# Umbrale Companion
+
+[Download latest Windows version](https://github.com/Bejerano1996/MapleCompanion/releases/latest) | [All 60 retained versions](https://github.com/Bejerano1996/MapleCompanion/releases)
 
 A compact MapleStory Classic overlay: your current objective, quests and GPS, with extra tools one click away.
 
@@ -51,3 +53,6 @@ python -m unittest discover -s tests -p "test_*model.py"
 ```
 
 Logic and GPS tests use cached game indexes. OCR regression uses the supplied screenshots. The extended lifecycle check is `python tests/soak_compact_ui.py --minutes 120`; it disables game capture and global hotkeys and uses temporary fixture state.
+
+
+See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.36**.
