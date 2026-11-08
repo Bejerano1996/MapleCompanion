@@ -1,27 +1,33 @@
 {
+  "provenance_check": {
+    "ok": true,
+    "cases": 800,
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
+    "scope": "Frozen model/reward/accountant modules from actualEXE,800orderedbonus/HUDfallback scenarios; not livegameplay"
+  },
   "precision_check": {
     "ok": true,
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
-    "tests": 28,
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
+    "tests": 65,
     "scope": "Frozen character validation/accounting and reader/strip modules: unsupported HUD and stale jumps, numeric confidence and native strip width; not livegameplay"
   },
   "identity_check": {
     "ok": true,
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
     "fairness_cases": 160,
     "scroll_cases": 200,
     "scope": "Frozen reader/reward modules from actualEXE; synthetic stationary/refinement/repeatedamount and actualscroll scenarios, not live gameplay"
   },
   "retry_check": {
     "ok": true,
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
     "recovered_mesos": 7,
     "known_total": 17,
     "duplicate": 0,
     "scope": "Frozen reader/reward modules from actualEXE on brightness1.2recorded fixture; not live gameplay"
   },
-  "version": "3.11.0-companion",
-  "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+  "version": "3.12.0-companion",
+  "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
   "native_ui": {
     "ok": true,
     "checks": [
@@ -56,7 +62,8 @@
     ]
   },
   "checks": {
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
+    "ok": true,
     "cases": [
       {
         "fixture": "live_exp_2560.png",
@@ -106,12 +113,11 @@
           "party_exp": 4
         }
       }
-    ],
-    "ok": true
+    ]
   },
   "context_checks": {
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
     "ok": true,
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
     "cases": [
       {
         "result": {
@@ -165,14 +171,14 @@
   },
   "reconciliation_check": {
     "ok": true,
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
     "exp": 9,
     "party_seen": 2,
     "scope": "Frozen accounting and context modules: delayed party, exact decimal counter, interrupted level confirmation and map plausibility; synthetic data"
   },
   "calibration_check": {
     "ok": true,
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
     "gain": 9,
     "window_consumed_once": true,
     "native_ui": {
@@ -206,7 +212,7 @@
   },
   "synthetic_soak": {
     "running": false,
-    "source_sha": "a4594bfdc36ac3c4eaccab734ffe02ef0c0920775b1fa59e903c80c8094f4eec",
+    "source_sha": "d7a97e6703123760246a936aa6ff48ce81cdd5615d2eeeef68e55b4626ec4c98",
     "target_seconds": 120.0,
     "ok": true,
     "latest": {
@@ -224,11 +230,11 @@
     "samples": [
       {
         "seconds": 30.0,
-        "frames": 46,
-        "exp": 405,
-        "party_seen": 90,
-        "mesos_observed": 660,
-        "mesos_true": 672,
+        "frames": 47,
+        "exp": 414,
+        "party_seen": 92,
+        "mesos_observed": 672,
+        "mesos_true": 685,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -236,11 +242,11 @@
       },
       {
         "seconds": 90.0,
-        "frames": 435,
+        "frames": 434,
         "exp": 3897,
         "party_seen": 850,
         "mesos_observed": 6282,
-        "mesos_true": 6505,
+        "mesos_true": 6489,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -262,9 +268,9 @@
     "errors": [],
     "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "validation": "Offline explicit unsupported HUD and pending-jump expiry regressions; frozen model/accounting/reader/strip tests plus360frozen notice scenarios; native UI and current-source120second synthetic stability, local OCR fixtures. No live3.11 accuracy claim.",
+  "validation": "Offline split-party provenance regressions; 800frozen old/new bonus scenarios plus360notice scenarios and frozen model/accounting/reader/strip tests; native UI, current-source120second synthetic stability and local OCR fixtures. No live3.12 accuracy claim.",
   "changes": [
-    "Reject explicit HUD levels outside the supported EXP table instead of inferring a different level",
-    "Expire pending abnormal level jumps after15seconds and require fresh confirmation"
+    "Distinguish a newly trailing party bonus from old covered-bonus credit when a new base reward is pending",
+    "Retain exclusion of old refined or inserted bonuses and public reward-delta format"
   ]
 }

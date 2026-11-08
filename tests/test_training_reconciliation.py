@@ -73,6 +73,33 @@ class TimingTests(unittest.TestCase):
         events=[('exp',7),('bonus',2),('exp',7),('bonus',2)]
         a.feed(s,t,events,None,21)
         self.assertEqual(s['exp'],-91)
+    def test_next_event_trailing_bonus_is_not_old_covered_bonus(self):
+        s,a,t=self.setup_account()
+        a.feed(s,t,[('exp',7),('bonus',None)],{'level':27,'exp':1009},1)
+        a.feed(s,t,[('exp',7),('bonus',None),('exp',7)],None,2)
+        events=[('exp',7),('bonus',None),('exp',7),('bonus',2)]
+        a.feed(s,t,events,None,3);a.feed(s,t,events,None,20)
+        self.assertEqual(s['exp'],18)
+        a.feed(s,t,events,{'level':27,'exp':1018},21)
+        self.assertEqual(s['exp'],18)
+    def test_old_refined_bonus_still_excluded_while_new_base_pending(self):
+        s,a,t=self.setup_account()
+        a.feed(s,t,[('exp',7),('bonus',None)],{'level':27,'exp':1009},1)
+        a.feed(s,t,[('exp',7),('bonus',None),('exp',7)],None,2)
+        events=[('exp',7),('bonus',2),('exp',7)]
+        a.feed(s,t,events,None,3);a.feed(s,t,events,None,20)
+        self.assertEqual(s['exp'],16)
+        a.feed(s,t,events+[('bonus',2)],None,21)
+        self.assertEqual(s['exp'],18)
+    def test_old_inserted_bonus_does_not_become_next_event_bonus(self):
+        s,a,t=self.setup_account()
+        a.feed(s,t,[('exp',7)],{'level':27,'exp':1009},1)
+        a.feed(s,t,[('exp',7),('exp',7)],None,2)
+        events=[('exp',7),('bonus',2),('exp',7)]
+        a.feed(s,t,events,None,3);a.feed(s,t,events,None,20)
+        self.assertEqual(s['exp'],16)
+        a.feed(s,t,events+[('bonus',2)],None,21)
+        self.assertEqual(s['exp'],18)
     def test_seeded_notice_and_hud_delays_cross_level_boundary(self):
         import leveling
         for seed in range(100):

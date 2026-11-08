@@ -65,7 +65,7 @@ class RewardTracker:
             else:j+=1
         return pairs
     def feed(self,events):
-        self.refined_party_exp=0
+        self.refined_party_exp=0;self.trailing_party_exp=0
         totals={'exp':0,'mesos':0,'kills':0,'party_exp':0}
         if events is None:self.previous=None;self.credited=[];self.seen=[];self.blanks=0;self.replacement=None;self.replacement_reads=0;self.positions=[];return totals
         current=[tuple(row) for row in events]
@@ -114,6 +114,7 @@ class RewardTracker:
                 else:
                     totals['party_exp']+=amount
                     if j in old_by_new and old[old_by_new[j]][1] is None:self.refined_party_exp+=amount
+                    if j>last and j>0 and j-1 in old_by_new and current[j-1][0]=='exp' and current[j-1][1] is not None:self.trailing_party_exp+=amount
         self.previous=current;self.credited=credited;self.seen=seen;self.positions=positions
         return totals
 

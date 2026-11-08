@@ -22,6 +22,15 @@ class RewardsTests(unittest.TestCase):
   old=[('mesos',None),('mesos',23),('mesos',None)]
   new=[('mesos',None),('mesos',None),('mesos',23)]
   self.assertEqual(RewardTracker._align(old,new,positions,positions),[(0,0),(1,1),(2,2)])
+ def test_trailing_bonus_provenance_does_not_change_public_delta(self):
+  t=RewardTracker();t.feed([]);t.feed([('exp',7),('bonus',None)])
+  t.feed([('exp',7),('bonus',None),('exp',7)])
+  events=[('exp',7),('bonus',None),('exp',7),('bonus',2)]
+  self.assertEqual(t.feed(events),dict(exp=2,kills=0,mesos=0,party_exp=2))
+  self.assertEqual(t.trailing_party_exp,2);self.assertEqual(t.refined_party_exp,0)
+  t.feed(events);self.assertEqual(t.trailing_party_exp,0)
+  events[1]=('bonus',2);t.feed(events)
+  self.assertEqual(t.trailing_party_exp,0);self.assertEqual(t.refined_party_exp,2)
  def test_clear_money_does_not_require_second_frame(self):
   from session_reader import RewardRead
   t=RewardTracker(confirm_money=2);t.feed([])

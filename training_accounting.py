@@ -6,12 +6,16 @@ import math
 class NoticeReconciliation:
     """Match notice gains to HUD gains across short display/OCR timing offsets."""
     def __init__(self):self.pending=0;self.base_pending=0;self.bonus_credit=0;self.credit_at=None
-    def feed(self,delta,hud_change,now,baseline=False,refined_party_exp=0):
+    def feed(self,delta,hud_change,now,baseline=False,refined_party_exp=0,trailing_party_exp=0):
         if baseline:
             self.__init__();return 0
         if self.credit_at is not None and now-self.credit_at>5:
             self.bonus_credit=0;self.credit_at=None
         possible_late=delta.get('party_exp',0) if not delta.get('kills') else refined_party_exp
+        if self.base_pending and not delta.get('kills'):
+            # A freshly appended bonus after an existing uncovered base belongs
+            # to the new notice sequence; old refinements remain eligible credit.
+            possible_late=max(refined_party_exp,possible_late-trailing_party_exp)
         late=min(self.bonus_credit,possible_late,delta.get('exp',0))
         self.bonus_credit-=late
         self.pending+=delta.get('exp',0)-late
@@ -56,7 +60,7 @@ class TrainingAccountant:
                 if old_reading and not baseline:hud_change=absolute_exp(reading)-absolute_exp(old_reading)
                 changed=changed or value!=session.get('exp',0)
                 session['exp']=value;session['exp_source']='EXP bar · net';session['exp_is_net']=True;self.bar_total=value;self.character=reading
-        self.logs_since_bar=self.reconciliation.feed(delta,hud_change,now,baseline,self.tracker.refined_party_exp)
+        self.logs_since_bar=self.reconciliation.feed(delta,hud_change,now,baseline,self.tracker.refined_party_exp,self.tracker.trailing_party_exp)
         if self.bar_total is not None:
             if now-(self.ledger.last_at if self.ledger.last_at is not None else now)>15:
                 value=self.bar_total+self.logs_since_bar
