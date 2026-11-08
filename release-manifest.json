@@ -1,33 +1,40 @@
 {
+  "periodic_check": {
+    "ok": true,
+    "cases": 300,
+    "failures": [],
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
+    "scope": "Frozen tracker/RewardRead modules from actualEXE,stationary periodic pre-session rows,zero newmoney; not livegameplay"
+  },
   "provenance_check": {
     "ok": true,
     "cases": 800,
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
     "scope": "Frozen model/reward/accountant modules from actualEXE,800orderedbonus/HUDfallback scenarios; not livegameplay"
   },
   "precision_check": {
     "ok": true,
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
-    "tests": 96,
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
+    "tests": 98,
     "scope": "Frozen context/startup/label,character/accounting,reader and strip modules; mocked inputs and recorded context images; not livegameplay"
   },
   "identity_check": {
     "ok": true,
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
     "fairness_cases": 160,
     "scroll_cases": 200,
     "scope": "Frozen reader/reward modules from actualEXE; synthetic stationary/refinement/repeatedamount and actualscroll scenarios, not live gameplay"
   },
   "retry_check": {
     "ok": true,
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
     "recovered_mesos": 7,
     "known_total": 17,
     "duplicate": 0,
     "scope": "Frozen reader/reward modules from actualEXE on brightness1.2recorded fixture; not live gameplay"
   },
-  "version": "3.15.0-companion",
-  "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+  "version": "3.16.0-companion",
+  "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
   "native_ui": {
     "ok": true,
     "checks": [
@@ -112,49 +119,49 @@
         "fixture": "party-rewards-fixture.png"
       }
     ],
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
     "ok": true
   },
   "context_checks": {
+    "ok": true,
     "cases": [
       {
-        "file": "context-party-four.png",
         "result": {
           "ok": true,
           "party_visible": 4,
           "roman_suffix": null,
           "labels": []
-        }
+        },
+        "file": "context-party-four.png"
       },
       {
-        "file": "context-party-five.png",
         "result": {
           "ok": true,
           "party_visible": 5,
           "roman_suffix": null,
           "labels": []
-        }
+        },
+        "file": "context-party-five.png"
       },
       {
-        "file": "live_frame_1920.png",
         "result": {
           "ok": true,
           "party_visible": null,
           "roman_suffix": "II",
           "labels": []
-        }
+        },
+        "file": "live_frame_1920.png"
       },
       {
-        "file": "live_exp_2560.png",
         "result": {
           "ok": true,
           "party_visible": 2,
           "roman_suffix": "III",
           "labels": []
-        }
+        },
+        "file": "live_exp_2560.png"
       },
       {
-        "file": "context-horny-scene.png",
         "result": {
           "ok": true,
           "party_visible": 2,
@@ -163,22 +170,22 @@
             "Lv,22HornyMushroom",
             "Lv.22 Horny M"
           ]
-        }
+        },
+        "file": "context-horny-scene.png"
       }
     ],
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
-    "ok": true
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b"
   },
   "reconciliation_check": {
     "ok": true,
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
     "exp": 9,
     "party_seen": 2,
     "scope": "Frozen accounting and context modules: delayed party, exact decimal counter, interrupted level confirmation and map plausibility; synthetic data"
   },
   "calibration_check": {
     "ok": true,
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
     "gain": 9,
     "window_consumed_once": true,
     "native_ui": {
@@ -215,16 +222,16 @@
   },
   "synthetic_soak": {
     "running": false,
-    "source_sha": "e520b048442a2a2f87f2f57e18fc646835757afee866f4dc1a5dccfb05ff3e47",
+    "source_sha": "a1b6294cdb620f4adf916a5c144164fef39385e83068e7df8d6471e7b3c2ba6b",
     "target_seconds": 120.0,
     "ok": true,
     "latest": {
       "seconds": 120.0,
-      "frames": 628,
-      "exp": 5643,
-      "party_seen": 1230,
-      "mesos_observed": 9120,
-      "mesos_true": 9405,
+      "frames": 627,
+      "exp": 5634,
+      "party_seen": 1228,
+      "mesos_observed": 9110,
+      "mesos_true": 9394,
       "fonts": 17,
       "images": 26,
       "jobs": 6,
@@ -234,9 +241,9 @@
       {
         "seconds": 30.0,
         "frames": 47,
-        "exp": 414,
-        "party_seen": 92,
-        "mesos_observed": 672,
+        "exp": 405,
+        "party_seen": 90,
+        "mesos_observed": 660,
         "mesos_true": 685,
         "fonts": 17,
         "images": 26,
@@ -245,11 +252,11 @@
       },
       {
         "seconds": 90.0,
-        "frames": 434,
-        "exp": 3897,
-        "party_seen": 850,
-        "mesos_observed": 6282,
-        "mesos_true": 6489,
+        "frames": 433,
+        "exp": 3888,
+        "party_seen": 848,
+        "mesos_observed": 6268,
+        "mesos_true": 6474,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -257,11 +264,11 @@
       },
       {
         "seconds": 120.0,
-        "frames": 628,
-        "exp": 5643,
-        "party_seen": 1230,
-        "mesos_observed": 9120,
-        "mesos_true": 9405,
+        "frames": 627,
+        "exp": 5634,
+        "party_seen": 1228,
+        "mesos_observed": 9110,
+        "mesos_true": 9394,
         "fonts": 17,
         "images": 26,
         "jobs": 6,
@@ -271,10 +278,10 @@
     "errors": [],
     "scope": "Persistent own Tk UI; synthetic EXP, party and mesos notifications with periodic log gaps. No game capture, hotkeys or gameplay input."
   },
-  "validation": "Offline split-HUD personal-yield regressions and native callback recalibration; frozen yield/model/accounting/context/reader/strip tests plus800bonus and360notice scenarios; current-source120second synthetic stability and local OCR fixtures. No live3.15 accuracy claim.",
+  "validation": "Offline periodic pre-session money regressions;300frozen stationary periodic cases plus800bonus/360notice scenarios and frozen model/context/reader/yield tests; native UI,current-source120second synthetic stability and local OCR fixtures. No live3.16 accuracy claim.",
   "changes": [
-    "Invalidate base-only learned yield when a separate party-bonus HUD window confirms additional personal EXP",
-    "Preserve valid learned yield when late bonus OCR does not change the HUD",
-    "Wait for fresh complete samples instead of guessing a merged per-kill amount"
+    "Prefer stationary row identity when partial repeated amounts remain compatible at the original positions",
+    "Prevent periodic pre-session money rows from being credited as new pickups",
+    "Retain real scroll recognition when stationary values conflict and independent anchors support movement"
   ]
 }

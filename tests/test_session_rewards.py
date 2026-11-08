@@ -31,6 +31,19 @@ class RewardsTests(unittest.TestCase):
   t.feed(events);self.assertEqual(t.trailing_party_exp,0)
   events[1]=('bonus',2);t.feed(events)
   self.assertEqual(t.trailing_party_exp,0);self.assertEqual(t.refined_party_exp,2)
+ def test_periodic_partial_rows_do_not_prove_movement_with_two_amounts(self):
+  positions=[(20*i,12) for i in range(4)]
+  old=[('mesos',10),('mesos',20),('mesos',None),('mesos',None)]
+  new=[('mesos',None),('mesos',None),('mesos',10),('mesos',20)]
+  self.assertEqual(RewardTracker._align(old,new,positions,positions),[(0,0),(1,1),(2,2),(3,3)])
+ def test_stationary_periodic_baseline_never_becomes_new_pickup(self):
+  from session_reader import RewardRead
+  import random
+  rng=random.Random(3);t=RewardTracker(confirm_money=2);total=0;values=[10,20]*3;positions=[(20*i,12) for i in range(6)]
+  for _ in range(20):
+   events=[('mesos',v if rng.random()<.45 else None) for v in values]
+   total+=t.feed(RewardRead(events,False,(),positions))['mesos']
+  self.assertEqual(total,0)
  def test_clear_money_does_not_require_second_frame(self):
   from session_reader import RewardRead
   t=RewardTracker(confirm_money=2);t.feed([])
