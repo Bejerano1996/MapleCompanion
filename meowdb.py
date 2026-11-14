@@ -20,7 +20,7 @@ import item_sources
 
 BASE = "https://meowdb.com/msclassic"
 MAP_DATA_URL = "https://meowdb.com/_data/maps.json"  # every map with portals, NPCs and spawns
-USER_AGENT = "UMBRALE/2.0 (personal use; liavbateman@gmail.com)"
+USER_AGENT = "UmbraleCompanion/3.37 (desktop game reference)"
 MIN_INTERVAL = 0.5          # seconds between network requests
 INDEX_MAX_AGE = 7 * 86400   # quests / npcs / maps / monsters lists
 DETAIL_MAX_AGE = 30 * 86400 # monster and item pages

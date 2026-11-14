@@ -55,4 +55,4 @@ python -m unittest discover -s tests -p "test_*model.py"
 Logic and GPS tests use cached game indexes. OCR regression uses the supplied screenshots. The extended lifecycle check is `python tests/soak_compact_ui.py --minutes 120`; it disables game capture and global hotkeys and uses temporary fixture state.
 
 
-See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.36**.
+See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.37**.

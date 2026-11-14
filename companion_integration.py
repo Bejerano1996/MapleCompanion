@@ -10,6 +10,7 @@ import webbrowser
 import time
 from PIL import Image,ImageTk
 import widgets
+from data_errors import data_error_status
 from widgets import C,FONT,label,ScrollArea
 from companion_widgets import ui_button,ui_card,ui_nav_icon,ui_walk_widgets,ui_round_card
 from companion_feature_model import utility_session_new,utility_session_snapshot,utility_search_history
@@ -31,7 +32,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='3.36.0-companion'
+    core['VERSION']='3.37.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -204,8 +205,9 @@ def integrate(Base,core):
 
         def set_status(self,text,color='muted'):
             full=str(text)
+            self._companion_status_error=full if full.startswith('Error:') else None
             if full.startswith('Error:'):
-                text='Could not load data · try again'
+                text=data_error_status(full)
             elif full.startswith("Couldn't load locations:"):
                 text='Quest locations unavailable · retry sync'
             elif full.startswith("Couldn't save your list:"):
@@ -225,6 +227,19 @@ def integrate(Base,core):
             if tip:tip.text=full
             elif hasattr(self,'status'):
                 self._companion_status_tip=widgets.Tooltip(self.status,full)
+                self.status.bind('<Button-1>',lambda event:self.companion_error_details(),add='+')
+
+        def companion_error_details(self):
+            full=getattr(self,'_companion_status_error',None)
+            if not full:return
+            window=self.ui_dialog('Background error details')
+            label(window,'One background request failed. Saved game data may still be available.',
+                  wraplength=390,justify='left').pack(padx=12,pady=10)
+            details=tk.Text(window,width=55,height=7,wrap='word',bg=C['card'],fg=C['text'],
+                            font=(FONT,font_size(9)),relief='flat')
+            details.insert('1.0',full);details.config(state='disabled')
+            details.pack(fill='both',expand=True,padx=12,pady=6)
+            widgets.button(window,'Close',window.destroy,padx=12).pack(pady=10)
 
         def render_levelup(self):
             details=getattr(self,'_companion_exp_window',None)

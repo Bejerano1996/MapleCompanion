@@ -1,3 +1,10 @@
+## 3.37
+
+- Use a product-only HTTP User-Agent without an embedded personal identifier. Verified successful downloads of quest pages and minimap images that failed with the old request identity.
+- Distinguish HTTP 403, missing pages/images, rate limits, timeouts, DNS and TLS errors instead of labeling every background failure as missing game data.
+- Click a background error to open its full selectable details; retain the original hover text.
+- Add request-identity and error-presentation regression tests to the Windows release workflow.
+
 ## 3.0.0
 
 - Reconcile session EXP against validated character-bar differences, including party rewards, quest gains, level-ups and net death losses. Visible notices remain a marked fallback and are never added twice to authoritative EXP.
