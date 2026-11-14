@@ -1,6 +1,6 @@
 # Umbrale Companion
 
-[Download latest Windows version](https://github.com/Bejerano1996/MapleCompanion/releases/latest) | [All 63 retained versions](https://github.com/Bejerano1996/MapleCompanion/releases)
+[Download latest Windows version](https://github.com/Bejerano1996/MapleCompanion/releases/latest) | [All retained versions](https://github.com/Bejerano1996/MapleCompanion/releases)
 
 A compact MapleStory Classic overlay: your current objective, quests and GPS, with extra tools one click away.
 

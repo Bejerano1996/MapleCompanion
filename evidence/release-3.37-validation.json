@@ -1,0 +1,21 @@
+{
+  "version": "3.37",
+  "source_commit": "bdba0a7f907c447b8ec34f1a6b0e18b0b454713d",
+  "workflow": "https://github.com/Bejerano1996/MapleCompanion/actions/runs/43595347918",
+  "workflow_conclusion": "success",
+  "checks": {
+    "data_error_unit_tests": 3,
+    "compact_ui_checks": 45,
+    "sync_checks": 9,
+    "training_model_checks": 23,
+    "quest_checks": 5,
+    "realtime_reader_checks": 3,
+    "publication_tools_checks": 6
+  },
+  "live_background_requests": {
+    "quests": 18,
+    "map_images": 6,
+    "errors_after_fix": 0
+  },
+  "program_sha256": "5992c903b43a00dbfb96a8eefa65ffdd19ad5a369693c14f1c6b140ef31350d5"
+}

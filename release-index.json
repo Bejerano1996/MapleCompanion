@@ -1,6 +1,6 @@
 {
   "repository": "Bejerano1996/MapleCompanion",
-  "latest": "umbrale-v3.36",
+  "latest": "umbrale-v3.37",
   "versions": [
     {
       "tag": "maple-ui-source",
@@ -1734,6 +1734,31 @@
           "origin": "recovered retained folder; no original ZIP existed",
           "download_name": "Umbrale.Companion.2.5.1.zip",
           "download_url": "https://github.com/Bejerano1996/MapleCompanion/releases/download/umbrale-v2.5.1/Umbrale.Companion.2.5.1.zip"
+        }
+      ]
+    },
+    {
+      "tag": "umbrale-v3.37",
+      "family": "umbrale",
+      "version": "3.37",
+      "source_available": true,
+      "commit": "bdba0a7f907c447b8ec34f1a6b0e18b0b454713d",
+      "assets": [
+        {
+          "name": "Umbrale.Companion.3.37.Source.zip",
+          "sha256": "6eef11edb28c2ed39bed8c405e9262752a7200e3ac0e4d14dd53b7b3799bd9e0",
+          "size": 18432008,
+          "kind": "source",
+          "download_name": "Umbrale.Companion.3.37.Source.zip",
+          "download_url": "https://github.com/Bejerano1996/MapleCompanion/releases/download/umbrale-v3.37/Umbrale.Companion.3.37.Source.zip"
+        },
+        {
+          "name": "Umbrale.Companion.3.37.zip",
+          "sha256": "5992c903b43a00dbfb96a8eefa65ffdd19ad5a369693c14f1c6b140ef31350d5",
+          "size": 111915915,
+          "kind": "program",
+          "download_name": "Umbrale.Companion.3.37.zip",
+          "download_url": "https://github.com/Bejerano1996/MapleCompanion/releases/download/umbrale-v3.37/Umbrale.Companion.3.37.zip"
         }
       ]
     }
