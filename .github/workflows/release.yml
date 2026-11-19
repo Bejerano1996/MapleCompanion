@@ -20,6 +20,8 @@ jobs:
   release:
     runs-on: windows-latest
     timeout-minutes: 30
+    env:
+      PYTHONIOENCODING: utf-8
     steps:
       - uses: actions/checkout@v4
         with:
@@ -42,6 +44,10 @@ jobs:
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p "test_alternate_sources.py" -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          foreach ($pattern in @('test_public_http.py', 'test_index_cache*.py', 'test_game_window_identity.py', 'test_screen_visibility.py', 'test_occluded_capture.py', 'test_context*.py', 'test_reader_health.py', 'test_close_persistence.py', 'test_reference_only_ui.py')) {
+            python -m unittest discover -s tests -p $pattern -v
+            if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          }
           python -m unittest discover -s tests -p "test_training_model.py" -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p "test_quest*.py" -v
@@ -49,6 +55,10 @@ jobs:
           python -m unittest discover -s tests -p "test_sync*.py" -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p "test_realtime_reader.py" -v
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/test_compact_ui.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tests/test_session_rewards_ui.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Build Windows application
         if: steps.plan.outputs.build == 'true'
