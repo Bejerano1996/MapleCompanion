@@ -38,7 +38,7 @@ jobs:
         run: |
           python tools/test_release_tools.py -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-          python -m unittest discover -s tests -p "test_data_errors.py" -v
+          python -m unittest discover -s tests -p "test_data*.py" -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python -m unittest discover -s tests -p "test_training_model.py" -v
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
