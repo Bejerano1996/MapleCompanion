@@ -777,6 +777,7 @@ class App:
             return lambda: (pop.close(), command())
         widgets.menu_item(body, "⟳   Sync now", then_close(self.sync_from_game)).pack(fill="x")
         widgets.menu_item(body, "NiaDB data / refresh", then_close(self.open_data_status)).pack(fill="x")
+        widgets.menu_item(body, "Additional quest sources", then_close(self.open_alternate_sources)).pack(fill="x")
         widgets.menu_item(body, "⌂   Reset position", then_close(self.reset_position)).pack(fill="x")
         rule()
         widgets.menu_item(body, "✕   Quit UMBRΛLE", self.on_close, "saves your list").pack(fill="x")
@@ -1359,6 +1360,10 @@ class App:
         self.prefetch()
         self._schedule_auto_sync()
         self.trainer_tick(force=True)
+
+    def open_alternate_sources(self):
+        from alternate_sources_ui import open_sources
+        return open_sources(self)
 
     def open_data_status(self):
         sources = getattr(self.db, 'data_sources', {})

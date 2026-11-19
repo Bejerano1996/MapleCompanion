@@ -55,7 +55,9 @@ python -m unittest discover -s tests -p "test_*model.py"
 Logic and GPS tests use cached game indexes. OCR regression uses the supplied screenshots. The extended lifecycle check is `python tests/soak_compact_ui.py --minutes 120`; it disables game capture and global hotkeys and uses temporary fixture state.
 
 
-See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.38**.
+See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.39**.
+
+Additional quest sources: open Settings → Additional quest sources → Refresh to search the independent public catalogs from [CCPLZ](https://ccplz.cc/quests) and [MapleStory Classic](https://maplestory-classic.com/quests). Results show source, level, listed EXP and an exact-page link. These reference catalogs do not replace tracked quest IDs, requirements, routes or measured EXP. Only the two public index pages are fetched, serially at least ten seconds apart, cached for a day; refusals stop further requests. MapleStory Classic credits [MapleClassic Wiki](https://mapleclassic.wiki/) structured game data under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Original guide text and sprites are not imported or bundled. Catalog caches stay local and are excluded from releases.
 
 
 NiaDB live data updates are currently paused because the operator withdrew the old tool permission. Existing cached data remains usable. See [3.38 release notes](RELEASE-3.38.md). New database content requires renewed site authorization; this release does not bypass the refusal.

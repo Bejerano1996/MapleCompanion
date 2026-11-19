@@ -1,0 +1,18 @@
+{
+  "tag": "umbrale-v3.39",
+  "version": "3.39",
+  "family": "umbrale",
+  "source_available": true,
+  "assets": [
+    {
+      "name": "Umbrale Companion 3.39.zip",
+      "sha256": "41c7ccc7c797c3c719c6149845414a9b2e6ffa31e8e1f95848c2e72c3cc7ffe5",
+      "size": 122636006
+    },
+    {
+      "name": "Umbrale Companion 3.39 Source.zip",
+      "sha256": "53a812b7c2ac642653cef258c9b33793e709102acf72285e2f5bdf39599668db",
+      "size": 18450538
+    }
+  ]
+}

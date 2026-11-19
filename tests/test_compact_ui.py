@@ -105,6 +105,18 @@ with tempfile.TemporaryDirectory(prefix='compact-ui-',dir=Path(__file__).parent)
     a.state['active']=[];a.set_tab('quests');pump()
     check('Empty journal still offers manual quest addition',any(isinstance(w,(tk.Label,tk.Button)) and w.cget('text')=='+ Quest' for w in ui_walk_widgets(a.scroll.inner)))
     a.state['active']=original_active
+    from alternate_sources import AlternateCatalogs, parse_catalog
+    a.alternate_catalogs=AlternateCatalogs(folder)
+    a.alternate_catalogs.rows['ccplz']=parse_catalog('ccplz','<li><a href="/quests/fixture">Fixture New Quest</a><span>Level 39, from NPC, 120 EXP</span></li>')
+    journal_before=json.dumps(a.state,sort_keys=True)
+    source_window=a.open_alternate_sources();pump()
+    source_text=[w.cget('text') for w in ui_walk_widgets(source_window) if isinstance(w,(tk.Label,tk.Button))]
+    check('Alternate catalog shows attributed quest and EXP',any('Fixture New Quest' in t for t in source_text) and any('CCPLZ · 120 EXP' in t for t in source_text))
+    check('Alternate catalog does not mutate journal',json.dumps(a.state,sort_keys=True)==journal_before)
+    source_search=next(w for w in ui_walk_widgets(source_window) if isinstance(w,tk.Entry))
+    source_search.insert(0,'unmatched');pump()
+    check('Alternate catalog search filters results',not any(isinstance(w,tk.Label) and 'Fixture New Quest' in w.cget('text') for w in ui_walk_widgets(source_window)))
+    source_window.destroy();pump()
     check('No callback errors',not errors)
     for job in root.tk.call('after','info'):root.tk.call('after','cancel',job)
     root.destroy()

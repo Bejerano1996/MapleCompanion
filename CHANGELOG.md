@@ -1,3 +1,9 @@
+## 3.39
+
+- Connect searchable CCPLZ and MapleStory Classic public quest catalogs, with exact source links, level and listed EXP.
+- Cache catalogs locally for one day and load only on explicit request, in the background with serial ten-second spacing.
+- Preserve prior records on failed refresh; stop a provider after HTTP 403/429. Never infer missing EXP as zero or overwrite tracked quest IDs, requirements, GPS or measured EXP.
+
 ## 3.38
 
 - Stop all automatic NiaDB requests while this tool's withdrawn permission awaits renewal; cached data remains usable.
