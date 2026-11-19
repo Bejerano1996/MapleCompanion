@@ -1,4 +1,4 @@
-"""Data access for NiaMeowDB (meowdb.com/msclassic), used with the operator's permission.
+"""Cached NiaDB data access. Live access requires renewed operator permission.
 
 Fetches pages one at a time, rate-limited, and caches every response on disk so each
 page is only downloaded once (index pages refresh weekly).
@@ -20,11 +20,23 @@ import item_sources
 
 BASE = "https://meowdb.com/msclassic"
 MAP_DATA_URL = "https://meowdb.com/_data/maps.json"  # every map with portals, NPCs and spawns
-USER_AGENT = "UmbraleCompanion/3.37 (desktop game reference)"
-MIN_INTERVAL = 0.5          # seconds between network requests
+USER_AGENT = "UmbraleCompanion/3.38 (https://github.com/Bejerano1996/MapleCompanion/issues)"
+MIN_INTERVAL = 10.0        # https://meowdb.com/reuse#tool-rules
+ACCESS_RENEWAL_REQUIRED = True  # Operator explicitly revoked this tool's old permission.
+_REQUEST_LOCK = threading.Lock()
+_LAST_REQUEST = None
+_ACCESS_DENIED = None
 INDEX_MAX_AGE = 7 * 86400   # quests / npcs / maps / monsters lists
 DETAIL_MAX_AGE = 30 * 86400 # monster and item pages
 RETRY_DELAYS = (1, 3)       # seconds to wait before the 2nd and 3rd try of a failed download
+
+
+class DataAccessPaused(urllib.error.URLError):
+    """No automatic retry after provider refusal or withdrawn permission."""
+
+
+def data_access_message():
+    return 'NiaDB access paused: renewed permission required (https://meowdb.com/reuse)'
 
 # Where the cache and saved state live: next to the .exe when packaged, else next to the code
 APP_DIR = (os.path.dirname(sys.executable) if getattr(sys, "frozen", False)
@@ -63,6 +75,9 @@ class MeowDB:
         self.shops = []    # [{npc, mapId, kind, stock: {item name: price}}], kind e.g. "Grocer"
         self.quest_guides = {}  # quest id -> [guide entry] (see guides.py)
         self.offline = False  # set when an expired page had to be served from the cache
+        self.access_paused = ACCESS_RENEWAL_REQUIRED or _ACCESS_DENIED is not None
+        self._force_refresh = False
+        self.data_sources = {}
 
     # ---------- network + cache ----------
 
@@ -75,7 +90,8 @@ class MeowDB:
             return self._fetch(path)
         cache = self._cache_path(path)
         have_cache = os.path.exists(cache)
-        if have_cache and time.time() - os.path.getmtime(cache) < max_age:
+        if have_cache and not self._force_refresh and time.time() - os.path.getmtime(cache) < max_age:
+            self.data_sources[path] = {'source': 'cache', 'fetched_at': os.path.getmtime(cache)}
             with open(cache, encoding="utf-8") as f:
                 return f.read()
         try:
@@ -84,30 +100,55 @@ class MeowDB:
             if not have_cache:
                 raise
             self.offline = True  # site unreachable: keep working from the older copy
+            self.data_sources[path] = {'source': 'cache', 'fetched_at': os.path.getmtime(cache)}
             with open(cache, encoding="utf-8") as f:
                 return f.read()
         write_atomic(cache, text)
+        self.data_sources[path] = {'source': 'network', 'fetched_at': os.path.getmtime(cache)}
         return text
 
     def _fetch(self, path):
-        """Download with retries: network hiccups and busy-server answers (429/5xx) are
-        retried after RETRY_DELAYS; a missing page (404) fails at once."""
+        """Retry transient failures only. Provider 403/429 responses stop requests."""
         for delay in RETRY_DELAYS + (None,):
             try:
                 return self._fetch_once(path)
             except urllib.error.HTTPError as e:
-                if e.code != 429 and e.code < 500 or delay is None:
+                if e.code < 500 or delay is None:
                     raise
+            except DataAccessPaused:
+                raise
             except (urllib.error.URLError, TimeoutError, ConnectionError):
                 if delay is None:
                     raise
             time.sleep(delay)
 
     def _fetch_once(self, path):
+        global _LAST_REQUEST, _ACCESS_DENIED
+        if ACCESS_RENEWAL_REQUIRED or _ACCESS_DENIED is not None:
+            self.access_paused = True
+            raise DataAccessPaused(data_access_message())
+        with _REQUEST_LOCK:
+            # Shared across all MeowDB instances, including portrait and guide jobs.
+            if ACCESS_RENEWAL_REQUIRED or _ACCESS_DENIED is not None:
+                self.access_paused = True
+                raise DataAccessPaused(data_access_message())
+            if _LAST_REQUEST is not None:
+                wait = MIN_INTERVAL - (time.monotonic() - _LAST_REQUEST)
+                if wait > 0:
+                    time.sleep(wait)
+            try:
+                return self._request_url(path)
+            except urllib.error.HTTPError as error:
+                if error.code in (403, 429):
+                    _ACCESS_DENIED = error.code
+                    self.access_paused = True
+                    raise DataAccessPaused(data_access_message()) from None
+                raise
+            finally:
+                _LAST_REQUEST = time.monotonic()
+
+    def _request_url(self, path):
         with self._lock:
-            wait = MIN_INTERVAL - (time.time() - self._last_request)
-            if wait > 0:
-                time.sleep(wait)
             url = path if path.startswith("https://") else BASE + path
             req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
             try:
@@ -144,38 +185,59 @@ class MeowDB:
 
     # ---------- indexes ----------
 
-    def load_indexes(self):
+    def load_indexes(self, force=False):
+        previous_sources, previous_offline = dict(self.data_sources), self.offline
+        self._force_refresh = force
+        self.offline = False
+        try:
+            return self._load_indexes()
+        except Exception:
+            self.data_sources, self.offline = previous_sources, previous_offline
+            raise
+        finally:
+            self._force_refresh = False
+
+    def refresh_indexes(self):
+        return self.load_indexes(force=True)
+
+    def _load_indexes(self):
         html = self._get("/quest-tracker/all", INDEX_MAX_AGE)
-        self.areas = {int(v): name for v, name in
+        areas = {int(v): name for v, name in
                       re.findall(r'<option value="(\d+)">([^<]+)</option>', html)}
         quests = self._largest_list(self._rsc(html), r'\[\{"id":', "need")
-        self.quests = {q["id"]: q for q in quests}
 
         npcs = self._largest_list(self._rsc(self._get("/npcs", INDEX_MAX_AGE)), r'\[\{"id":', "maps")
-        self.npcs = {}
+        npc_index = {}
         for n in npcs:
             for key in {n.get("name"), n.get("displayName")}:
                 if key:
-                    self.npcs.setdefault(key.lower(), n)
+                    npc_index.setdefault(key.lower(), n)
 
         maps = self._largest_list(self._rsc(self._get("/maps", INDEX_MAX_AGE)), r'\[\{"id":', "avgMobLevel")
-        self.maps = {m["id"]: m for m in maps}
 
         mobs = self._largest_list(self._rsc(self._get("/monsters", INDEX_MAX_AGE)), r'\[\{"id":', "level")
-        self.monsters = {m["id"]: m for m in mobs if not is_job_test_monster(m)}
-
-        self.map_data = {m["id"]: m for m in json.loads(self._get(MAP_DATA_URL, INDEX_MAX_AGE))}
+        map_rows = json.loads(self._get(MAP_DATA_URL, INDEX_MAX_AGE))
+        for name, rows in (('quests', quests), ('NPCs', npcs), ('maps', maps),
+                           ('monsters', mobs), ('map routes', map_rows)):
+            if not isinstance(rows, list) or not rows or any(not isinstance(row, dict) or 'id' not in row for row in rows):
+                raise ValueError('NiaDB data format changed: ' + name + '; previous data kept')
 
         try:  # shops are extra: the app works without them (e.g. offline with no copy cached yet)
-            self.sold_by = self._index_shops(self._get("/npc-shops", INDEX_MAX_AGE))
+            sold_by = self._index_shops(self._get("/npc-shops", INDEX_MAX_AGE))
         except Exception:
-            self.sold_by, self.shops = {}, []
+            sold_by, self.shops = {}, []
 
         try:  # guides are extra too: quests that need explaining (jump quests, events, the Hollow)
-            self.quest_guides = guides.quest_guides(
+            quest_guides = guides.quest_guides(
                 lambda slug: self._rsc(self._get(f"/guides/{slug}", DETAIL_MAX_AGE)))
         except Exception:
-            self.quest_guides = {}
+            quest_guides = {}
+        # A failed refresh must never leave half-new indexes or empty the quest list.
+        self.__dict__.update(areas=areas, quests={q['id']: q for q in quests},
+                             npcs=npc_index, maps={m['id']: m for m in maps},
+                             monsters={m['id']: m for m in mobs if not is_job_test_monster(m)},
+                             map_data={m['id']: m for m in map_rows},
+                             sold_by=sold_by, quest_guides=quest_guides)
 
     def _index_shops(self, html):
         """Every NPC shop's stock, by game item id: who sells it, where, and the Classic price."""

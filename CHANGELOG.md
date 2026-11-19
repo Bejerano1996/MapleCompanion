@@ -1,3 +1,11 @@
+## 3.38
+
+- Stop all automatic NiaDB requests while this tool's withdrawn permission awaits renewal; cached data remains usable.
+- Enforce one shared, serial request every ten seconds after renewed authorization, and stop on HTTP 403/429 without retries.
+- Commit refreshed game indexes only after complete validation, preserving existing indexes on format/network failure.
+- Add NiaDB data status, cache dates and background refresh controls; distinguish paused provider access from generic loading errors.
+- Preserve the 3.37 error-details improvements and use a public project contact in the proposed User-Agent.
+
 ## 3.37
 
 - Use a product-only HTTP User-Agent without an embedded personal identifier. Verified successful downloads of quest pages and minimap images that failed with the old request identity.

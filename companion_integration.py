@@ -32,7 +32,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='3.37.0-companion'
+    core['VERSION']='3.38.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -52,7 +52,7 @@ def integrate(Base,core):
             if not self.db.quests:self.render()
 
         def run_bg(self,fn,callback,on_error=None):
-            if getattr(fn,'__name__','')!='load_indexes' or getattr(fn,'__self__',None) is not getattr(self,'db',None):
+            if getattr(fn,'__name__','') not in ('load_indexes','refresh_indexes') or getattr(fn,'__self__',None) is not getattr(self,'db',None):
                 return super().run_bg(fn,callback,on_error)
             self._companion_loading=True;self._companion_data_error=None
             def loaded(value):
@@ -218,6 +218,8 @@ def integrate(Base,core):
                 text='Auto sync on'
             elif full.startswith('Offline:'):
                 text='Offline · saved data'
+            elif full.startswith('NiaDB updates paused:'):
+                text='NiaDB cached data · updates paused'
             elif full.startswith('No quests on screen:'):
                 text='Open the in-game Quest Helper'
             elif len(full)>90:
@@ -236,7 +238,7 @@ def integrate(Base,core):
             label(window,'One background request failed. Saved game data may still be available.',
                   wraplength=390,justify='left').pack(padx=12,pady=10)
             details=tk.Text(window,width=55,height=7,wrap='word',bg=C['card'],fg=C['text'],
-                            font=(FONT,font_size(9)),relief='flat')
+                            font=(FONT,widgets.font_size(9)),relief='flat')
             details.insert('1.0',full);details.config(state='disabled')
             details.pack(fill='both',expand=True,padx=12,pady=6)
             widgets.button(window,'Close',window.destroy,padx=12).pack(pady=10)

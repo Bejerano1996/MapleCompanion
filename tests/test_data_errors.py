@@ -23,10 +23,10 @@ class DataErrorTests(unittest.TestCase):
         self.assertTrue(USER_AGENT.startswith('UmbraleCompanion/'))
         self.assertNotIn('@',USER_AGENT)
         self.assertNotIn('gmail',USER_AGENT.casefold())
-        with tempfile.TemporaryDirectory() as folder:
+        with tempfile.TemporaryDirectory(dir=Path(__file__).resolve().parent) as folder:
             db=MeowDB(folder)
             response=MagicMock();response.__enter__.return_value.read.return_value=b'payload'
-            with patch('meowdb.urllib.request.urlopen',return_value=response) as call:
+            with patch('meowdb.ACCESS_RENEWAL_REQUIRED',False),patch('meowdb._ACCESS_DENIED',None),patch('meowdb._LAST_REQUEST',None),patch('meowdb.urllib.request.urlopen',return_value=response) as call:
                 self.assertEqual(db._fetch_once('/quest-tracker/10300'),b'payload')
             request=call.call_args.args[0]
             self.assertEqual(request.get_header('User-agent'),USER_AGENT)

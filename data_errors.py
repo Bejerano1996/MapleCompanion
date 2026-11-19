@@ -4,6 +4,10 @@ import re
 
 def data_error_status(message):
     text = str(message)
+    if "NiaDB access paused" in text:
+        return "NiaDB updates paused · permission required"
+    if "NiaDB data format changed" in text:
+        return "NiaDB format changed · previous data kept"
     code = re.search(r"HTTP\s*(?:Error\s*)?[:=]?\s*(403|404|429|5\d\d)\b", text, re.I)
     if code:
         value = int(code.group(1))

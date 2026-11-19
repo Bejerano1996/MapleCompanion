@@ -2,6 +2,7 @@
 from pathlib import Path
 import sys,os,json,tempfile,time,types
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
+from unittest.mock import patch
 import tkinter as tk
 import tkinter.font as tkfont
 import app,widgets
@@ -68,6 +69,9 @@ with tempfile.TemporaryDirectory(prefix='compact-ui-',dir=Path(__file__).parent)
     a.training_accept_character({'level':26,'exp':29285});a.render_levelup();pump()
     check('Compact EXP reports actual percentage',any(isinstance(w,tk.Label) and '53.34%' in w.cget('text') for w in ui_walk_widgets(a.lvl_strip)))
     a._companion_exp_window.destroy();a.render_levelup();pump()
+    with patch('app.messagebox.showinfo') as info:
+        a.db.access_paused=True;a.open_data_status()
+        check('Data status explains permission pause and retained indexes','renewed permission' in info.call_args.args[1] and str(len(a.db.quests)) in info.call_args.args[1])
     check('Closing details keeps compact summary usable',a.lvl_strip.winfo_exists())
     a.set_status('Error: <urlopen error [Errno 11001] getaddrinfo failed>','red')
     check('Technical errors have short user-facing copy','urlopen' not in a.status.cget('text') and len(a.status.cget('text'))<60)

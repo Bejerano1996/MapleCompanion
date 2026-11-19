@@ -776,6 +776,7 @@ class App:
         def then_close(command):
             return lambda: (pop.close(), command())
         widgets.menu_item(body, "⟳   Sync now", then_close(self.sync_from_game)).pack(fill="x")
+        widgets.menu_item(body, "NiaDB data / refresh", then_close(self.open_data_status)).pack(fill="x")
         widgets.menu_item(body, "⌂   Reset position", then_close(self.reset_position)).pack(fill="x")
         rule()
         widgets.menu_item(body, "✕   Quit UMBRΛLE", self.on_close, "saves your list").pack(fill="x")
@@ -1343,7 +1344,9 @@ class App:
     def _on_loaded(self, _):
         if not self.db.quests:
             return
-        if self.db.offline:
+        if getattr(self.db, 'access_paused', False):
+            self.set_status('NiaDB updates paused: renewed site permission required; using saved data', 'gold')
+        elif self.db.offline:
             self.set_status(f"Offline: meowdb.com unreachable, using saved data ({len(self.db.quests)} quests)")
         elif not self.state["auto_sync"]:
             self.set_status("AUTO is off: quests and counts update only when you press ⟳ (the GPS still follows you)",
@@ -1356,6 +1359,25 @@ class App:
         self.prefetch()
         self._schedule_auto_sync()
         self.trainer_tick(force=True)
+
+    def open_data_status(self):
+        sources = getattr(self.db, 'data_sources', {})
+        stamps = [row['fetched_at'] for row in sources.values() if row.get('fetched_at')]
+        date = time.strftime('%Y-%m-%d', time.localtime(min(stamps))) if stamps else 'Unknown'
+        paused = getattr(self.db, 'access_paused', False)
+        text = (f'NiaDB data\n\n{len(self.db.quests)} quests · {len(self.db.maps)} maps · '
+                f'{len(self.db.monsters)} monsters\nOldest loaded data: {date}\n\n')
+        if paused:
+            text += ('Live updates are paused: NiaDB withdrew this tool\'s old permission. '
+                     'Saved data remains available. New content requires renewed permission from '
+                     'contact@meowdb.com. Rules: https://meowdb.com/reuse\n\n'
+                     'No repeated requests will be sent while access is paused.')
+            messagebox.showinfo('NiaDB data', text, parent=self.root)
+        elif messagebox.askyesno('NiaDB data', text + 'Download updated indexes now? This runs in the background.', parent=self.root):
+            def loaded(value):
+                self.guides.clear()
+                self._on_loaded(value)
+            self.run_bg(self.db.refresh_indexes, loaded)
 
     def refresh_map_label(self):
         m = self.db.maps.get(self.state.get("map") or "")

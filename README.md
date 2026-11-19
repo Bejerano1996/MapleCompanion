@@ -55,4 +55,7 @@ python -m unittest discover -s tests -p "test_*model.py"
 Logic and GPS tests use cached game indexes. OCR regression uses the supplied screenshots. The extended lifecycle check is `python tests/soak_compact_ui.py --minutes 120`; it disables game capture and global hotkeys and uses temporary fixture state.
 
 
-See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.37**.
+See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.38**.
+
+
+NiaDB live data updates are currently paused because the operator withdrew the old tool permission. Existing cached data remains usable. See [3.38 release notes](RELEASE-3.38.md). New database content requires renewed site authorization; this release does not bypass the refusal.
