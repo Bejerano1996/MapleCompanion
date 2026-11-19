@@ -20,6 +20,7 @@ import item_sources
 
 BASE = "https://meowdb.com/msclassic"
 MAP_DATA_URL = "https://meowdb.com/_data/maps.json"  # every map with portals, NPCs and spawns
+CORE_INDEX_PATHS = frozenset(('/quest-tracker/all', '/npcs', '/maps', '/monsters', MAP_DATA_URL))
 USER_AGENT = "UmbraleCompanion/3.38 (https://github.com/Bejerano1996/MapleCompanion/issues)"
 MIN_INTERVAL = 10.0        # https://meowdb.com/reuse#tool-rules
 ACCESS_RENEWAL_REQUIRED = True  # Operator explicitly revoked this tool's old permission.
@@ -55,6 +56,48 @@ def write_atomic(path, data):
     os.replace(tmp, path)
 
 
+def validate_index(name, rows):
+    """Reject unusable provider data before replacing any existing index."""
+    def invalid(field):
+        raise ValueError('NiaDB data format changed: ' + name + ' ' + field + '; previous data kept')
+    if not isinstance(rows, list) or not rows:
+        invalid('catalog')
+    identities = set()
+    for row in rows:
+        if not isinstance(row, dict):
+            invalid('record')
+        identity = row.get('id')
+        if type(identity) not in (str, int) or (isinstance(identity, str) and (not identity or identity != identity.strip())):
+            invalid('identity')
+        if identity in identities:
+            invalid('duplicate identity')
+        identities.add(identity)
+        label_field = 'displayName' if name == 'maps' else 'name'
+        if not isinstance(row.get(label_field), str) or not row[label_field].strip():
+            invalid(label_field)
+        if name == 'quests':
+            needs = row.get('need')
+            if needs is not None and not isinstance(needs, list):
+                invalid('objectives')
+            for need in needs or []:
+                if not isinstance(need, dict) or not isinstance(need.get('name'), str) or not need['name'].strip():
+                    invalid('objective name')
+                count = need.get('count', 1)
+                if type(count) is not int or count <= 0:
+                    invalid('objective count')
+            for field in ('exp', 'mesos', 'levelMin'):
+                if field in row and (type(row[field]) is not int or row[field] < 0):
+                    invalid(field)
+        elif name == 'monsters':
+            if type(identity) is not int:
+                invalid('numeric identity')
+            for field in ('level', 'hp', 'exp'):
+                if type(row.get(field)) is not int or row[field] < (1 if field == 'hp' else 0):
+                    invalid(field)
+        elif name == 'NPCs' and row.get('maps') is not None and not isinstance(row['maps'], list):
+            invalid('locations')
+
+
 _PUSH_RE = re.compile(r"self\.__next_f\.push\((\[.*?\])\)</script>", re.S)
 _decoder = json.JSONDecoder()
 
@@ -77,7 +120,17 @@ class MeowDB:
         self.offline = False  # set when an expired page had to be served from the cache
         self.access_paused = ACCESS_RENEWAL_REQUIRED or _ACCESS_DENIED is not None
         self._force_refresh = False
+        self._refresh_thread = None
+        self._indexes_lock = threading.Lock()
+        self._index_pages = None
+        self._index_fresh = False
+        from index_cache import IndexCache
+        self._index_cache = IndexCache(cache_dir, CORE_INDEX_PATHS)
         self.data_sources = {}
+        from alternate_sources import AlternateCatalogs
+        from quest_references import ReferenceIndex
+        self.reference_catalogs = AlternateCatalogs(cache_dir)
+        self.reference_index = ReferenceIndex()
 
     # ---------- network + cache ----------
 
@@ -89,23 +142,41 @@ class MeowDB:
         if binary:  # images are cached by the caller under their own name
             return self._fetch(path)
         cache = self._cache_path(path)
-        have_cache = os.path.exists(cache)
-        if have_cache and not self._force_refresh and time.time() - os.path.getmtime(cache) < max_age:
-            self.data_sources[path] = {'source': 'cache', 'fetched_at': os.path.getmtime(cache)}
-            with open(cache, encoding="utf-8") as f:
-                return f.read()
+        snapshot = self._index_cache.get(path)
+        legacy_exists = os.path.exists(cache)
+        if snapshot is not None and path not in CORE_INDEX_PATHS and legacy_exists and os.path.getmtime(cache) > snapshot[1]:
+            snapshot = None  # An independently refreshed optional detail can be newer.
+        have_cache = snapshot is not None or legacy_exists
+        stamp = snapshot[1] if snapshot is not None else os.path.getmtime(cache) if legacy_exists else None
+        owner = self._refresh_thread == threading.get_ident() and self._index_pages is not None
+        if owner and path in self._index_pages:
+            return self._index_pages[path][0]
+        def remember(text, fetched_at, fresh=False):
+            if owner:
+                self._index_pages[path] = (text, fetched_at)
+                self._index_fresh = self._index_fresh or fresh
+            self.data_sources[path] = {'source': 'network' if fresh else 'cache', 'fetched_at': fetched_at}
+            return text
+        def saved():
+            if snapshot is not None:
+                return remember(snapshot[0], snapshot[1])
+            with open(cache, encoding='utf-8') as stream:
+                return remember(stream.read(), stamp)
+        force_refresh = self._force_refresh and self._refresh_thread == threading.get_ident()
+        if have_cache and not force_refresh and 0 <= time.time() - stamp < max_age:
+            return saved()
         try:
             text = self._fetch(path).decode("utf-8")
         except (urllib.error.URLError, OSError):
             if not have_cache:
                 raise
             self.offline = True  # site unreachable: keep working from the older copy
-            self.data_sources[path] = {'source': 'cache', 'fetched_at': os.path.getmtime(cache)}
-            with open(cache, encoding="utf-8") as f:
-                return f.read()
+            return saved()
+        if owner:
+            # Publish no raw response until the complete index batch validates.
+            return remember(text, time.time(), fresh=True)
         write_atomic(cache, text)
-        self.data_sources[path] = {'source': 'network', 'fetched_at': os.path.getmtime(cache)}
-        return text
+        return remember(text, os.path.getmtime(cache), fresh=True)
 
     def _fetch(self, path):
         """Retry transient failures only. Provider 403/429 responses stop requests."""
@@ -186,16 +257,28 @@ class MeowDB:
     # ---------- indexes ----------
 
     def load_indexes(self, force=False):
-        previous_sources, previous_offline = dict(self.data_sources), self.offline
-        self._force_refresh = force
-        self.offline = False
-        try:
-            return self._load_indexes()
-        except Exception:
-            self.data_sources, self.offline = previous_sources, previous_offline
-            raise
-        finally:
-            self._force_refresh = False
+        with self._indexes_lock:
+            previous_sources, previous_offline = dict(self.data_sources), self.offline
+            self._force_refresh = force
+            self._refresh_thread = threading.get_ident()
+            self._index_pages = {}
+            self._index_fresh = False
+            self.offline = False
+            try:
+                indexes = self._load_indexes()
+                if indexes is not None:
+                    if self._index_fresh:
+                        self._index_cache.commit(self._index_pages)
+                    self.__dict__.update(indexes)
+                return None
+            except Exception:
+                self.data_sources, self.offline = previous_sources, previous_offline
+                raise
+            finally:
+                self._force_refresh = False
+                self._refresh_thread = None
+                self._index_pages = None
+                self._index_fresh = False
 
     def refresh_indexes(self):
         return self.load_indexes(force=True)
@@ -207,11 +290,6 @@ class MeowDB:
         quests = self._largest_list(self._rsc(html), r'\[\{"id":', "need")
 
         npcs = self._largest_list(self._rsc(self._get("/npcs", INDEX_MAX_AGE)), r'\[\{"id":', "maps")
-        npc_index = {}
-        for n in npcs:
-            for key in {n.get("name"), n.get("displayName")}:
-                if key:
-                    npc_index.setdefault(key.lower(), n)
 
         maps = self._largest_list(self._rsc(self._get("/maps", INDEX_MAX_AGE)), r'\[\{"id":', "avgMobLevel")
 
@@ -219,35 +297,77 @@ class MeowDB:
         map_rows = json.loads(self._get(MAP_DATA_URL, INDEX_MAX_AGE))
         for name, rows in (('quests', quests), ('NPCs', npcs), ('maps', maps),
                            ('monsters', mobs), ('map routes', map_rows)):
-            if not isinstance(rows, list) or not rows or any(not isinstance(row, dict) or 'id' not in row for row in rows):
-                raise ValueError('NiaDB data format changed: ' + name + '; previous data kept')
+            validate_index(name, rows)
+        npc_index = {}
+        for npc in npcs:
+            for key in {npc.get('name'), npc.get('displayName')}:
+                if isinstance(key, str) and key:
+                    npc_index.setdefault(key.lower(), npc)
 
         try:  # shops are extra: the app works without them (e.g. offline with no copy cached yet)
-            sold_by = self._index_shops(self._get("/npc-shops", INDEX_MAX_AGE))
+            sold_by, shops = self._index_shops(self._get("/npc-shops", INDEX_MAX_AGE))
         except Exception:
-            sold_by, self.shops = {}, []
+            sold_by, shops = self.sold_by, self.shops
+            self._retain_index_page('/npc-shops')
 
         try:  # guides are extra too: quests that need explaining (jump quests, events, the Hollow)
-            quest_guides = guides.quest_guides(
-                lambda slug: self._rsc(self._get(f"/guides/{slug}", DETAIL_MAX_AGE)))
+            quest_guides = guides.quest_guides(self._guide_index_payload)
         except Exception:
-            quest_guides = {}
+            quest_guides = self.quest_guides
+            for slug in guides.QUEST_GUIDES:
+                self._retain_index_page('/guides/'+slug)
         # A failed refresh must never leave half-new indexes or empty the quest list.
-        self.__dict__.update(areas=areas, quests={q['id']: q for q in quests},
+        return dict(areas=areas, quests={q['id']: q for q in quests},
                              npcs=npc_index, maps={m['id']: m for m in maps},
                              monsters={m['id']: m for m in mobs if not is_job_test_monster(m)},
                              map_data={m['id']: m for m in map_rows},
-                             sold_by=sold_by, quest_guides=quest_guides)
+                    sold_by=sold_by, shops=shops, quest_guides=quest_guides)
+
+    def _guide_index_payload(self, slug):
+        rsc = self._rsc(self._get('/guides/'+slug, DETAIL_MAX_AGE))
+        if not rsc or not guides.page_events(rsc):
+            raise ValueError('NiaDB guide format changed; previous data kept')
+        return rsc
+
+    def _retain_index_page(self, path):
+        """An invalid optional response must not replace its last saved page."""
+        if self._index_pages is None:
+            return
+        saved = self._index_cache.get(path)
+        if saved is None:
+            try:
+                cache = self._cache_path(path)
+                with open(cache, encoding='utf-8') as stream:
+                    saved = (stream.read(), os.path.getmtime(cache))
+            except (OSError, ValueError):
+                pass
+        self._index_pages.pop(path, None)
+        self.data_sources.pop(path, None)
+        if saved is not None:
+            self._index_pages[path] = saved
+            self.data_sources[path] = {'source':'cache', 'fetched_at':saved[1]}
 
     def _index_shops(self, html):
         """Every NPC shop's stock, by game item id: who sells it, where, and the Classic price."""
         shops = self._largest_list(self._rsc(html), r'\[\{"slug":', "npcName")
+        if not shops:
+            raise ValueError('NiaDB shop catalog format changed; previous data kept')
         sold = {}
-        self.shops = []
+        shop_index = []
         for shop in shops:
+            if not isinstance(shop.get('npcName'), str) or not shop['npcName'].strip():
+                raise ValueError('Invalid shop NPC name; previous data kept')
             if shop.get("opensNoShop") or not shop.get("mapId"):
                 continue
-            self.shops.append({"npc": shop["npcName"], "mapId": shop["mapId"], "kind": shop.get("npcFunction") or "Shop",
+            if not isinstance(shop.get('items') or [], list):
+                raise ValueError('Invalid shop inventory; previous data kept')
+            for item in shop.get('items') or []:
+                if not isinstance(item, dict):
+                    raise ValueError('Invalid shop item; previous data kept')
+                price = item.get('classicPrice')
+                if price is not None and (type(price) is not int or price < 0):
+                    raise ValueError('Invalid shop price; previous data kept')
+            shop_index.append({"npc": shop["npcName"], "mapId": shop["mapId"], "kind": shop.get("npcFunction") or "Shop",
                                "stock": {i["name"]: i["classicPrice"] for i in shop.get("items") or []
                                          if i.get("name") and i.get("classicPrice") is not None}})
             for item in shop.get("items") or []:
@@ -258,7 +378,7 @@ class MeowDB:
                      "citizen": item.get("citizenReq")})
         for sellers in sold.values():
             sellers.sort(key=lambda s: s["price"])
-        return sold
+        return sold, shop_index
 
     # ---------- lookups ----------
 

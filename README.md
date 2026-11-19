@@ -55,7 +55,11 @@ python -m unittest discover -s tests -p "test_*model.py"
 Logic and GPS tests use cached game indexes. OCR regression uses the supplied screenshots. The extended lifecycle check is `python tests/soak_compact_ui.py --minutes 120`; it disables game capture and global hotkeys and uses temporary fixture state.
 
 
-See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.39**.
+See [RELEASES.md](RELEASES.md) for historical versions, checksums and automatic publication. Current application version: **3.40**.
+
+**Quest references during play:** cached additional catalogs load at startup. When a visible title is absent from the main quest database, two fresh matching AUTO reads can show a separate source card with listed EXP. References expire after 15 seconds without confirmation. They do not create saved quest IDs or progress. Open **Settings → Additional quest sources**, or press **Ctrl+Shift+F while the Companion has focus**, to search locally; **Refresh** explicitly updates the public catalogs. **Near Lv** optionally limits results to your level and the preceding ten levels; it does not establish eligibility or prerequisites.
+
+The AUTO dot reflects recent quest-title evidence: green means a nonempty reading within six seconds, gold means waiting, old, blocked or unavailable, gray means AUTO is off. Keep the game's Quest Helper visible. Covered regions are excluded from OCR; the tool cannot read invisible quests or a minimized game. Main database refreshes validate and atomically save a complete core snapshot, preserving the previous snapshot if validation or disk writing fails.
 
 Additional quest sources: open Settings → Additional quest sources → Refresh to search the independent public catalogs from [CCPLZ](https://ccplz.cc/quests) and [MapleStory Classic](https://maplestory-classic.com/quests). Results show source, level, listed EXP and an exact-page link. These reference catalogs do not replace tracked quest IDs, requirements, routes or measured EXP. Only the two public index pages are fetched, serially at least ten seconds apart, cached for a day; refusals stop further requests. MapleStory Classic credits [MapleClassic Wiki](https://mapleclassic.wiki/) structured game data under [CC BY-NC-SA 4.0](https://creativecommons.org/licenses/by-nc-sa/4.0/). Original guide text and sprites are not imported or bundled. Catalog caches stay local and are excluded from releases.
 

@@ -10,9 +10,10 @@ class MissingGameSyncTests(unittest.TestCase):
   a.root=type('Root',(),{'after':lambda root,*args:a.scheduled.append(args)})();a.results=queue.Queue()
   return a
  def test_missing_game_clears_busy_and_marks_map_unreadable(self):
-  a=self.make_app();a._on_synced(None)
+  a=self.make_app();a._reads={'old':(1,2)};a._gone={'old':4};a.focus=[(0,0,100,100)];a._on_synced(None)
   self.assertFalse(a.syncing);self.assertFalse(a._live_last_result['_minimap_readable'])
   self.assertTrue(a.statuses);self.assertEqual(len(a.profiles),1)
+  self.assertEqual(a._reads,{});self.assertEqual(a._gone,{});self.assertIsNone(a.focus)
  def test_missing_game_result_does_not_stop_shared_result_pump(self):
   a=self.make_app();received=[];a.results.put((a._on_synced,None,None));a.results.put((lambda value:received.append(value),16,None))
   with patch.object(app.os.path,'exists',return_value=False):a._poll()

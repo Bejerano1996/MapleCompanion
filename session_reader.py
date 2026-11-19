@@ -98,6 +98,8 @@ def capture_rewards(hide=()):
     from PIL import ImageGrab,ImageDraw
     box=find_game_window()
     if box is None:return None
+    import screen_visibility
+    hide=tuple(hide)+tuple(screen_visibility.covering_windows(box))
     x,y,right,bottom=box;w=right-x;h=bottom-y
     # Keep the floating reward notices large enough for OCR at 1080p/1440p.
     # The previous wide scene crop left their small glyphs at native resolution.
@@ -106,16 +108,11 @@ def capture_rewards(hide=()):
     # Floating notices sit above the quick-slot/HUD area. A tools window
     # touching only the scene above them must not disable the entire reader.
     log=(x+int(w*.70),y+int(h*.70),right,y+int(h*.83))
-    partial=any(r>log[0] and left<log[2] and b>log[1] and top<log[3] for left,top,r,b in hide)
-    if partial:
-        from PIL import Image
-        visible=Image.new('L',(log[2]-log[0],log[3]-log[1]),255)
-        mask=ImageDraw.Draw(visible)
-        for left,top,r,b in hide:
-            if r>log[0] and left<log[2] and b>log[1] and top<log[3]:
-                mask.rectangle((max(0,left-log[0]),max(0,top-log[1]),min(visible.width,r-log[0]),min(visible.height,b-log[1])),fill=0)
-        if visible.getbbox() is None:return None
+    if screen_visibility.fully_covered(log,hide):return None
     image=ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB')
+    hide+=tuple(screen_visibility.covering_windows(box))
+    if screen_visibility.fully_covered(log,hide):return None
+    partial=any(r>log[0] and left<log[2] and b>log[1] and top<log[3] for left,top,r,b in hide)
     draw=ImageDraw.Draw(image)
     for left,top,r,b in hide:
         if r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3]:
@@ -155,7 +152,12 @@ def capture_wallet(hide=()):
     box=find_game_window()
     if not box:return None
     x,y,r,b=box;crop=(x+int((r-x)*.70),y,r,y+int((b-y)*.65))
+    import screen_visibility
+    hide=tuple(hide)+tuple(screen_visibility.covering_windows(box))
+    if screen_visibility.fully_covered(crop,hide):return None
     image=ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB')
+    hide+=tuple(screen_visibility.covering_windows(box))
+    if screen_visibility.fully_covered(crop,hide):return None
     draw=ImageDraw.Draw(image)
     for left,top,right,bottom in hide:
         if right>crop[0] and left<crop[2] and bottom>crop[1] and top<crop[3]:
@@ -174,12 +176,17 @@ def capture_training(hide=(),read_status=True,read_wallet=False):
             x,y,right,bottom=box;w=right-x;h=bottom-y
             crop=(x,y+int(h*.91),right,bottom)
             from PIL import ImageDraw
-            image=ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB')
-            draw=ImageDraw.Draw(image)
-            for left,top,r,b in hide:
-                if r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3]:
-                    draw.rectangle((max(0,left-crop[0]),max(0,top-crop[1]),min(image.width,r-crop[0]),min(image.height,b-crop[1])),fill='black')
-            reading=read_character_image(image)
+            import screen_visibility
+            covers=tuple(hide)+tuple(screen_visibility.covering_windows(box))
+            if not screen_visibility.fully_covered(crop,covers):
+                image=ImageGrab.grab(bbox=crop,all_screens=True).convert('RGB')
+                covers+=tuple(screen_visibility.covering_windows(box))
+                if not screen_visibility.fully_covered(crop,covers):
+                    draw=ImageDraw.Draw(image)
+                    for left,top,r,b in covers:
+                        if r>crop[0] and left<crop[2] and b>crop[1] and top<crop[3]:
+                            draw.rectangle((max(0,left-crop[0]),max(0,top-crop[1]),min(image.width,r-crop[0]),min(image.height,b-crop[1])),fill='black')
+                    reading=read_character_image(image)
     result={'events':events,'character':reading}
     if read_wallet:result['wallet']=capture_wallet(hide)
     return result

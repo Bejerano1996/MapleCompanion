@@ -43,7 +43,7 @@ class DataRefreshTests(unittest.TestCase):
   self.assertFalse(db._force_refresh);self.assertEqual(db.data_sources,{'old':{'source':'cache'}})
  def pages(self):
   def page(rows):return '<script>self.__next_f.push('+json.dumps([1,json.dumps(rows,separators=(',',':'))])+')</script>'
-  return {'/quest-tracker/all':page([{'id':'q','need':[]}]),'/npcs':page([{'id':'n','name':'NPC','maps':[]}]),'/maps':page([{'id':'m','avgMobLevel':1}]),'/monsters':page([{'id':1,'level':1,'name':'Slime'}]),meowdb.MAP_DATA_URL:json.dumps([{'id':'m','monsters':[]}]),'/npc-shops':''}
+  return {'/quest-tracker/all':page([{'id':'q','name':'Quest','need':[]}]),'/npcs':page([{'id':'n','name':'NPC','maps':[]}]),'/maps':page([{'id':'m','displayName':'Map','avgMobLevel':1}]),'/monsters':page([{'id':1,'level':1,'name':'Slime','hp':10,'exp':1}]),meowdb.MAP_DATA_URL:json.dumps([{'id':'m','name':'Map','monsters':[]}]),'/npc-shops':''}
  def test_invalid_new_catalog_leaves_all_existing_indexes_intact(self):
   db=self.db();old={'old':{'id':'old'}};db.quests=old;db.maps=old;db.monsters=old;db.npcs=old
   pages=self.pages();pages['/maps']='<html>changed upstream format</html>'
@@ -54,6 +54,21 @@ class DataRefreshTests(unittest.TestCase):
   db=self.db();pages=self.pages()
   with patch.object(db,'_get',side_effect=lambda path,age:pages[path]),patch.object(meowdb.guides,'quest_guides',return_value={}):db.load_indexes()
   self.assertEqual(set(db.quests),{'q'});self.assertEqual(set(db.maps),{'m'});self.assertEqual(set(db.monsters),{1});self.assertIn('npc',db.npcs)
+ def test_invalid_fields_and_duplicate_ids_preserve_old_indexes(self):
+  def page(rows):return '<script>self.__next_f.push('+json.dumps([1,json.dumps(rows,separators=(',',':'))])+')</script>'
+  bad_rows=[('/quest-tracker/all',[{'id':'q','name':'','need':[]}]),
+            ('/quest-tracker/all',[{'id':'q','name':'Quest','need':[],'exp':'100'}]),
+            ('/quest-tracker/all',[{'id':'q','name':'Quest','need':[{'name':'Item','count':-1}]}]),
+            ('/quest-tracker/all',[{'id':'q','name':'A','need':[]},{'id':'q','name':'B','need':[]}]),
+            ('/maps',[{'id':'m','displayName':None,'avgMobLevel':1}]),
+            ('/monsters',[{'id':1,'name':'Slime','level':1,'hp':10,'exp':-100}])]
+  for path,rows in bad_rows:
+   with self.subTest(path=path,rows=rows):
+    db=self.db();old={'old':{'id':'old'}};db.quests=old;db.maps=old;db.monsters=old;db.npcs=old
+    pages=self.pages();pages[path]=page(rows)
+    with patch.object(db,'_get',side_effect=lambda path,age:pages[path]),patch.object(meowdb.guides,'quest_guides',return_value={}):
+     with self.assertRaisesRegex(ValueError,'previous data kept'):db.load_indexes()
+    for field in ('quests','maps','monsters','npcs'):self.assertIs(getattr(db,field),old)
  def test_refresh_dialog_keeps_guides_until_success(self):
   import app
   from types import SimpleNamespace

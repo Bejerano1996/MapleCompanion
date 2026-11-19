@@ -1,5 +1,5 @@
 from pathlib import Path
-import sys,types,unittest,copy
+import sys,types,unittest,copy,time
 sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import training_context
 class ContextGenerationTests(unittest.TestCase):
@@ -9,7 +9,7 @@ class ContextGenerationTests(unittest.TestCase):
   a=types.SimpleNamespace(root=root,state={'utility_session':{'id':'same','running_since':1,'auto_rewards':True}},db=types.SimpleNamespace(maps={'a':{}},monsters={}),run_bg=lambda work,loaded,on_error:pending.append(loaded),render_levelup=lambda:renders.append(1))
   training_context.context_poll(a);before=copy.deepcopy(a._training_context)
   if restart:a._context_generation=1
-  pending.pop()({'game':True,'map':'a','mobs':[23],'party_visible':2,'captured_at':100})
+  pending.pop()({'game':True,'map':'a','mobs':[23],'party_visible':2,'captured_at':time.time()})
   self.assertFalse(a._context_busy)
   return a,before,renders
  def test_generation_change_rejects_old_context(self):

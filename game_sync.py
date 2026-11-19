@@ -3,17 +3,55 @@ window), OCR it, and the global sync hotkey. Read-only: it never touches the gam
 memory and never sends the game any input."""
 import ctypes
 import ctypes.wintypes
+import ntpath
 import threading
 
 from PIL import ImageChops, ImageDraw
 
 import sync
+import screen_visibility
 
 MINIMAP_CORNER = (0.3, 0.12)  # share of the game window (width, height) holding the map name
 
 
+class GameWindowRect(tuple):
+    """Screen bounds plus an OS window identity, without a game-process connection."""
+    def __new__(cls, rectangle, hwnd):
+        value = super().__new__(cls, rectangle)
+        value.hwnd = hwnd
+        return value
+
+
+def _process_image(hwnd):
+    """Read the executable's OS metadata with query-only rights, never process memory."""
+    try:
+        process_id = ctypes.wintypes.DWORD()
+        ctypes.windll.user32.GetWindowThreadProcessId(ctypes.wintypes.HWND(hwnd), ctypes.byref(process_id))
+        if not process_id.value:
+            return None
+        kernel = ctypes.windll.kernel32
+        kernel.OpenProcess.argtypes = [ctypes.wintypes.DWORD, ctypes.wintypes.BOOL, ctypes.wintypes.DWORD]
+        kernel.OpenProcess.restype = ctypes.wintypes.HANDLE
+        kernel.QueryFullProcessImageNameW.argtypes = [ctypes.wintypes.HANDLE, ctypes.wintypes.DWORD, ctypes.wintypes.LPWSTR, ctypes.POINTER(ctypes.wintypes.DWORD)]
+        kernel.QueryFullProcessImageNameW.restype = ctypes.wintypes.BOOL
+        kernel.CloseHandle.argtypes = [ctypes.wintypes.HANDLE]
+        handle = kernel.OpenProcess(0x1000, False, process_id.value)  # PROCESS_QUERY_LIMITED_INFORMATION only
+        if not handle:
+            return None
+        try:
+            buffer = ctypes.create_unicode_buffer(32768)
+            size = ctypes.wintypes.DWORD(len(buffer))
+            if kernel.QueryFullProcessImageNameW(handle, 0, buffer, ctypes.byref(size)):
+                return ntpath.basename(buffer.value)
+        finally:
+            kernel.CloseHandle(handle)
+    except (AttributeError, OSError):
+        pass
+    return None
+
+
 def find_game_window():
-    """Screen rectangle of the MapleStory window, or None to capture the whole screen."""
+    """Screen rectangle of the MapleStory window, or None when no game can be identified."""
     user32 = ctypes.windll.user32
     found = []
 
@@ -23,17 +61,26 @@ def find_game_window():
             buf = ctypes.create_unicode_buffer(256)
             user32.GetWindowTextW(hwnd, buf, 256)
             if buf.value.startswith("MapleStory"):
+                if user32.IsIconic(hwnd):
+                    return True
+                window_class = ctypes.create_unicode_buffer(256)
+                user32.GetClassNameW(hwnd, window_class, 256)
+                if window_class.value.startswith(('Chrome_WidgetWin_', 'MozillaWindowClass', 'IEFrame')):
+                    return True
+                image = _process_image(hwnd)
+                if image and image.casefold() not in {'maplestory.exe', 'maplestory64.exe', 'maplestoryworlds.exe', 'maplestory worlds.exe', 'maplestoryclassic.exe'}:
+                    return True
                 found.append(hwnd)
         return True
 
     user32.EnumWindows(visit, 0)
-    if not found:
-        return None
-    rect = ctypes.wintypes.RECT()
-    user32.GetWindowRect(found[0], ctypes.byref(rect))
-    if rect.right - rect.left < 200:  # minimized
-        return None
-    return rect.left, rect.top, rect.right, rect.bottom
+    for hwnd in found:
+        rect = ctypes.wintypes.RECT()
+        if not user32.GetWindowRect(hwnd, ctypes.byref(rect)):
+            continue
+        if rect.right - rect.left >= 200 and rect.bottom - rect.top >= 200:
+            return GameWindowRect((rect.left, rect.top, rect.right, rect.bottom), hwnd)
+    return None
 
 
 def window_rect(widget):
@@ -95,6 +142,8 @@ def read_location(img, maps, frame=None):
     from the top-left corner of the game window, as before."""
     import screen_ocr
     from PIL import Image
+    if not maps:
+        return None, '', False
     title = minimap_title(img, frame) if frame else None
     if title is not None:
         # the same text size whatever the game's resolution: three times the unstretched size
@@ -306,23 +355,30 @@ def read_title(corner, maps):
 
 def capture_and_read(db, auto=False, hide=(), regions=None, map_only=False, exp_bar=True):
     """Screenshot the game, OCR it and match quests / progress / current map (background).
-    Auto syncs only look at the game window; they skip the (slow) whole-screen fallback.
+    Both automatic and manual syncs read only an identified game window.
     `hide` lists screen rectangles to black out first: our own overlay sits on top of the
     game, and reading it back would just feed our own (stale) numbers into the sync.
     `regions` (from a previous full scan) limits the OCR to those small areas, which keeps
     frequent auto syncs light enough not to slow the game down. `map_only` reads just the
     minimap corner and returns only where you are (for the GPS while AUTO is off). `exp_bar`:
     also read the EXP bar (about half a second, so not on every auto sync)."""
+    box = find_game_window()
+    if box is None:
+        return None
     import screen_ocr  # imported lazily: needs the winrt OCR packages
     from PIL import ImageGrab
-    box = find_game_window()
-    if auto and box is None:
-        return None
+    def blocked():
+        return dict(quests=[],progress={},tracked=[],references=[],notices=[],exp_bar=None,
+                    window=True,auto=auto,full=False,regions=None,quest_window=False,
+                    map_only=map_only,map=None,map_sure=False,map_text='',capture_blocked=True)
+    hide = tuple(hide) + tuple(screen_visibility.covering_windows(box))
+    if screen_visibility.fully_covered(box, hide):
+        return blocked()
     img = ImageGrab.grab(bbox=box, all_screens=True).convert("RGB")
-    if box:
-        ox, oy = box[0], box[1]
-    else:  # whole virtual screen: its origin can be left of / above the main monitor
-        ox, oy = ctypes.windll.user32.GetSystemMetrics(76), ctypes.windll.user32.GetSystemMetrics(77)
+    hide += tuple(screen_visibility.covering_windows(box))
+    if screen_visibility.fully_covered(box, hide):
+        return blocked()
+    ox, oy = box[0], box[1]
     # the minimap's frame, found before our own windows are blacked out: the GPS sits right
     # against it, and blacking it out would cut its edge off
     report = {}
@@ -348,17 +404,28 @@ def capture_and_read(db, auto=False, hide=(), regions=None, map_only=False, exp_
         offsets += [offset] * len(versions)
     lines = screen_ocr.read_lines(*images, offsets=offsets)
     found = sync.match_quests(lines, db.quests)
+    references = []
+    reference_index = getattr(db, 'reference_index', None)
+    if reference_index is not None:
+        reference_index.update(db.reference_catalogs)
+        references = reference_index.match(lines, db.quests.values())
     progress = {qid: sync.read_progress(lines, db.quests[qid], db) for qid in found}
     if not box:  # whole screen: only a street + map name pair counts, never a lone name
         where["map"] = map_id = sync.match_map(lines, db.maps, anchored_only=True)
-    return {"quests": list(found), "progress": progress, "window": box is not None,
+    focus_found, focus_quests = dict(found), dict(db.quests)
+    for index, reference in enumerate(references):
+        # Ephemeral keys are used only for helper crop discovery, never journal IDs.
+        key = ('reference', index)
+        focus_found[key] = 1.0
+        focus_quests[key] = {'name': reference['name']}
+    return {"quests": list(found), "references": references, "progress": progress, "window": box is not None,
             "auto": auto, "full": not regions, **where,
             "tracked": list(sync.tracked_quests(lines, found, db.quests)),
             "notices": read_notices(img) if box else [],
             "exp_bar": read_exp_bar(img) if box and exp_bar else None,
             "quest_window": sync.quest_window_open(lines),
             "regions": None if regions or not box else
-            sync.focus_regions(lines, found, db.quests, map_id, db.maps, img.size)}
+            sync.focus_regions(lines, focus_found, focus_quests, map_id, db.maps, img.size)}
 
 
 class HotkeyThread(threading.Thread):

@@ -7,11 +7,14 @@ from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import urljoin, urlsplit
 import json
+import math
 import re
 import threading
 import time
 import urllib.error
 import urllib.request
+import unicodedata
+from public_http import open_catalog_request
 
 PROVIDERS = {
     'ccplz': ('CCPLZ', 'https://ccplz.cc/quests'),
@@ -24,8 +27,13 @@ MAX_BYTES = 8 * 1024 * 1024
 
 
 def number(text):
-    match = re.search(r'\d[\d,]*', text)
-    return int(match[0].replace(',', '')) if match else None
+    text = unicodedata.normalize('NFKC', text)
+    match = re.search(r'[+−–—-]?\d[\d,]*(?:\.\d+)?[A-Za-z]*', text)
+    if not match or not re.fullmatch(r'\+?(?:\d+|\d{1,3}(?:,\d{3})+)', match[0]):
+        return None
+    if re.search(r'\d', text[match.end():]):
+        return None
+    return int(match[0].replace(',', ''))
 
 
 class CatalogParser(HTMLParser):
@@ -77,7 +85,7 @@ class CatalogParser(HTMLParser):
             text = ' '.join(' '.join(self.text).split())
             if self.provider == 'ccplz':
                 level_match = re.search(r'\bLevel\s+(\d+)', text)
-                exp_match = re.search(r'([\d,]+)\s+EXP\b', text)
+                exp_match = re.search(r'([+−–—-]?\d[\d,]*(?:\.\d+)?[A-Za-z]*)\s+EXP\b', text)
                 level = int(level_match[1]) if level_match else None
                 exp = number(exp_match[1]) if exp_match else None
             else:
@@ -105,28 +113,68 @@ class AlternateCatalogs:
         self.folder = Path(cache_dir) / 'alternate-catalogs'
         self.rows = {}
         self.status = {}
+        self.fetched_at = {}
+        self._refresh_lock = threading.Lock()
+        self._revision = 0
+        self.load_cached()
+
+    def _saved(self, key):
+        """Validate local data with the same trust boundary as downloaded links."""
+        try:
+            saved = json.loads((self.folder / (key + '.json')).read_text(encoding='utf-8'))
+            stamp = saved['fetched_at']
+            if not isinstance(stamp, (int, float)) or not math.isfinite(stamp) or stamp <= 0:
+                return None
+            rows = saved['rows']
+            if not isinstance(rows, list) or not 1 <= len(rows) <= 10000:
+                return None
+            for row in rows:
+                if row['provider'] != key or not isinstance(row['name'], str) or not 1 <= len(row['name']) <= 500:
+                    return None
+                if type(row['level']) is not int or not 1 <= row['level'] <= 250:
+                    return None
+                if row['exp'] is not None and (type(row['exp']) is not int or row['exp'] < 0):
+                    return None
+                parsed = urlsplit(row['url'])
+                if parsed.scheme != 'https' or parsed.netloc != urlsplit(PROVIDERS[key][1]).netloc or not parsed.path.startswith('/quests/'):
+                    return None
+            return saved
+        except (OSError, ValueError, KeyError, TypeError):
+            return None
+
+    def load_cached(self):
+        """Startup/opening a window must never initiate a provider request."""
+        for key in PROVIDERS:
+            saved = self._saved(key)
+            if saved:
+                self._accept_saved(key, saved)
+        return self
+
+    def _accept_saved(self, key, saved):
+        # Publish a new mapping: readers can finish iterating the old one.
+        self.rows = {**self.rows, key:saved['rows']}
+        self.fetched_at[key] = saved['fetched_at']
+        if saved['fetched_at'] > time.time() + 300:
+            self.status[key] = 'Cached · date ahead of system clock'
+        else:
+            self.status[key] = 'Cached · ' + time.strftime('%Y-%m-%d', time.localtime(saved['fetched_at']))
 
     def refresh(self, force=False):
+        # Multiple source windows share this object; concurrent refreshes coalesce via cache.
+        revision = self._revision
+        with self._refresh_lock:
+            if force and revision != self._revision:
+                return self
+            result = self._refresh(force)
+            self._revision += 1
+            return result
+
+    def _refresh(self, force):
         for key, (name, url) in PROVIDERS.items():
             path = self.folder / (key + '.json')
-            saved = None
-            try:
-                saved = json.loads(path.read_text(encoding='utf-8'))
-                assert isinstance(saved['fetched_at'], (int, float))
-                # Cache is data, not executable code. Revalidate source URLs and record types.
-                assert isinstance(saved['rows'], list) and saved['rows']
-                for row in saved['rows']:
-                    assert row['provider'] == key and isinstance(row['name'], str)
-                    assert isinstance(row['level'], int) and 1 <= row['level'] <= 250
-                    assert row['exp'] is None or (isinstance(row['exp'], int) and row['exp'] >= 0)
-                    parsed = urlsplit(row['url'])
-                    assert parsed.scheme == 'https' and parsed.netloc == urlsplit(url).netloc
-                    assert parsed.path.startswith('/quests/')
-            except (OSError, ValueError, KeyError, TypeError, AssertionError):
-                saved = None
-            if saved and not force and time.time() - saved['fetched_at'] < 86400:
-                self.rows[key] = saved['rows']
-                self.status[key] = 'Cached · ' + time.strftime('%Y-%m-%d', time.localtime(saved['fetched_at']))
+            saved = self._saved(key)
+            if saved and not force and 0 <= time.time() - saved['fetched_at'] < 86400:
+                self._accept_saved(key, saved)
                 continue
             try:
                 payload = self._download(key, url)
@@ -136,11 +184,12 @@ class AlternateCatalogs:
                 temp = path.with_suffix('.tmp')
                 temp.write_text(json.dumps(dict(rows=rows, fetched_at=stamp)), encoding='utf-8')
                 temp.replace(path)
-                self.rows[key] = rows
+                self.rows = {**self.rows, key:rows}
+                self.fetched_at[key] = stamp
                 self.status[key] = 'Updated · ' + time.strftime('%Y-%m-%d', time.localtime(stamp))
             except Exception as error:
                 if saved:
-                    self.rows[key] = saved['rows']
+                    self._accept_saved(key, saved)
                 self.status[key] = ('Saved catalog · ' if key in self.rows else 'Unavailable · ') + str(error)
         return self
 
@@ -155,7 +204,7 @@ class AlternateCatalogs:
             request = urllib.request.Request(url, headers={
                 'User-Agent': 'UmbraleCompanion/3.38 (https://github.com/Bejerano1996/MapleCompanion/issues)'})
             try:
-                with urllib.request.urlopen(request, timeout=30) as response:
+                with open_catalog_request(request, timeout=30) as response:
                     if urlsplit(response.url).netloc != urlsplit(url).netloc:
                         raise ValueError('Unexpected provider redirect')
                     payload = response.read(MAX_BYTES + 1)
@@ -169,7 +218,9 @@ class AlternateCatalogs:
             finally:
                 _LAST = time.monotonic()
 
-    def search(self, query=''):
-        query = query.casefold().strip()
-        return [row for rows in self.rows.values() for row in rows
-                if query in row['name'].casefold()]
+    def search(self, query='', level_range=None):
+        terms = re.findall(r'[a-z0-9]+', unicodedata.normalize('NFKC', query).casefold())
+        rows = [row for entries in self.rows.values() for row in entries
+                if all(term in unicodedata.normalize('NFKC', row['name']).casefold() for term in terms)
+                and (level_range is None or level_range[0] <= row['level'] <= level_range[1])]
+        return sorted(rows, key=lambda row: (row['name'].casefold(), row['provider'], row['url']))

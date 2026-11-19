@@ -66,21 +66,32 @@ def _number_tail(text):
 def match_quests(lines, quests):
     """Return {quest_id: score} for quests whose title appears in the OCR lines."""
     found = {}
+    # Content-based signature invalidates cached decisions after a catalog refresh,
+    # including in-place name edits. Repeated OCR lines need no repeated fuzzy scan.
+    catalog = tuple((q['id'], q['name']) for q in quests.values())
     for line in lines:
-        best_id, best, runner_up = None, 0, 0
         if len(line["text"]) < 6:
             continue
-        for q in quests.values():
-            s = title_score(line["text"], q["name"], TITLE_MIN_SCORE)
-            if s > best:
-                best_id, best, runner_up = q["id"], s, best
-            elif s > runner_up:
-                runner_up = s
-        # a tie means the line can't tell two quests apart (e.g. "Daughter ?" when the number
-        # didn't read): skip it rather than guess; another line or pass will usually settle it
-        if best >= TITLE_MIN_SCORE and best - runner_up > 0.01:
+        match = _match_quest_title(line['text'], catalog)
+        if match is not None:
+            best_id, best = match
             found[best_id] = max(best, found.get(best_id, 0))
     return found
+
+
+@functools.lru_cache(maxsize=4096)
+def _match_quest_title(text, catalog):
+    best_id, best, runner_up = None, 0, 0
+    for quest_id, name in catalog:
+        score = title_score(text, name, TITLE_MIN_SCORE)
+        if score > best:
+            best_id, best, runner_up = quest_id, score, best
+        elif score > runner_up:
+            runner_up = score
+    # Preserve the original ambiguity threshold, including numbered/truncated titles.
+    if best >= TITLE_MIN_SCORE and best - runner_up > 0.01:
+        return best_id, best
+    return None
 
 
 def _digit_runs(text):
@@ -238,6 +249,8 @@ def match_map(lines, maps, anchored_only=False):
     ("Perion"). The area name OCRs reliably, so once it is found the line below is only
     compared with that area's maps, which tolerates misreads like "PeriOli". Without an
     area line, a map name has to match almost exactly."""
+    if not maps:
+        return None
     streets = {}
     for m in maps.values():
         streets.setdefault((m.get("displayStreet") or "").lower(), []).append(m)

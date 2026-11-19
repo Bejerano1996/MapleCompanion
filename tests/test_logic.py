@@ -218,6 +218,9 @@ def main():
     check(a.state["tracked"] == ["80020", "10100", "10304"], "helper hidden: nothing changes")
     for _ in range(app.GONE_AFTER):
         a._on_synced(res(["10304"]))
+    check('80020' in a.state['active'] and '10100' in a.state['tracked'],
+          'partial helper crop waits for a full verification scan')
+    a._on_synced({**res(['10304']), 'full':True})
     check("80020" in a.state["completed"] and "80020" not in a.state["active"],
           "finished quest gone from the helper = turned in")
     check("10100" in a.state["active"] and "10100" not in a.state["tracked"],
@@ -402,7 +405,7 @@ def main():
     texts=[w.cget('text') for w in ui_walk_widgets(a._companion_exp_window) if isinstance(w,(tk.Label,tk.Button))]
     check('Party on map' in texts and 'Apply' in texts, 'Party and calibration controls remain available')
     a._companion_exp_window.destroy()
-    a.state.update(party=1,level=26)
+    a.state.update(party=1,level=26,training_auto_context=False)
     a.training_accept_character({'level':26,'exp':29285})
     a.refresh_exp_pill()
     pill=a.exp_pill.cget('text')

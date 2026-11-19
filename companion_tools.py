@@ -22,6 +22,10 @@ def ui_tools_indicator(self):
         if tip:tip.text='Companion tools · Ctrl+K'+(f' · {due} reminders due' if due else '')
 
 def utility_tick(self):
+    if hasattr(self, 'expire_quest_references'):
+        self.expire_quest_references()
+    if hasattr(self, 'refresh_reader_health'):
+        self.refresh_reader_health()
     self.context_poll()
     if self.state['utility_session'].get('running_since') is not None:
         utility_track_current_map(self)

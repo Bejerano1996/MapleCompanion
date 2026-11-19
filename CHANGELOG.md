@@ -1,3 +1,15 @@
+## 3.40
+
+- Load saved CCPLZ / MapleStory Classic catalogs on startup. Match exact visible quest titles locally, confirm automatic reads twice, expire old references, and show attributed EXP without inventing game IDs or objectives.
+- Add a reusable quest-source window, local Ctrl+Shift+F shortcut, multiword search and optional nearby-level filter. Saved main data stays visible after failed refresh; reference mode remains available without a primary cache.
+- Publish provider catalog mappings without mutating searches already in progress, preventing a refresh/search race.
+- Publish validated core cache snapshots atomically with SHA-256 verification and previous-generation recovery. Reject malformed records before changing memory or disk; isolate forced refreshes from other threads.
+- Keep saved shop records and pages through malformed optional responses and invalid prices, including on restart.
+- Preserve the previous guide-page group after an interrupted or malformed optional update, including on restart.
+- Reject stale quest/context callbacks after delays, journal edits, reset or AUTO changes. Require a full scan before retiring a quest missing from a focused crop.
+- Identify the game using window metadata, mask higher windows and skip covered regions. A browser title or unavailable game no longer triggers desktop OCR. AUTO shows actual reading freshness.
+- Cache repeated title matching and preserve pending state when the native window closes. Improve source-dialog positioning and reuse its widgets.
+
 ## 3.39
 
 - Connect searchable CCPLZ and MapleStory Classic public quest catalogs, with exact source links, level and listed EXP.

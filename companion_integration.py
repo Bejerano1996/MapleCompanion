@@ -32,7 +32,7 @@ def apply_palette():
 
 def integrate(Base,core):
     apply_palette()
-    core['VERSION']='3.39.0-companion'
+    core['VERSION']='3.40.0-companion'
     core['HOVER_ALPHA']=1.0
     core['PANEL_SIZE']=(360,.5)
     core['MIN_W']=340
@@ -54,6 +54,7 @@ def integrate(Base,core):
         def run_bg(self,fn,callback,on_error=None):
             if getattr(fn,'__name__','') not in ('load_indexes','refresh_indexes') or getattr(fn,'__self__',None) is not getattr(self,'db',None):
                 return super().run_bg(fn,callback,on_error)
+            self._companion_cached_during_load=bool(self.db.quests)
             self._companion_loading=True;self._companion_data_error=None
             def loaded(value):
                 self._companion_loading=False;self._companion_data_error=None
@@ -62,7 +63,12 @@ def integrate(Base,core):
                 self._companion_loading=False;self._companion_data_error=str(error)
                 if on_error:on_error(error)
                 self.render()
-                self._pill('Data unavailable','red')
+                if self.db.quests:
+                    self._pill('Saved game data','gold')
+                elif self.reference_mode_ready():
+                    self._pill('Quest references','muted')
+                    self._schedule_auto_sync()
+                else:self._pill('Data unavailable','red')
             return super().run_bg(fn,loaded,failed)
 
         def _build(self):
@@ -117,13 +123,13 @@ def integrate(Base,core):
             self.global_entry=tk.Entry(search,textvariable=self.global_query,font=(FONT, font_size(10)),bg=C['card'],fg=C['text'],insertbackground=C['text'],relief='flat')
             self.global_entry.pack(side='left',fill='x',expand=True,padx=9,ipady=7)
             self._companion_search_kind=tk.StringVar(value='Maps / NPCs')
-            menu=tk.OptionMenu(search,self._companion_search_kind,'Maps / NPCs','Monsters','Items');menu.config(bg=C['card'],fg=C['text'],font=(FONT, font_size(8)),relief='flat',highlightthickness=0);menu.pack(side='left')
+            menu=tk.OptionMenu(search,self._companion_search_kind,'Maps / NPCs','Monsters','Items','Quests');menu.config(bg=C['card'],fg=C['text'],font=(FONT, font_size(8)),relief='flat',highlightthickness=0);menu.pack(side='left')
             self._companion_search_button=ui_button(search,'↑',self.ui_search,primary=True,compact=True,tip='Search selected database · Ctrl+F');self._companion_search_button.pack(side='right',padx=3)
             self.global_entry.bind('<Return>',lambda e:self.ui_search())
             self.global_entry.bind('<Escape>',lambda e:self.ui_close_search())
-            widgets.Tooltip(self.global_entry,'Search maps, NPCs, monsters or items; choose the database to the right')
+            widgets.Tooltip(self.global_entry,'Search maps, NPCs, monsters, items or quest references; choose the database to the right')
             self._companion_bindings=getattr(self,'_companion_bindings',{})
-            bindings={'<Control-f>':lambda e:self.ui_focus_search(),'<Control-k>':lambda e:self.ui_tools(),'<Control-comma>':lambda e:self.ui_settings(),'<Control-KeyPress>':self._companion_control}
+            bindings={'<Control-f>':lambda e:self.ui_focus_search(),'<Control-Shift-F>':lambda e:self.open_alternate_sources(),'<Control-k>':lambda e:self.ui_tools(),'<Control-comma>':lambda e:self.ui_settings(),'<Control-KeyPress>':self._companion_control}
             for index,(key,_) in enumerate(core['TABS'],1):bindings[f'<Alt-Key-{index}>']=lambda e,k=key:self._companion_open_tab(k)
             for sequence,callback in bindings.items():
                 previous=self._companion_bindings.get(sequence)
@@ -158,14 +164,20 @@ def integrate(Base,core):
             self._companion_profile_refresh()
 
         def render(self,keep_scroll=True):
-            if self.state.get('tab')!='pq' and (not self.db.quests or getattr(self,'_companion_loading',False) or getattr(self,'_companion_data_error',None)):
+            if self.state.get('tab')!='pq' and not self.db.quests and self.reference_mode_ready() and not getattr(self,'_companion_loading',False):
+                self.render_reference_mode(keep_scroll)
+                return
+            initial_load=getattr(self,'_companion_loading',False) and not getattr(self,'_companion_cached_during_load',False)
+            if self.state.get('tab')!='pq' and (not self.db.quests or initial_load):
                 self.scroll.clear(keep_scroll)
                 unavailable=bool(getattr(self,'_companion_data_error',None))
                 label(self.scroll.inner,'Game data unavailable' if unavailable else 'Loading game data…',
                       bold=True,size=10,padx=10,pady=12).pack(anchor='w')
                 if unavailable:
                     widgets.button(self.scroll.inner,'Retry',self.companion_retry_data,bg='button',padx=10,
-                                   tip='Download game indexes again').pack(anchor='w',padx=10,pady=(0,10))
+                                   tip='Reload cached indexes; live NiaDB access still requires permission').pack(anchor='w',padx=10,pady=(0,6))
+                    widgets.button(self.scroll.inner,'Quest sources',self.open_alternate_sources,bg='button',padx=10,
+                                   tip='Load independent quest references from CCPLZ and MapleStory Classic').pack(anchor='w',padx=10,pady=(0,10))
                 self.scroll.commit()
                 self._fit_height()
                 return
@@ -282,9 +294,8 @@ def integrate(Base,core):
             finally:
                 if current:self.state['utility_session']=current
 
-        def ui_dialog(self,title):
+        def ui_dialog(self,title,width=470,height=600):
             w=tk.Toplevel(self.root,bg=C['bg']);w.title('UMBRΛLE · '+title);w.transient(self.root);w.attributes('-topmost',True)
-            width,height=470,600
             x,y=widgets.on_monitor_of(self.root,self.root.winfo_x()+30,self.root.winfo_y()+35,width,height)
             w.geometry(f'{width}x{height}{x:+d}{y:+d}');w.resizable(True,True)
             label(w,title,size=17,bold=True,wraplength=width-36,justify='left').pack(anchor='w',padx=18,pady=(16,10))
@@ -365,6 +376,9 @@ def integrate(Base,core):
             if kind in ('Monsters','Items'):
                 self._companion_open_tab('mobs' if kind=='Monsters' else 'items')
                 (self.mob_query if kind=='Monsters' else self.item_query).set(query)
+            elif kind=='Quests':
+                from alternate_sources_ui import open_sources
+                open_sources(self,query)
             else:
                 self.open_map_search(self._companion_search_button)
                 box=next(w for w in ui_walk_widgets(self.map_search) if isinstance(w,tk.Entry))

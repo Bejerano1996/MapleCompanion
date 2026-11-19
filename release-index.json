@@ -1,6 +1,6 @@
 {
   "repository": "Bejerano1996/MapleCompanion",
-  "latest": "umbrale-v3.39",
+  "latest": "umbrale-v3.40",
   "versions": [
     {
       "tag": "maple-ui-source",
@@ -1795,6 +1795,24 @@
           "name": "Umbrale Companion 3.39 Source.zip",
           "sha256": "53a812b7c2ac642653cef258c9b33793e709102acf72285e2f5bdf39599668db",
           "size": 18450538
+        }
+      ]
+    },
+    {
+      "tag": "umbrale-v3.40",
+      "version": "3.40",
+      "family": "umbrale",
+      "source_available": true,
+      "assets": [
+        {
+          "name": "Umbrale Companion 3.40.zip",
+          "sha256": "ed7a132187d64d5bd64798c33ad56f979658f619d950c96e018be3162fd4d84b",
+          "size": 122668836
+        },
+        {
+          "name": "Umbrale Companion 3.40 Source.zip",
+          "sha256": "90c62759eaf887e278ee76585489fef93db730f2216c1bc1945aa6d398114d2b",
+          "size": 18488386
         }
       ]
     }

@@ -10,7 +10,17 @@ import tkinter as tk
 import app,widgets
 parser=argparse.ArgumentParser();parser.add_argument('--minutes',type=float,default=120)
 parser.add_argument('--interval',type=float,default=15)
+parser.add_argument('--report',type=Path)
+parser.add_argument('--hidden',action='store_true',help='Keep all fixture windows hidden; lifecycle/resource test, not visual QA')
 args=parser.parse_args()
+if args.hidden:
+    OriginalToplevel=tk.Toplevel
+    class HiddenToplevel(OriginalToplevel):
+        def __init__(self,*args,**kwargs):
+            super().__init__(*args,**kwargs)
+            self.withdraw()
+        def deiconify(self):pass
+    tk.Toplevel=HiddenToplevel
 app.App.sync_from_game=lambda *a,**k:None
 app.App.prefetch=lambda *a,**k:None
 app.App.run_bg=lambda *a,**k:None
@@ -20,7 +30,7 @@ class NoHotkey:
     def start(self):pass
 app.HotkeyThread=NoHotkey
 here=Path(__file__).parent
-report_path=here/'compact-soak-results.json'
+report_path=args.report or here/('compact-soak-'+time.strftime('%Y%m%d-%H%M%S')+'-'+str(os.getpid())+'.json')
 start=time.monotonic();cycle=0;errors=[];samples=[]
 def pump():
     for _ in range(3):root.update();time.sleep(.015)
@@ -37,6 +47,8 @@ with tempfile.TemporaryDirectory(prefix='compact-soak-',dir=here) as folder:
     Path(app.STATE_FILE).write_text(json.dumps({'auto_sync':False,'auto_on_v2':True,'level':26,'map':'010005061','active':['10306'],'tracked':['10306'],'panel_size':[360,520],'companion_compact_v2':True,'idle_alpha':1.0}),encoding='utf-8')
     root=tk.Tk();root.withdraw();root.report_callback_exception=lambda x,y,z:errors.append(str(y))
     a=app.App(root);a.db.load_indexes();pump()
+    a.alternate_catalogs=a.db.reference_catalogs
+    a.alternate_catalogs.rows={'ccplz':[dict(provider='ccplz',name='Fixture Quest '+str(index),level=1+index%60,exp=100+index,url='https://ccplz.cc/quests/fixture-'+str(index)) for index in range(160)]}
     baselines={}
     try:
         while time.monotonic()-start<args.minutes*60:
@@ -44,6 +56,13 @@ with tempfile.TemporaryDirectory(prefix='compact-soak-',dir=here) as folder:
             a.set_text_size(widgets.TEXT_SCALES[cycle%3])
             a.set_tab(app.TABS[cycle%len(app.TABS)][0]);pump()
             a.ui_focus_search();pump();a.ui_close_search()
+            source=a.open_alternate_sources();pump()
+            source._source_query.set('fixture quest 1');pump()
+            source._source_query.set('');pump();source.destroy()
+            from quest_references import VisibleReferences
+            a.visible_references.feed([dict(name='Fixture Quest 1',sources=[a.alternate_catalogs.rows['ccplz'][1]])],time.monotonic(),auto=False)
+            a.reader_health.record({'tracked':['10306'],'references':[]},time.monotonic())
+            a.refresh_reader_health();a.visible_references.clear()
             a.companion_exp_details();a.set_party(cycle%6+1);pump();a._companion_exp_window.destroy()
             a.ui_settings();pump()
             for window in list(root.winfo_children()):
@@ -51,7 +70,7 @@ with tempfile.TemporaryDirectory(prefix='compact-soak-',dir=here) as folder:
             a.ui_tools();pump();a._utility_show(('session','route','timers','saved','compare','quick')[cycle%6]);pump();a._tools_window.destroy()
             a._minimap=(20,30,280,240)
             a.state['gps_docked']=True;a.start_route('soak','010004000');pump()
-            if (a.gps.winfo_x(),a.gps.winfo_y())!=(281,30):raise AssertionError('GPS lost its minimap anchor')
+            if not args.hidden and (a.gps.winfo_x(),a.gps.winfo_y())!=(281,30):raise AssertionError('GPS lost its minimap anchor')
             a.close_gps();a.stop_route('soak');pump()
             snapshot=stats()
             scenario=cycle%30
@@ -66,7 +85,7 @@ with tempfile.TemporaryDirectory(prefix='compact-soak-',dir=here) as folder:
             print(json.dumps(snapshot),flush=True)
             deadline=min(start+args.minutes*60,time.monotonic()+args.interval)
             while time.monotonic()<deadline:root.update();time.sleep(.1)
-        report={'ok':True,'running':False,'latest':stats(),'samples':samples,'errors':errors,'scope':'Own fixture windows; no game capture, hotkeys or gameplay input.'}
+        report={'ok':True,'running':False,'latest':stats(),'samples':samples,'errors':errors,'scope':'Own fixture windows; no game capture, hotkeys or gameplay input. '+('Hidden lifecycle/resource validation; not visible layout or live-game verification.' if args.hidden else '')}
         report_path.write_text(json.dumps(report,indent=2),encoding='utf-8')
         print('SOAK PASS '+json.dumps(report['latest']),flush=True)
     except Exception as exc:

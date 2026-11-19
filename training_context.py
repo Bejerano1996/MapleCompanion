@@ -1,5 +1,5 @@
 ﻿"""Read-only training context; visible roster/mobs are evidence, not kill telemetry."""
-import re,time
+import re,time,math
 
 def key(text):return re.sub(r'[^a-z0-9]','',str(text).casefold())
 
@@ -132,7 +132,13 @@ def capture_context(maps,monsters,hide=()):
     box=find_game_window()
     if not box:return {'game':False}
     captured_at=time.time()
+    import screen_visibility
+    hide=tuple(hide)+tuple(screen_visibility.covering_windows(box))
+    def blocked():return dict(game=True,map=None,party_visible=None,mobs=[],captured_at=captured_at,map_blocked=True)
+    if screen_visibility.fully_covered(box,hide):return blocked()
     x,y,right,bottom=box;image=ImageGrab.grab(bbox=box,all_screens=True).convert('RGB');w,h=image.size
+    hide+=tuple(screen_visibility.covering_windows(box))
+    if screen_visibility.fully_covered(box,hide):return blocked()
     covers=[(l-x,t-y,r-x,b-y) for l,t,r,b in hide]
     report={};frame=find_minimap(image,covers,report);draw=ImageDraw.Draw(image)
     if frame and any(r>frame[0] and l<frame[2] and b>frame[1] and t<frame[3] for l,t,r,b in covers):frame=None;report['blocked']=True
@@ -159,6 +165,7 @@ def context_poll(self):
     hide=[window_rect(v) for v in windows if v.winfo_viewable()]
     generation=getattr(self,'_context_generation',0)
     token=session_token(session);self._context_busy=True;self._context_last_poll=time.monotonic()
+    capture_started=time.monotonic()
     if getattr(self,'_context_scope',None)!=token:
         self._context_tracker=ContextTracker();self._context_scope=token
         self._training_party_seen_at=0
@@ -166,7 +173,20 @@ def context_poll(self):
     def loaded(reading):
         self._context_busy=False
         if generation!=getattr(self,'_context_generation',0) or token!=session_token(self.state['utility_session']) or not self.state.get('training_auto_context',True):return
-        data=self._context_tracker.feed(reading,reading.get('captured_at',time.time()));self._training_context=data
+        now=time.time()
+        captured_at=reading.get('captured_at',now) if isinstance(reading,dict) else None
+        if (time.monotonic()-capture_started>15 or type(captured_at) not in (int,float)
+                or not math.isfinite(captured_at) or not 0<=now-captured_at<=15):
+            self._context_error='Old or invalid context read ignored'
+            self._context_tracker=ContextTracker()
+            self._training_context=dict(game=False,map=None,mobs=[],party_visible=None,at=now,
+                                        map_readable=False,party_readable=False)
+            self._training_party_seen_at=0
+            self._live_last_result={'_minimap_readable':False}
+            self.render_levelup()
+            return
+        self._context_error=None
+        data=self._context_tracker.feed(reading,captured_at);self._training_context=data
         seen=self.state['utility_session'].setdefault('observed_monsters',{})
         for mob in data.get('mobs',[]):
             if len(seen)<40 or str(mob) in seen:seen[str(mob)]={'last_seen':data['at'],'map':data.get('map')}

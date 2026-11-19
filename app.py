@@ -100,6 +100,10 @@ class App:
     def __init__(self, root):
         self.root = root
         self.db = MeowDB()
+        from quest_references import VisibleReferences
+        self.visible_references = VisibleReferences()
+        from reader_health import ReaderHealth
+        self.reader_health = ReaderHealth()
         self.state = {**DEFAULT_STATE, **load_json(STATE_FILE, {})}
         if not self.state.get("auto_on_v2"):
             # AUTO used to start off, so location, routes and counts silently stopped updating;
@@ -159,6 +163,7 @@ class App:
         self.root.after(AUTOSAVE_MS, self._autosave)
         self.root.bind_all("<Control-MouseWheel>", self._wheel_opacity)
         self.root.bind("<Key>", self._on_key)
+        self.root.protocol('WM_DELETE_WINDOW', self.on_close)
         self.run_bg(self.db.load_indexes, self._on_loaded)
         self.state.pop("click_through", None)  # from a version that had it
         HotkeyThread({ord("S"): lambda: self.results.put((lambda _: self.sync_from_game(), None, None))}).start()
@@ -361,7 +366,7 @@ class App:
         self.auto_dot = label(top, "●", bg="header", size=7, cursor="hand2", padx=0, pady=0)
         self.auto_dot.pack(side="left", padx=(p(4), p(2)))
         self.auto_dot.bind("<Button-1>", lambda e: self.toggle_auto())
-        Tooltip(self.auto_dot, "AUTO: following the game every 2 s (click to switch)")
+        self._auto_status_tip = Tooltip(self.auto_dot, "AUTO: waiting for a screen read (click to switch)")
         # the free space right of the wordmark: your EXP bar and kills left (see refresh_exp_pill)
         self.exp_pill = label(top, "", fg="bar_muted", bg="header", size=8, padx=0, pady=0, bd=0)
         self.exp_pill.pack(side="right")
@@ -967,6 +972,15 @@ class App:
 
     def toggle_auto(self):
         self.state["auto_sync"] = not self.state["auto_sync"]
+        self._sync_generation = getattr(self, '_sync_generation', 0) + 1
+        self._reads.clear()
+        self._gone.clear()
+        self.focus = None
+        from reader_health import ReaderHealth
+        self.reader_health = ReaderHealth()
+        tracker = getattr(self, 'visible_references', None)
+        if tracker is not None:
+            tracker.pending.clear()
         self._paint_auto()
         self._schedule_auto_sync()
         self.set_status("AUTO on: following the game every 2 s" if self.state["auto_sync"] else
@@ -974,8 +988,20 @@ class App:
                         "muted" if self.state["auto_sync"] else "gold")
 
     def _paint_auto(self):
-        self.auto_dot.config(fg=C["bar_green"] if self.state["auto_sync"] else C["disabled"])
+        self.refresh_reader_health()
         self.refresh_pill()
+
+    def refresh_reader_health(self):
+        health = getattr(self, 'reader_health', None)
+        if health is None or not hasattr(self, 'auto_dot'):
+            return
+        ready = bool(self.db.quests) or self.reference_mode_ready()
+        color, text = health.status(self.state['auto_sync'], ready, time.monotonic())
+        if self.auto_dot.cget('fg') != C[color]:
+            self.auto_dot.config(fg=C[color])
+        tip = getattr(self, '_auto_status_tip', None)
+        if tip:
+            tip.text = text
 
     # ---------- kills to level up ----------
 
@@ -1365,6 +1391,30 @@ class App:
         from alternate_sources_ui import open_sources
         return open_sources(self)
 
+    def reference_catalogs_updated(self):
+        catalogs = getattr(self, 'alternate_catalogs', None)
+        if catalogs is not None:
+            self.db.reference_catalogs = catalogs
+            self.db.reference_index.update(catalogs)
+        if not self.db.quests:
+            self._schedule_auto_sync()
+        self.render()
+
+    def reference_mode_ready(self):
+        return bool(getattr(getattr(self.db, 'reference_catalogs', None), 'rows', None))
+
+    def render_reference_mode(self, keep_scroll=True):
+        self.scroll.clear(keep_scroll)
+        label(self.scroll.inner, 'Quest reference mode', bold=True, padx=10, pady=10).pack(anchor='w')
+        label(self.scroll.inner, 'The main database is unavailable. Visible quest titles can still show '
+              'information from your saved additional sources. Full objectives and GPS require main game data.',
+              fg='muted', wraplength=self.wrap(40), justify='left', padx=10).pack(anchor='w')
+        self.render_quest_references()
+        button(self.scroll.inner, 'Search / refresh quest sources', self.open_alternate_sources,
+               bg='button', padx=10).pack(anchor='w', padx=10, pady=10)
+        self.scroll.commit()
+        self._fit_height()
+
     def open_data_status(self):
         sources = getattr(self.db, 'data_sources', {})
         stamps = [row['fetched_at'] for row in sources.values() if row.get('fetched_at')]
@@ -1457,6 +1507,7 @@ class App:
         return sorted(self.state["active"], key=lambda qid: qid not in tracked)
 
     def render_quests(self):
+        self.render_quest_references()
         active = self.quest_display_order()
         if self.state.get("trainer_on"):
             self.render_trainer_card()
@@ -1487,6 +1538,37 @@ class App:
         if active:
             button(tools, "Clear list", self.clear_quests, bg="bg", fg="muted", size=8,
                    tip="Remove every quest from this list").pack(side="right")
+
+    def render_quest_references(self):
+        tracker = getattr(self, 'visible_references', None)
+        if not tracker or not tracker.visible:
+            return
+        from alternate_sources import PROVIDERS
+        from alternate_sources_ui import open_sources
+        card = tk.Frame(self.scroll.inner, bg=C['card_hi'])
+        card.pack(fill='x', padx=6, pady=4)
+        label(card, 'Visible quest · additional sources', bg='card_hi', fg='muted', size=8).pack(anchor='w', padx=8, pady=(5, 1))
+        for reference in tracker.visible[:3]:
+            button(card, reference['name'], lambda name=reference['name']: open_sources(self, name),
+                   bg='card_hi', anchor='w', wraplength=self.wrap(55), justify='left',
+                   tip='Exact visible title found in a reference catalog; objectives and GPS are not imported.').pack(fill='x', padx=5)
+            text = ' · '.join(PROVIDERS[source['provider']][0] + ': ' +
+                              (f"{source['exp']:,} EXP" if source['exp'] is not None else 'EXP not listed')
+                              for source in reference['sources'])
+            label(card, text, bg='card_hi', fg='muted', size=7, wraplength=self.wrap(55), justify='left').pack(anchor='w', padx=8, pady=(0, 5))
+
+    def update_quest_references(self, result):
+        tracker = getattr(self, 'visible_references', None)
+        if tracker is None:
+            return False
+        if result is None:
+            return tracker.clear()
+        return tracker.feed(result.get('references') or [], time.monotonic(), auto=result.get('auto', True))
+
+    def expire_quest_references(self):
+        tracker = getattr(self, 'visible_references', None)
+        if tracker is not None and tracker.expire(time.monotonic()) and self.state.get('tab') == 'quests':
+            self.render()
 
     def dist_from(self, map_id):
         """Portals-away from any map (cached: the map graph doesn't change while running)."""
@@ -3177,7 +3259,8 @@ class App:
     # ---------- game sync ----------
 
     def sync_from_game(self, auto=False, map_only=False):
-        if self.syncing or not self.db.quests or (auto and self.resetting):
+        references_ready = bool(getattr(getattr(self.db, 'reference_catalogs', None), 'rows', None))
+        if self.syncing or (not self.db.quests and not references_ready) or (auto and self.resetting):
             return
         self.syncing = True
         if not auto and not self.resetting:
@@ -3195,15 +3278,56 @@ class App:
         self._exp_tick = (getattr(self, "_exp_tick", 0) + 1) % EXP_BAR_EVERY
         exp_bar = not auto or self._exp_tick == 0
         character_revision = getattr(self, "_character_read_revision", 0)
+        capture_started = time.monotonic()
+        sync_generation = getattr(self, '_sync_generation', 0)
+        reset_scope = self.resetting
+        def journal_scope():
+            state = getattr(self, 'state', {})
+            return json.dumps([state.get(key) for key in ('active', 'tracked', 'completed', 'done', 'progress')], sort_keys=True)
+        journal_before = journal_scope()
         def loaded(result):
+            expired = time.monotonic() - capture_started > 15
+            edited = (reset_scope is not self.resetting or journal_before != journal_scope()
+                      or sync_generation != getattr(self, '_sync_generation', 0))
+            suspended = auto and not map_only and not getattr(self, 'state', {}).get('auto_sync', True)
+            if expired or edited or suspended:
+                # OCR must not overwrite a newer user action or act like a fresh screen read.
+                self.syncing = False
+                self.focus = None
+                getattr(self, '_reads', {}).clear()
+                getattr(self, '_gone', {}).clear()
+                if expired:
+                    self._live_last_result = {'_minimap_readable': False}
+                    self.set_status('Screen read expired: retrying with a fresh capture')
+                    health = getattr(self, 'reader_health', None)
+                    if health is not None:
+                        health.failed('previous capture expired')
+                retry = (expired and not edited and not suspended) or (auto and not suspended)
+                if not self.resetting and retry and (not auto or getattr(self, 'state', {}).get('auto_sync', True)):
+                    self.root.after(120, lambda: self.sync_from_game(auto=auto, map_only=map_only))
+                return
             # Another reader or manual calibration may have accepted newer character evidence.
             # Keep this scan's map/quest evidence, but never overwrite that newer EXP reading.
             if result and character_revision != getattr(self, "_character_read_revision", 0):
                 result = dict(result)
                 result.pop("exp_bar", None)
+            health = getattr(self, 'reader_health', None)
+            if health is not None:
+                health.record(result, time.monotonic(), captured_at=capture_started)
             self._on_synced(result)
+            refresh_health = getattr(self, 'refresh_reader_health', None)
+            if refresh_health:
+                refresh_health()
+        def failed(error):
+            self.syncing = False
+            health = getattr(self, 'reader_health', None)
+            if health is not None:
+                health.failed('screen reader unavailable; retry on the next sync')
+            refresh_health = getattr(self, 'refresh_reader_health', None)
+            if refresh_health:
+                refresh_health()
         self.run_bg(lambda: capture_and_read(self.db, auto, ours, regions, map_only, exp_bar), loaded,
-                    on_error=lambda _: setattr(self, "syncing", False))
+                    on_error=failed)
 
     def _snapshot(self):
         return json.dumps([self.state[k] for k in ("active", "done", "progress", "map", "tracked")],
@@ -3211,8 +3335,35 @@ class App:
 
     def _on_synced(self, result):
         self.syncing = False
+        references_changed = self.update_quest_references(result)
         if result is None:
+            self.focus = None
+            getattr(self, '_reads', {}).clear()
+            getattr(self, '_gone', {}).clear()
+            if references_changed and self.state.get('tab') == 'quests':
+                self.render()
             self.set_status("Auto sync waiting: MapleStory window not found")
+            return
+        if result.get('capture_blocked'):
+            self.focus = None
+            getattr(self, '_reads', {}).clear()
+            getattr(self, '_gone', {}).clear()
+            if references_changed and self.state.get('tab') == 'quests':
+                self.render()
+            self.set_status('Game area covered: move overlapping windows to resume reading')
+            return
+        if not self.db.quests and self.reference_mode_ready():
+            # A fresh installation can use independent cached references without deleting
+            # saved primary quest IDs or pretending that objectives/routes were imported.
+            if result.get('full'):
+                self.focus = result.get('regions') or None
+            elif not result.get('references'):
+                self.focus = None
+            if references_changed:
+                self.render()
+            if not result.get('auto', True):
+                self.set_status('Quest references read from the screen' if result.get('references')
+                                else 'Reference mode: show a full quest title in the game')
             return
         if result.get("minimap"):
             self._minimap, self._blocked_reads = result["minimap"], 0
@@ -3230,12 +3381,12 @@ class App:
             self._on_reset_read(result)
             return
         if result.get("map_only"):  # AUTO off, GPS open: only where you are, quests untouched
-            if self._apply_location(result, self._confirmed):
+            if self._apply_location(result, self._confirmed) or references_changed:
                 self.render()
             return
         if result["full"]:
             self.focus = result["regions"] or None
-        elif not result["quests"]:
+        elif not result["quests"] and not result.get('references'):
             self.focus = None  # the quest helper moved or closed: next auto sync looks everywhere
         # Auto syncs only trust a reading once it comes out the same twice in a row: the
         # see-through in-game window OCRs a little differently each time, and acting on every
@@ -3318,8 +3469,8 @@ class App:
                 self.set_status(f"Synced from {where}: {len(result['quests'])} quests seen")
             else:
                 self.set_status("No quests on screen: open the in-game Quest Helper, not under this window")
-        if self.state["tab"] == "quests" and self._snapshot() != before:
-            if self._structure() != self._structure(json.loads(before)):
+        if self.state["tab"] == "quests" and (self._snapshot() != before or references_changed):
+            if references_changed or self._structure() != self._structure(json.loads(before)):
                 self.render()  # quests, finished objectives or the map changed: rebuild
             else:
                 self.update_numbers(changed_numbers)  # only counts moved: change just those labels
@@ -3516,6 +3667,7 @@ class App:
         then show under suggestions); any other one just stops being tracked live.
         Returns the names of quests turned in."""
         if not result["tracked"]:
+            self._gone.clear()
             return []
         seen, turned_in = set(result["quests"]), []
         for qid in list(self.state["tracked"]):
@@ -3524,6 +3676,11 @@ class App:
                 continue
             self._gone[qid] = self._gone.get(qid, 0) + 1
             if self._gone[qid] < GONE_AFTER:
+                continue
+            if not result.get('full', True):
+                # A fast crop can miss a helper that grew or moved. Verify the whole game
+                # window before treating an absent quest as turned in or untracked.
+                self.focus = None
                 continue
             self._gone.pop(qid, None)
             needs = len(self.db.quests[qid].get("need") or [])

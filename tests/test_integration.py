@@ -5,6 +5,7 @@ sys.path.insert(0,str(Path(__file__).resolve().parents[1]))
 import app,widgets,companion_market
 from companion_feature_model import utility_session_new
 import tkinter as tk
+from unittest.mock import patch
 class NoHotkey:
     def __init__(self,*a,**k):pass
     def start(self):pass
@@ -55,6 +56,11 @@ with tempfile.TemporaryDirectory(prefix='integration-state-',dir=str(Path(__file
     require('Profile save persisted',json.loads(Path(app.STATE_FILE).read_text())['profile_name']=='Saved profile')
     a.global_query.set('Snail');a._companion_search_kind.set('Monsters');a.ui_search();pump()
     require('Global monster search maps to native API',a.mob_query.get()=='Snail' and a.state['tab']=='mobs')
+    a.global_query.set('Arwen glass');a._companion_search_kind.set('Quests');journal_before=a._snapshot();a.ui_search();pump()
+    sources=a._alternate_sources_window
+    source_entry=next(w for w in descendants(sources) if isinstance(w,tk.Entry))
+    require('Global quest search opens local reference search with supplied words',source_entry.get()=='Arwen glass' and a._snapshot()==journal_before)
+    sources.destroy();pump()
     a.open_add_dialog();pump()
     add=next(w for w in root.winfo_children() if isinstance(w,tk.Toplevel) and 'Add a quest' in w.title())
     require('Quest picker opens without replacing journal',a.state['active']==fixture['active']);add.destroy()
@@ -64,13 +70,16 @@ with tempfile.TemporaryDirectory(prefix='integration-state-',dir=str(Path(__file
     require('Watchlist persists',a.state['companion_watchlist']==['Snail Shell']);watch.destroy()
     a.ui_mesowatch('Snail Shell');pump()
     meso=next(w for w in root.winfo_children() if isinstance(w,tk.Toplevel) and 'MesoWatch' in w.title())
-    entries=[w for w in descendants(meso) if isinstance(w,tk.Entry)];entries[1].insert(0,'75');click(meso,'Save manual price note');pump()
-    require('MesoWatch quote is explicitly manual and persisted',a.state['companion_price_notes']['Snail Shell']['price']==75 and 'manual' in a.state['companion_price_notes']['Snail Shell']['source']);meso.destroy()
-    companion_market.market_fetch=lambda name=None: {'name':name,'listings':[]} if name else {'at':time.time(),'items':[{'name':'Snail Shell','typical':75,'range':[70,80],'sold':4}]}
-    a.ui_market();pump(.6)
-    require('Live market pane loads using same client interface',a._market_view_state['index']['items'][0]['typical']==75)
-    require('MesoWatch accessible alongside automatic source',any(isinstance(w,tk.Button) and 'MesoWatch' in w.cget('text') for w in descendants(a._market_window)))
-    a._market_window.destroy();pump(.1)
+    entries=[w for w in descendants(meso) if isinstance(w,tk.Entry)]
+    require('MesoWatch search is prefilled',len(entries)==1 and entries[0].get()=='Snail Shell')
+    with patch('mesowatch_browser.launch_search') as launch:
+        click(meso,'Search MesoWatch ↗');pump()
+        require('MesoWatch opens the requested item without inventing a local price',launch.call_args.args==('Snail Shell',))
+    meso.destroy()
+    a.ui_market();pump(.1)
+    market=next(w for w in root.winfo_children() if isinstance(w,tk.Toplevel) and 'MesoWatch' in w.title())
+    require('Market navigation opens MesoWatch search',bool(market.winfo_exists()))
+    market.destroy();pump(.1)
     a.companion_overview();pump()
     require('Native quest guide remains accessible',any(isinstance(w,tk.Toplevel) and 'Your next step' in w.title() for w in root.winfo_children()))
     a.save_state();saved=json.loads(Path(app.STATE_FILE).read_text())
